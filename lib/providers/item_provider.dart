@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter_seoul/models/item_model.dart';
-import 'package:flutter_seoul/repositories/item_repository.dart';
+import 'package:moa/models/item_model.dart';
+import 'package:moa/repositories/item_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'item_provider.g.dart';

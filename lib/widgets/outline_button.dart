@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_seoul/utils/colors.dart';
+import 'package:moa/utils/colors.dart';
 
 class OutlineButton extends StatelessWidget {
   final void Function() onPressed;

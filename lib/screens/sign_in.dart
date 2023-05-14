@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_seoul/models/user_model.dart';
-import 'package:flutter_seoul/providers/user_provider.dart';
-import 'package:flutter_seoul/repositories/user_repository.dart';
-import 'package:flutter_seoul/utils/colors.dart';
-import 'package:flutter_seoul/utils/localization.dart';
-import 'package:flutter_seoul/utils/router_config.dart';
-import 'package:flutter_seoul/widgets/common/button.dart';
-import 'package:flutter_seoul/widgets/common/edit_text.dart';
+import 'package:moa/models/user_model.dart';
+import 'package:moa/providers/user_provider.dart';
+import 'package:moa/repositories/user_repository.dart';
+import 'package:moa/utils/colors.dart';
+import 'package:moa/utils/localization.dart';
+import 'package:moa/utils/router_config.dart';
+import 'package:moa/widgets/common/button.dart';
+import 'package:moa/widgets/common/edit_text.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:go_router/go_router.dart';
 

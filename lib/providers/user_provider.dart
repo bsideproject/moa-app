@@ -1,5 +1,5 @@
-import 'package:flutter_seoul/models/user_model.dart';
-import 'package:flutter_seoul/repositories/user_repository.dart';
+import 'package:moa/models/user_model.dart';
+import 'package:moa/repositories/user_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_provider.g.dart';

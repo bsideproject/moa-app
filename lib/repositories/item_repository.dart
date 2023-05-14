@@ -1,5 +1,5 @@
-import 'package:flutter_seoul/models/item_model.dart';
-import 'package:flutter_seoul/utils/logger.dart';
+import 'package:moa/models/item_model.dart';
+import 'package:moa/utils/logger.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 

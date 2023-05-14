@@ -1,4 +1,4 @@
-import 'package:flutter_seoul/models/user_model.dart';
+import 'package:moa/models/user_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 

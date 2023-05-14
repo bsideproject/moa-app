@@ -1,4 +1,4 @@
-import 'package:flutter_seoul/models/user_model.dart';
+import 'package:moa/models/user_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

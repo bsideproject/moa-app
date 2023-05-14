@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_seoul/generated/l10n.dart';
-import 'package:flutter_seoul/utils/router_config.dart';
-import 'package:flutter_seoul/utils/themes.dart';
+import 'package:moa/generated/l10n.dart';
+import 'package:moa/utils/router_config.dart';
+import 'package:moa/utils/themes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

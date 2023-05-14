@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_seoul/utils/router_config.dart';
+import 'package:moa/utils/router_config.dart';
 import 'package:go_router/go_router.dart';
 
 import '../utils/colors.dart';

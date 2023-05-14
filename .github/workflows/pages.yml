@@ -32,4 +32,4 @@ jobs:
       - uses: erickzanardo/flutter-gh-pages@v7
         with:
           targetBranch: gh-pages
-          baseHref: /flutter_seoul/
+          baseHref: /moa/

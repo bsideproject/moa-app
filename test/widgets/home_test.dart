@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_seoul/repositories/user_repository.dart';
-import 'package:flutter_seoul/utils/router_config.dart';
+import 'package:moa/repositories/user_repository.dart';
+import 'package:moa/utils/router_config.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 

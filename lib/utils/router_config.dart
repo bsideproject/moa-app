@@ -1,14 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_seoul/models/item_model.dart';
-import 'package:flutter_seoul/navigations/main_bottom_tab.dart';
-import 'package:flutter_seoul/screens/edit_profile.dart';
-import 'package:flutter_seoul/screens/home.dart';
-import 'package:flutter_seoul/screens/item_detail.dart';
-import 'package:flutter_seoul/screens/permission_screen.dart';
-import 'package:flutter_seoul/screens/result.dart';
-import 'package:flutter_seoul/screens/sample.dart';
-import 'package:flutter_seoul/screens/sign_in.dart';
+import 'package:moa/models/item_model.dart';
+import 'package:moa/navigations/main_bottom_tab.dart';
+import 'package:moa/screens/edit_profile.dart';
+import 'package:moa/screens/home.dart';
+import 'package:moa/screens/item_detail.dart';
+import 'package:moa/screens/permission_screen.dart';
+import 'package:moa/screens/result.dart';
+import 'package:moa/screens/sample.dart';
+import 'package:moa/screens/sign_in.dart';
 import 'package:go_router/go_router.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
