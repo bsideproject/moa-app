@@ -1,0 +1,10 @@
+{
+  "@@locale": "en",
+
+  "appName": "Flutter Seoul",
+  "result": "Result",
+  "loading": "Loading...",
+  "count": "Count",
+  "inquiry": "Inquiry",
+  "fullAgreement": "Full agreement"
+}
