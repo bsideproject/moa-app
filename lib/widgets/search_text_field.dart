@@ -31,7 +31,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
     _cancelDebounceSearching();
 
     _debounce = Timer(widget.debounceDuration, () {
-      String searchText = text.trim();
+      var searchText = text.trim();
 
       if (searchText.isNotEmpty) {
         widget.onSearched(searchText);

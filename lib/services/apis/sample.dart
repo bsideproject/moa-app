@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:moa_app/models/user_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:moa_app/models/user_model.dart';
 
 Future fetchUser(http.Client client) async {
   var response = await client

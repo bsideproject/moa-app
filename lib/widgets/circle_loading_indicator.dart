@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../utils/localization.dart';
+import 'package:moa_app/utils/localization.dart';
 
 class CircleLoadingIndicator extends StatelessWidget {
   const CircleLoadingIndicator({Key? key}) : super(key: key);

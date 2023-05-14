@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
 
 class CustomCheckbox extends StatefulWidget {
-  final bool value;
-  final void Function(bool) onChanged;
-
-  final Widget? uncheckedWidget;
-  final Widget? checkedWidget;
-
-  final CheckBoxStyle checkBoxStyle;
-
   const CustomCheckbox({
     Key? key,
     required this.value,
@@ -17,6 +9,13 @@ class CustomCheckbox extends StatefulWidget {
     this.checkedWidget,
     this.checkBoxStyle = const CheckBoxStyle(),
   }) : super(key: key);
+  final bool value;
+  final void Function(bool) onChanged;
+
+  final Widget? uncheckedWidget;
+  final Widget? checkedWidget;
+
+  final CheckBoxStyle checkBoxStyle;
 
   @override
   State<CustomCheckbox> createState() => _CustomCheckboxState();
@@ -63,7 +62,7 @@ class _CustomCheckboxState extends State<CustomCheckbox> {
   }
 
   Widget _buildDefaultCheckBox({Widget? child}) {
-    final style = widget.checkBoxStyle;
+    var style = widget.checkBoxStyle;
 
     return Container(
       height: style.height,
@@ -105,17 +104,6 @@ class _CustomCheckboxState extends State<CustomCheckbox> {
 }
 
 class CheckBoxStyle {
-  final bool isCircleFeedback;
-  final double width;
-  final double height;
-  final EdgeInsetsGeometry? padding;
-  final double borderRadius;
-  final double? iconSize;
-  final Color borderColor;
-  final Color checkColor;
-  final Color checkedBackgroundColor;
-  final Color uncheckedBackgroundColor;
-
   const CheckBoxStyle({
     this.isCircleFeedback = false,
     this.width = 25,
@@ -128,4 +116,14 @@ class CheckBoxStyle {
     this.checkedBackgroundColor = Colors.white,
     this.uncheckedBackgroundColor = Colors.white,
   });
+  final bool isCircleFeedback;
+  final double width;
+  final double height;
+  final EdgeInsetsGeometry? padding;
+  final double borderRadius;
+  final double? iconSize;
+  final Color borderColor;
+  final Color checkColor;
+  final Color checkedBackgroundColor;
+  final Color uncheckedBackgroundColor;
 }

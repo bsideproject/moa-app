@@ -33,7 +33,9 @@ class Home extends HookConsumerWidget {
       var rngId = rng.nextInt(100);
 
       await itemNotifier.addItems(item: itemData.value.copyWith(id: rngId));
-      Navigator.pop(context);
+      if (context.mounted) {
+        Navigator.pop(context);
+      }
     }
 
     Future<void> removeItem(int id) async {
@@ -42,7 +44,9 @@ class Home extends HookConsumerWidget {
 
     Future<void> updateItem(int id) async {
       await itemNotifier.updateItems(item: itemData.value.copyWith(id: id));
-      Navigator.pop(context);
+      if (context.mounted) {
+        Navigator.pop(context);
+      }
     }
 
     return Scaffold(

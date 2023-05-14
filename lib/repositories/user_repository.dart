@@ -50,7 +50,7 @@ class UserRepository implements IUserRepository {
   @override
   Future<List<UserModel>>? getMe() async {
     var db = await initDB();
-    final List<Map<String, dynamic>> maps = await db.query('user');
+    List<Map<String, dynamic>> maps = await db.query('user');
 
     return List.generate(maps.length, (i) {
       return UserModel(
