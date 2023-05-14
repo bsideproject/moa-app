@@ -17,6 +17,9 @@ flutter pub get
 ```sh
 dart run build_runner build --delete-conflicting-outputs
 ```
+## 커밋 컨벤션
+<img width="762" alt="commit" src="https://github.com/bsideproject/Moa-app/assets/73378472/9c177b86-9fa4-46c8-85a9-a605fa922c61">
+
 ## 개발 컨벤션
 ```sh
 https://www.notion.so/bside/FE-Flutter-ce45e42f0602443abde7163a1a06780e?pvs=4
