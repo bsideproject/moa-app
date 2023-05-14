@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:flutter_seoul/models/user_model.dart';
+import 'package:moa_app/models/user_model.dart';
 import 'package:http/http.dart' as http;
 
 Future fetchUser(http.Client client) async {
-  final response = await client
+  var response = await client
       .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1'));
 
   if (response.statusCode == 200) {

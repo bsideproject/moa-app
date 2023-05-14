@@ -1,4 +1,4 @@
-package com.dooboolab.flutter_seoul
+package com.beside.moa
 
 import io.flutter.embedding.android.FlutterActivity
 

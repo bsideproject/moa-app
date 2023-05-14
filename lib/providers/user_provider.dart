@@ -1,5 +1,5 @@
-import 'package:flutter_seoul/models/user_model.dart';
-import 'package:flutter_seoul/repositories/user_repository.dart';
+import 'package:moa_app/models/user_model.dart';
+import 'package:moa_app/repositories/user_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_provider.g.dart';
@@ -7,13 +7,13 @@ part 'user_provider.g.dart';
 @riverpod
 class UserState extends _$UserState {
   Future<List<UserModel>?> getMe() async {
-    final user = UserRepository.instance.getMe();
+    var user = UserRepository.instance.getMe();
     return user;
   }
 
   @override
   Future<List<UserModel>?> build() async {
-    final me = UserRepository.instance.getMe();
+    var me = UserRepository.instance.getMe();
     return me;
   }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_seoul/repositories/user_repository.dart';
-import 'package:flutter_seoul/utils/router_config.dart';
+import 'package:moa_app/repositories/user_repository.dart';
+import 'package:moa_app/utils/router_config.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -30,7 +30,7 @@ extension PumpApp on WidgetTester {
 }
 
 void main() {
-  testWidgets('Render authSwitch', (WidgetTester tester) async {
+  testWidgets('Render authSwitch', (tester) async {
     // await tester.pumpWidget(const ProviderScope(child: MyApp()));
 
     await tester.pumpRealRouterApp(
@@ -39,21 +39,21 @@ void main() {
       isConnected: false,
     );
 
-    final mockUserRepository = MockUserRepository();
+    var mockUserRepository = MockUserRepository();
     when(mockUserRepository.getMe()).thenAnswer(
       (_) => Future.value([]),
     );
     expect(find.text('Home'), findsOneWidget);
   });
 
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Counter increments smoke test', (tester) async {
     await tester.pumpWidget(
         TestUtils.makeTestableWidget(child: GoRoutes.home.fullPath));
     await tester.pump();
   });
 
   testWidgets('Button is present and triggers navigation after tapped',
-      (WidgetTester tester) async {
+      (tester) async {
     await tester.pumpWidget(
         TestUtils.makeTestableWidget(child: GoRoutes.signIn.fullPath));
     await tester.pump();

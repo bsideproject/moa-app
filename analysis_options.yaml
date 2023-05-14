@@ -1,16 +1,33 @@
 include: package:flutter_lints/flutter.yaml
 
 linter:
-  # The lint rules applied to this project can be customized in the
-  # section below to disable rules from the `package:flutter_lints/flutter.yaml`
-  # included above or to enable additional rules. A list of all available lints
-  # and their documentation is published at
-  # https://dart-lang.github.io/linter/lints/index.html.
   rules:
+    - prefer_const_constructors
     - always_declare_return_types
-    - prefer_final_in_for_each
+    - always_require_non_null_named_parameters
+    - avoid_types_on_closure_parameters
+    - avoid_annotating_with_dynamic
+    - avoid_escaping_inner_quotes
+    - avoid_function_literals_in_foreach_calls
+    - avoid_private_typedef_functions
+    - combinators_ordering
+    - curly_braces_in_flow_control_structures
+    - lowercase_with_underscores
+    - omit_local_variable_types
+    - annotate_overrides
+    - sort_constructors_first
+    - unawaited_futures
+    - directives_ordering
+    - unnecessary_final
+    - unnecessary_parenthesis
+    - conditional_uri_does_not_exist
     - prefer_single_quotes
-    - await_only_futures: true
+    - await_only_futures
+    - always_use_package_imports
+    - avoid_empty_else
+    - comment_references
+    - prefer_void_to_null
+    - use_key_in_widget_constructors
 
 analyzer:
   strong-mode:
@@ -20,6 +37,7 @@ analyzer:
     - lib/**.freezed.dart
     - lib/**.g.dart
     - lib/generated
+    - lib/firebase_options.dart
   errors:
-    # invalid_annotation_target: ignore
+    invalid_annotation_target: ignore
     todo: ignore

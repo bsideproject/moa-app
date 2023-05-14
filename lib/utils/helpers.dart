@@ -1,5 +1,5 @@
-// import 'package:flutter_seoul/utils/constants.dart';
-// import 'package:flutter_seoul/utils/localization.dart';
+// import 'package:moa_app/utils/constants.dart';
+// import 'package:moa_app/utils/localization.dart';
 
 // void alert(String message) => Get.snackbar(appName, message);
 

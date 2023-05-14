@@ -1,6 +1,6 @@
 {
-    "name": "flutter_seoul",
-    "short_name": "flutter_seoul",
+    "name": "moa_app",
+    "short_name": "moa_app",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -1,15 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_seoul/models/item_model.dart';
-import 'package:flutter_seoul/navigations/main_bottom_tab.dart';
-import 'package:flutter_seoul/screens/edit_profile.dart';
-import 'package:flutter_seoul/screens/home.dart';
-import 'package:flutter_seoul/screens/item_detail.dart';
-import 'package:flutter_seoul/screens/permission_screen.dart';
-import 'package:flutter_seoul/screens/result.dart';
-import 'package:flutter_seoul/screens/sample.dart';
-import 'package:flutter_seoul/screens/sign_in.dart';
 import 'package:go_router/go_router.dart';
+import 'package:moa_app/models/item_model.dart';
+import 'package:moa_app/navigations/main_bottom_tab.dart';
+import 'package:moa_app/screens/edit_profile.dart';
+import 'package:moa_app/screens/home.dart';
+import 'package:moa_app/screens/item_detail.dart';
+import 'package:moa_app/screens/permission_screen.dart';
+import 'package:moa_app/screens/result.dart';
+import 'package:moa_app/screens/sample.dart';
+import 'package:moa_app/screens/sign_in.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -79,7 +79,7 @@ GoRouter routerConfig([String? initialLocation]) => GoRouter(
                   name: GoRoutes.itemDetail.name,
                   path: ':id',
                   builder: (context, state) {
-                    final item = state.extra! as ItemModel;
+                    var item = state.extra! as ItemModel;
                     return ItemDetail(item: item);
                   },
                 ),

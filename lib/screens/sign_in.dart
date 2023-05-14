@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_seoul/models/user_model.dart';
-import 'package:flutter_seoul/providers/user_provider.dart';
-import 'package:flutter_seoul/repositories/user_repository.dart';
-import 'package:flutter_seoul/utils/colors.dart';
-import 'package:flutter_seoul/utils/localization.dart';
-import 'package:flutter_seoul/utils/router_config.dart';
-import 'package:flutter_seoul/widgets/common/button.dart';
-import 'package:flutter_seoul/widgets/common/edit_text.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:moa_app/models/user_model.dart';
+import 'package:moa_app/providers/user_provider.dart';
+import 'package:moa_app/repositories/user_repository.dart';
+import 'package:moa_app/utils/colors.dart';
+import 'package:moa_app/utils/localization.dart';
+import 'package:moa_app/utils/router_config.dart';
+import 'package:moa_app/widgets/common/button.dart';
+import 'package:moa_app/widgets/common/edit_text.dart';
 
 class SignIn extends HookConsumerWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -47,14 +47,14 @@ class SignIn extends HookConsumerWidget {
                   ),
                   Column(children: [
                     EditText(
-                      onChanged: (String txt) {
+                      onChanged: (txt) {
                         user.value = user.value.copyWith(email: txt);
                       },
                       keyboardType: TextInputType.emailAddress,
                       hintText: 'Email',
                     ),
                     EditText(
-                      onChanged: (String txt) {
+                      onChanged: (txt) {
                         user.value = user.value.copyWith(password: txt);
                       },
                       hintText: 'Password',
@@ -69,7 +69,7 @@ class SignIn extends HookConsumerWidget {
                         user.value.email == '' || user.value.password == '',
                     onPress: () async {
                       await UserRepository.instance.login(user.value);
-                      ref.watch(userStateProvider.notifier).getMe();
+                      await ref.watch(userStateProvider.notifier).getMe();
                       if (context.mounted) {
                         context.go(GoRoutes.home.fullPath);
                       }

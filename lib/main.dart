@@ -1,15 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_seoul/generated/l10n.dart';
-import 'package:flutter_seoul/providers/user_provider.dart';
-import 'package:flutter_seoul/utils/router_config.dart';
-import 'package:flutter_seoul/utils/themes.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_seoul/widgets/model_theme.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:moa_app/generated/l10n.dart';
+import 'package:moa_app/providers/user_provider.dart';
+import 'package:moa_app/utils/router_config.dart';
+import 'package:moa_app/utils/themes.dart';
+import 'package:moa_app/widgets/model_theme.dart';
 
 class Logger extends ProviderObserver {
   @override
@@ -31,7 +31,7 @@ class Logger extends ProviderObserver {
 }
 
 void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  var widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await dotenv.load(fileName: '.env');
 
@@ -43,8 +43,8 @@ class MyApp extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeNotifier = ref.watch(modelProvider);
-    final currentUser = ref.watch(userStateProvider);
+    var themeNotifier = ref.watch(modelProvider);
+    var currentUser = ref.watch(userStateProvider);
 
     useEffect(() {
       if (!currentUser.isLoading) {

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter_seoul/models/item_model.dart';
-import 'package:flutter_seoul/repositories/item_repository.dart';
+import 'package:moa_app/models/item_model.dart';
+import 'package:moa_app/repositories/item_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'item_provider.g.dart';
@@ -12,7 +12,7 @@ part 'item_provider.g.dart';
 class AsyncItems extends _$AsyncItems {
   Future<List<ItemModel>> fetchItem() async {
     // get the [KeepAliveLink]
-    final link = ref.keepAlive();
+    var link = ref.keepAlive();
     // a timer to be used by the callbacks below
     Timer? timer;
     // An object from package:dio that allows cancelling http requests
@@ -33,7 +33,7 @@ class AsyncItems extends _$AsyncItems {
       timer?.cancel();
     });
 
-    final itemData = ItemRepository.instance.getItems();
+    var itemData = ItemRepository.instance.getItems();
     return itemData;
   }
 
@@ -48,7 +48,7 @@ class AsyncItems extends _$AsyncItems {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      ItemRepository.instance.addItem(item: item);
+      await ItemRepository.instance.addItem(item: item);
       return fetchItem();
     });
   }
@@ -59,7 +59,7 @@ class AsyncItems extends _$AsyncItems {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      ItemRepository.instance.removeItem(id: id);
+      await ItemRepository.instance.removeItem(id: id);
       return fetchItem();
     });
   }
@@ -70,7 +70,7 @@ class AsyncItems extends _$AsyncItems {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      ItemRepository.instance.updateItem(item: item);
+      await ItemRepository.instance.updateItem(item: item);
       return fetchItem();
     });
   }

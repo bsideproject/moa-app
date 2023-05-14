@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_seoul/utils/localization.dart';
-import 'package:flutter_seoul/widgets/common/app_bar.dart';
-import 'package:flutter_seoul/widgets/common/button.dart';
-import 'package:flutter_seoul/widgets/custom_checkbox.dart';
-import 'package:flutter_seoul/widgets/outline_button.dart';
+import 'package:moa_app/utils/localization.dart';
+import 'package:moa_app/widgets/common/app_bar.dart';
+import 'package:moa_app/widgets/common/button.dart';
+import 'package:moa_app/widgets/custom_checkbox.dart';
+import 'package:moa_app/widgets/outline_button.dart';
 
 class Sample extends HookWidget {
   const Sample({Key? key}) : super(key: key);
