@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'my_theme_preferences.dart';
+import 'package:moa_app/widgets/my_theme_preferences.dart';
 
 class ModelTheme extends ChangeNotifier {
-  late bool _isDark;
-  late MyThemePreferences _preferences;
-  bool get isDark => _isDark;
-
   ModelTheme() {
     _isDark = false;
     _preferences = MyThemePreferences();
     getPreferences();
   }
+  late bool _isDark;
+  late MyThemePreferences _preferences;
+  bool get isDark => _isDark;
 
   void toggleTheme() {
     _isDark = !_isDark;
@@ -27,13 +26,12 @@ class ModelTheme extends ChangeNotifier {
   }
 
   Future<void> getPreferences() async {
-    final schedulerBinding = SchedulerBinding.instance;
-    Brightness brightness =
-        schedulerBinding.platformDispatcher.platformBrightness;
-    bool isDarkMode = brightness == Brightness.dark;
+    var schedulerBinding = SchedulerBinding.instance;
+    var brightness = schedulerBinding.platformDispatcher.platformBrightness;
+    var isDarkMode = brightness == Brightness.dark;
     if (isDarkMode) {
       _isDark = isDarkMode;
-      _preferences.setTheme(isDarkMode);
+      await _preferences.setTheme(isDarkMode);
       notifyListeners();
       return;
     }

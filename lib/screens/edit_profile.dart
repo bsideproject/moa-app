@@ -1,20 +1,20 @@
 import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:moa/providers/user_provider.dart';
-import 'package:moa/repositories/user_repository.dart';
-import 'package:moa/utils/assets.dart';
-import 'package:moa/widgets/common/button.dart';
-import 'package:moa/widgets/common/edit_text.dart';
-import 'package:moa/widgets/model_theme.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter/material.dart';
+import 'package:moa_app/providers/user_provider.dart';
+import 'package:moa_app/repositories/user_repository.dart';
+import 'package:moa_app/utils/assets.dart';
+import 'package:moa_app/widgets/common/button.dart';
+import 'package:moa_app/widgets/common/edit_text.dart';
+import 'package:moa_app/widgets/model_theme.dart';
 
 class EditProfileArguments {
+  EditProfileArguments({this.title, this.person});
   final String? title;
   final String? person;
-
-  EditProfileArguments({this.title, this.person});
 }
 
 class EditProfile extends HookConsumerWidget {
@@ -24,15 +24,15 @@ class EditProfile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeNotifier = ref.watch(modelProvider);
+    var themeNotifier = ref.watch(modelProvider);
 
-    final ImagePicker picker = ImagePicker();
+    var picker = ImagePicker();
     var nameValue = useState('');
     var descValue = useState('');
     var imageFile = useState<XFile?>(null);
 
     void pickPhoto(ImageSource source) async {
-      final pickedFile = await picker.pickImage(source: source);
+      var pickedFile = await picker.pickImage(source: source);
       imageFile.value = pickedFile;
     }
 
@@ -73,7 +73,7 @@ class EditProfile extends HookConsumerWidget {
             icon: const Icon(Icons.exit_to_app),
             onPressed: () async {
               await UserRepository.instance.logout();
-              ref.watch(userStateProvider.notifier).removeUser();
+              await ref.watch(userStateProvider.notifier).removeUser();
             },
             iconSize: 30,
           )
@@ -167,7 +167,7 @@ class EditProfile extends HookConsumerWidget {
                           ),
                         )),
                     EditText(
-                      onChanged: (String txt) => nameValue.value = txt,
+                      onChanged: (txt) => nameValue.value = txt,
                       hintText: 'Name',
                     ),
                     Container(
@@ -181,7 +181,7 @@ class EditProfile extends HookConsumerWidget {
                           ),
                         )),
                     EditText(
-                      onChanged: (String txt) => descValue.value = txt,
+                      onChanged: (txt) => descValue.value = txt,
                       hintText: 'Description',
                     ),
                     Button(

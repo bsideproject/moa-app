@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../utils/colors.dart';
+import 'package:moa_app/utils/colors.dart';
 
 class _Snackbar {
   factory _Snackbar() {

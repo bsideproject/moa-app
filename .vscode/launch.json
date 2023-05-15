@@ -5,9 +5,21 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Flutter",
-            "request": "launch",
-            "type": "dart"
-        }
+          "name": "moa_app",
+          "request": "launch",
+          "type": "dart"
+        },
+        {
+          "name": "moa_app (profile mode)",
+          "request": "launch",
+          "type": "dart",
+          "flutterMode": "profile"
+        },
+        {
+          "name": "moa_app (release mode)",
+          "request": "launch",
+          "type": "dart",
+          "flutterMode": "release"
+        },
     ]
 }

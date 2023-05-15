@@ -3,16 +3,16 @@ import 'dart:math';
 import 'package:flat_list/flat_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:moa/models/item_model.dart';
-import 'package:moa/providers/item_provider.dart';
-import 'package:moa/utils/general.dart';
-import 'package:moa/utils/router_config.dart';
-import 'package:moa/widgets/common/button.dart';
-import 'package:moa/widgets/common/edit_text.dart';
-import 'package:moa/widgets/common/loading_indicator.dart';
-import 'package:moa/widgets/common/styles.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:moa_app/models/item_model.dart';
+import 'package:moa_app/providers/item_provider.dart';
+import 'package:moa_app/utils/general.dart';
+import 'package:moa_app/utils/router_config.dart';
+import 'package:moa_app/widgets/common/button.dart';
+import 'package:moa_app/widgets/common/edit_text.dart';
+import 'package:moa_app/widgets/common/loading_indicator.dart';
+import 'package:moa_app/widgets/common/styles.dart';
 
 final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -23,8 +23,8 @@ class Home extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     var itemData =
         useState<ItemModel>(const ItemModel(id: 0, title: '', content: ''));
-    final itemNotifier = ref.watch(asyncItemsProvider.notifier);
-    final itemAsync = ref.watch(asyncItemsProvider);
+    var itemNotifier = ref.watch(asyncItemsProvider.notifier);
+    var itemAsync = ref.watch(asyncItemsProvider);
 
     Future<void> addItem() async {
       if (!formKey.currentState!.validate()) return;
@@ -32,17 +32,21 @@ class Home extends HookConsumerWidget {
       var rng = Random();
       var rngId = rng.nextInt(100);
 
-      itemNotifier.addItems(item: itemData.value.copyWith(id: rngId));
-      Navigator.pop(context);
+      await itemNotifier.addItems(item: itemData.value.copyWith(id: rngId));
+      if (context.mounted) {
+        Navigator.pop(context);
+      }
     }
 
     Future<void> removeItem(int id) async {
-      itemNotifier.removeItems(id: id);
+      await itemNotifier.removeItems(id: id);
     }
 
     Future<void> updateItem(int id) async {
-      itemNotifier.updateItems(item: itemData.value.copyWith(id: id));
-      Navigator.pop(context);
+      await itemNotifier.updateItems(item: itemData.value.copyWith(id: id));
+      if (context.mounted) {
+        Navigator.pop(context);
+      }
     }
 
     return Scaffold(

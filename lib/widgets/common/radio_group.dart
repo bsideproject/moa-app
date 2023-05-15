@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import '../../utils/colors.dart';
+import 'package:moa_app/utils/colors.dart';
 
 class RadioGroup<T> extends HookWidget {
   const RadioGroup({

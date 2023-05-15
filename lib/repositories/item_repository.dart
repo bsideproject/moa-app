@@ -1,5 +1,5 @@
-import 'package:moa/models/item_model.dart';
-import 'package:moa/utils/logger.dart';
+import 'package:moa_app/models/item_model.dart';
+import 'package:moa_app/utils/logger.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -21,7 +21,7 @@ class ItemRepository implements IItemRepository {
 
   @override
   Future<Database> initDB() async {
-    final Future<Database> database = openDatabase(
+    var database = openDatabase(
       // 데이터베이스 경로를 지정합니다. 참고: `path` 패키지의 `join` 함수를 사용하는 것이
       // 각 플랫폼 별로 경로가 제대로 생성됐는지 보장할 수 있는 가장 좋은 방법입니다.
       join(await getDatabasesPath(), 'item_database.db'),
@@ -35,15 +35,15 @@ class ItemRepository implements IItemRepository {
       version: 1,
     );
 
-    final Database db = await database;
+    var db = await database;
     return db;
   }
 
   @override
   Future<void> addItem({required ItemModel item}) async {
-    final Database db = await initDB();
+    var db = await initDB();
     try {
-      db.insert('item', item.toJson(),
+      await db.insert('item', item.toJson(),
           conflictAlgorithm: ConflictAlgorithm.replace);
     } catch (e) {
       logger.d(e);
@@ -52,9 +52,9 @@ class ItemRepository implements IItemRepository {
 
   @override
   Future<void> removeItem({required int id}) async {
-    final Database db = await initDB();
+    var db = await initDB();
     try {
-      db.delete(
+      await db.delete(
         'item',
         // 특정 dog를 제거하기 위해 `where` 절을 사용하세요
         where: 'id = ?',
@@ -68,9 +68,9 @@ class ItemRepository implements IItemRepository {
 
   @override
   Future<void> updateItem({required ItemModel item}) async {
-    final Database db = await initDB();
+    var db = await initDB();
     try {
-      db.update(
+      await db.update(
         'item',
         item.toJson(),
         where: 'id = ?',
@@ -83,8 +83,8 @@ class ItemRepository implements IItemRepository {
 
   @override
   Future<List<ItemModel>> getItems() async {
-    final Database db = await initDB();
-    final List<Map<String, dynamic>> maps = await db.query('item');
+    var db = await initDB();
+    List<Map<String, dynamic>> maps = await db.query('item');
 
     return List.generate(maps.length, (i) {
       return ItemModel(

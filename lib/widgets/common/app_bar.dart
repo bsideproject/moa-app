@@ -2,12 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
-  final Widget? title;
-  final Widget? leading;
-  final List? actions;
-  final bool isBottomBorderDisplayed;
-  final BottomBorderStyle bottomBorderStyle;
-
   const AppBarBack({
     Key? key,
     this.title,
@@ -16,6 +10,11 @@ class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
     this.isBottomBorderDisplayed = true,
     this.bottomBorderStyle = const BottomBorderStyle(),
   }) : super(key: key);
+  final Widget? title;
+  final Widget? leading;
+  final List? actions;
+  final bool isBottomBorderDisplayed;
+  final BottomBorderStyle bottomBorderStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +43,10 @@ class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class BottomBorderStyle {
-  final Color color;
-  final double height;
-
   const BottomBorderStyle({
     this.color = Colors.grey,
     this.height = 1,
   });
+  final Color color;
+  final double height;
 }

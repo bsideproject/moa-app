@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flat_list/flat_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:moa/widgets/common/alert_dialog.dart';
-import 'package:moa/widgets/common/styles.dart';
+import 'package:moa_app/widgets/common/alert_dialog.dart';
+import 'package:moa_app/widgets/common/styles.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PermissionType {

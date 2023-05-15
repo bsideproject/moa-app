@@ -4,16 +4,15 @@ const mobileMaxWidth = 850;
 const tabletMaxWidth = 1100;
 
 class Responsive extends StatelessWidget {
-  final Widget mobile;
-  final Widget? desktop;
-  final Widget? tablet;
-
   const Responsive({
     Key? key,
     this.desktop,
     this.tablet,
     required this.mobile,
   }) : super(key: key);
+  final Widget mobile;
+  final Widget? desktop;
+  final Widget? tablet;
 
   static bool isMobile(BuildContext context) =>
       MediaQuery.of(context).size.width < mobileMaxWidth;
@@ -27,7 +26,7 @@ class Responsive extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
+    var size = MediaQuery.of(context).size;
 
     if (desktop != null && size.width >= tabletMaxWidth) {
       return desktop!;

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:moa/generated/l10n.dart';
-import 'package:moa/utils/router_config.dart';
-import 'package:moa/utils/themes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:moa_app/generated/l10n.dart';
+import 'package:moa_app/utils/router_config.dart';
+import 'package:moa_app/utils/themes.dart';
 
 import 'mocks/navigator_observer.mocks.dart';
 

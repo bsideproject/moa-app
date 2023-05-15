@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'colors.dart';
+import 'package:moa_app/utils/colors.dart';
 
 class Themes {
   Themes._();

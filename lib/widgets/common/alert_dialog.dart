@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../utils/colors.dart';
-import 'button.dart';
-import 'styles.dart';
+import 'package:moa_app/utils/colors.dart';
+import 'package:moa_app/widgets/common/button.dart';
+import 'package:moa_app/widgets/common/styles.dart';
 
 class _AlertDialog {
   factory _AlertDialog() {

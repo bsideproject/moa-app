@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:moa/utils/colors.dart';
-import 'package:moa/widgets/common/styles.dart';
+import 'package:moa_app/utils/colors.dart';
+import 'package:moa_app/widgets/common/styles.dart';
 
 OutlineInputBorder focusedOutlineBorder = OutlineInputBorder(
   borderSide: BorderSide(width: 1.5, color: AppColors.role.basic),
@@ -85,7 +85,7 @@ class _EditTextState extends State<EditText> {
                       .borderSide
                       .color)),
         ),
-        onChanged: (String txt) => widget.onChanged(txt),
+        onChanged: (txt) => widget.onChanged(txt),
         keyboardType: widget.keyboardType,
       ),
     );
