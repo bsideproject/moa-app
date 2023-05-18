@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">moa_app</string>
+    <string name="client_id">K10uUCEMBAnAY0ZtJMeo</string>
+    <string name="client_secret">qtCW1qORKI</string>
+    <string name="client_name">Moa-app</string>
 </resources>

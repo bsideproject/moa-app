@@ -18,6 +18,21 @@
     
     <application android:label="@string/app_name" android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!--Kakao 소셜 로그인 설정-->
+        <activity
+            android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity"
+            android:exported="true">
+            <intent-filter android:label="flutter_web_auth">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- "kakao${YOUR_NATIVE_APP_KEY}://oauth" 형식의 앱 실행 스킴 설정 -->
+                <!-- 카카오 로그인 Redirect URI -->
+                <data android:scheme="kakao425f4fa4567f8679a573604ddf734236" android:host="oauth"/>
+            </intent-filter>
+        </activity>
+
         <activity android:name=".MainActivity" android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
@@ -34,9 +49,33 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- 카카오톡 로그린 URL 스킴 설정 -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- "kakao${YOUR_NATIVE_APP_KEY}://${PRODUCT_NAME}" 형식의 앱 실행 스킴 설정 -->
+                <!-- 카카오로그인 -->
+                <data android:scheme="kakao425f4fa4567f8679a573604ddf734236" android:host="oauth"/>
+            </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data android:name="flutterEmbedding" android:value="2" />
+
+        <!--Naver 소셜 로그인 설정-->
+        <!--android/app/src/main/res/values/strings.xml-->
+        <meta-data
+            android:name="com.naver.sdk.clientId"
+            android:value="@string/client_id" />
+        <meta-data
+            android:name="com.naver.sdk.clientSecret"
+            android:value="@string/client_secret" />
+        <meta-data
+            android:name="com.naver.sdk.clientName"
+            android:value="@string/client_name" />
+
+
     </application>
 </manifest>
