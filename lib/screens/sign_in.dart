@@ -1,16 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/user_model.dart';
 import 'package:moa_app/providers/user_provider.dart';
 import 'package:moa_app/repositories/auth_repository.dart';
 import 'package:moa_app/repositories/user_repository.dart';
-import 'package:moa_app/utils/colors.dart';
-import 'package:moa_app/utils/localization.dart';
 import 'package:moa_app/utils/router_config.dart';
-import 'package:moa_app/widgets/common/button.dart';
-import 'package:moa_app/widgets/common/edit_text.dart';
+import 'package:moa_app/widgets/button.dart';
+import 'package:moa_app/widgets/edit_text.dart';
 
 class SignIn extends HookConsumerWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -19,7 +20,6 @@ class SignIn extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var user =
         useState<UserModel>(const UserModel(id: '0', email: '', password: ''));
-    var t = localization(context);
 
     return Scaffold(
       body: SafeArea(
@@ -32,18 +32,11 @@ class SignIn extends HookConsumerWidget {
                 children: [
                   Container(
                     alignment: Alignment.center,
-                    margin: const EdgeInsets.only(top: 60, bottom: 8),
-                    child: Text(
-                      t.appName,
-                      style: const TextStyle(
-                          fontSize: 32, fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 64),
+                    margin: const EdgeInsets.only(top: 60, bottom: 60),
                     child: const Text(
                       'MOA',
-                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
                     ),
                   ),
                   Column(children: [
@@ -73,7 +66,6 @@ class SignIn extends HookConsumerWidget {
                       await ref.watch(userStateProvider.notifier).getMe();
                       if (context.mounted) {
                         context.go(GoRoutes.home.fullPath);
-
                       }
                     },
                   ),
@@ -83,62 +75,73 @@ class SignIn extends HookConsumerWidget {
             Container(
                 margin: const EdgeInsets.only(left: 32, top: 25, right: 32),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Button(
-                      text: '구글',
-                      onPress: () async {
-                        var user = await GoogleAuthRepository.instance.login();
-                        if(context.mounted && user != null) {
-                          context.go(GoRoutes.home.fullPath);
-                        }
-                      },
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: InkWell(
+                        onTap: () async {
+                          var user = await KakaoAuthRepository.instance.login();
+                          if (context.mounted && user != null) {
+                            context.go(GoRoutes.home.fullPath);
+                          }
+                        },
+                        child: Image(
+                          width: 60,
+                          image: Assets.kakao,
+                        ),
+                      ),
                     ),
-                    Button(
-                      text: '애플',
-                      onPress: () async {
-                        var user = await AppleAuthRepository.instance.login();
-                        if(context.mounted && user != null) {
-                          context.go(GoRoutes.home.fullPath);
-                        }
-                      },
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: InkWell(
+                        onTap: () async {
+                          var user = await NaverAuthRepository.instance.login();
+                          if (context.mounted && user != null) {
+                            context.go(GoRoutes.home.fullPath);
+                          }
+                        },
+                        child: Image(
+                          height: 60,
+                          image: Assets.naver,
+                        ),
+                      ),
                     ),
-                    Button(
-                      text: '카카오',
-                      onPress: () async {
-                        var user = await KakaoAuthRepository.instance.login();
-                        if(context.mounted && user != null) {
-                          context.go(GoRoutes.home.fullPath);
-                        }
-                      },
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: InkWell(
+                        onTap: () async {
+                          var user =
+                              await GoogleAuthRepository.instance.login();
+                          if (context.mounted && user != null) {
+                            context.go(GoRoutes.home.fullPath);
+                          }
+                        },
+                        child: Image(
+                          width: 60,
+                          height: 60,
+                          image: Assets.google,
+                        ),
+                      ),
                     ),
-                    Button(
-                      text: '네이버',
-                      onPress: () async {
-                        var user = await NaverAuthRepository.instance.login();
-                        if(context.mounted && user != null) {
-                          context.go(GoRoutes.home.fullPath);
-                        }
-                      },
-                    ),
+                    Platform.isIOS
+                        ? InkWell(
+                            onTap: () async {
+                              var user =
+                                  await AppleAuthRepository.instance.login();
+                              if (context.mounted && user != null) {
+                                context.go(GoRoutes.home.fullPath);
+                              }
+                            },
+                            child: Image(
+                              width: 60,
+                              height: 60,
+                              image: Assets.apple,
+                            ),
+                          )
+                        : const SizedBox(),
                   ],
-                )
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 56, bottom: 48),
-              child: Column(
-                children: [
-                  Text(localization(context).inquiry,
-                      style: const TextStyle(fontSize: 12, color: grey)),
-                  Container(
-                    margin: const EdgeInsets.only(top: 8),
-                    child: const Text(
-                      'support@dooboolab.com',
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                )),
           ],
         ),
       ),
