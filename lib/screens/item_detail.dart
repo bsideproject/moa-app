@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:moa_app/models/item_model.dart';
-import 'package:moa_app/widgets/common/app_bar.dart';
+import 'package:moa_app/widgets/app_bar.dart';
 
 class ItemDetail extends HookWidget {
   const ItemDetail({super.key, required this.item});

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:moa_app/utils/localization.dart';
-import 'package:moa_app/widgets/common/app_bar.dart';
-import 'package:moa_app/widgets/common/button.dart';
+import 'package:moa_app/widgets/app_bar.dart';
+import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/custom_checkbox.dart';
 import 'package:moa_app/widgets/outline_button.dart';
 

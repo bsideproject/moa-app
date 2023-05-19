@@ -7,8 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/providers/user_provider.dart';
 import 'package:moa_app/repositories/user_repository.dart';
-import 'package:moa_app/widgets/common/button.dart';
-import 'package:moa_app/widgets/common/edit_text.dart';
+import 'package:moa_app/widgets/button.dart';
+import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/model_theme.dart';
 
 class EditProfileArguments {

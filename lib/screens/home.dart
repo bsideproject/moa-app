@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:moa_app/constants/text_style_constants.dart';
 import 'package:moa_app/models/item_model.dart';
 import 'package:moa_app/providers/item_provider.dart';
 import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/utils/router_config.dart';
-import 'package:moa_app/widgets/common/button.dart';
-import 'package:moa_app/widgets/common/edit_text.dart';
-import 'package:moa_app/widgets/common/loading_indicator.dart';
-import 'package:moa_app/widgets/common/styles.dart';
+import 'package:moa_app/widgets/button.dart';
+import 'package:moa_app/widgets/edit_text.dart';
+import 'package:moa_app/widgets/loading_indicator.dart';
 
 final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 

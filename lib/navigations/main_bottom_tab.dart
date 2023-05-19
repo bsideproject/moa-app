@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
-import 'package:moa_app/utils/colors.dart';
+import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/utils/router_config.dart';
 
 enum ScreenType { social, generalMeetings }
@@ -41,8 +41,8 @@ class MainBottomTab extends HookWidget {
         type: BottomNavigationBarType.fixed,
         selectedFontSize: 12,
         unselectedFontSize: 12,
-        selectedItemColor: AppColors.role.brand,
-        unselectedItemColor: AppColors.text.placeholder,
+        selectedItemColor: AppColors.primaryColor,
+        unselectedItemColor: AppColors.placeholder,
         showSelectedLabels: true,
         showUnselectedLabels: true,
         iconSize: 24,

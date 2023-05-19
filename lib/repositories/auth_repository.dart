@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
@@ -6,7 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:moa_app/models/user_model.dart';
-
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 abstract class IAuthRepository {
   Future<UserModel?> login();
@@ -14,7 +13,6 @@ abstract class IAuthRepository {
 }
 
 class GoogleAuthRepository implements IAuthRepository {
-
   // Singleton
   const GoogleAuthRepository._();
   static GoogleAuthRepository instance = const GoogleAuthRepository._();
@@ -24,13 +22,14 @@ class GoogleAuthRepository implements IAuthRepository {
 
   @override
   Future<UserModel?> login() async {
-
     var user = await _googleSignIn.signIn();
 
-    if(user == null) { return null; }
+    if (user == null) {
+      return null;
+    }
 
     return UserModel(
-      id:user.id,
+      id: user.id,
       email: user.email,
       password: 'Secret',
     );
@@ -40,7 +39,6 @@ class GoogleAuthRepository implements IAuthRepository {
   Future<void> logout() async {
     await _googleSignIn.disconnect();
   }
-
 }
 
 class KakaoAuthRepository implements IAuthRepository {
@@ -57,7 +55,6 @@ class KakaoAuthRepository implements IAuthRepository {
           ? await UserApi.instance.loginWithKakaoTalk()
           : await UserApi.instance.loginWithKakaoAccount();
 
-
       var url = Uri.https('kapi.kakao.com', '/v2/user/me');
 
       var response = await http.get(
@@ -70,7 +67,7 @@ class KakaoAuthRepository implements IAuthRepository {
       var user = json.decode(response.body);
 
       return UserModel(
-        id:user.id,
+        id: user.id,
         email: user.kakao_account.email,
         password: 'Secret',
       );
@@ -80,25 +77,22 @@ class KakaoAuthRepository implements IAuthRepository {
   }
 
   @override
-  Future<void> logout() async {
-  }
+  Future<void> logout() async {}
 }
-
 
 class NaverAuthRepository implements IAuthRepository {
   // Singleton
   const NaverAuthRepository._();
   static NaverAuthRepository instance = const NaverAuthRepository._();
 
-
   @override
   Future<UserModel?> login() async {
     var user = await FlutterNaverLogin.logIn();
-    if(user.status != NaverLoginStatus.loggedIn){
+    if (user.status != NaverLoginStatus.loggedIn) {
       return null;
     }
     return UserModel(
-      id:user.account.id,
+      id: user.account.id,
       email: user.account.email,
       password: 'Secret',
     );
@@ -110,20 +104,23 @@ class NaverAuthRepository implements IAuthRepository {
   }
 }
 
-
-class AppleAuthRepository implements IAuthRepository {
-  // Singleton
+class AppleAuthRepository {
   const AppleAuthRepository._();
   static AppleAuthRepository instance = const AppleAuthRepository._();
 
-  // Authentication API Instance
+  Future<String?> login() async {
+    var credential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+    );
 
-  @override
-  Future<UserModel?> login() async {
+    if (credential.identityToken != null) {
+      return credential.identityToken;
+    }
     return null;
   }
 
-  @override
-  Future<void> logout() async {
-  }
+  Future<void> logout() async {}
 }
