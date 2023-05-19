@@ -93,7 +93,7 @@ class NaverAuthRepository implements IAuthRepository {
 
   @override
   Future<UserModel?> login() async {
-    NaverLoginResult user = await FlutterNaverLogin.logIn();
+    var user = await FlutterNaverLogin.logIn();
     if(user.status != NaverLoginStatus.loggedIn){
       return null;
     }
