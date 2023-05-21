@@ -83,7 +83,6 @@ class SignIn extends HookConsumerWidget {
                       borderRadius: BorderRadius.circular(60),
                       onTap: () async {
                         var user = await AuthRepository.instance.kakaoLogin();
-                        print('user222:$user');
                         if (context.mounted && user != null) {
                           context.go(GoRoutes.home.fullPath);
                         }
