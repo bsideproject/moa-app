@@ -26,8 +26,10 @@ class MainBottomTab extends HookWidget {
         // https://github.com/flutter/flutter/issues/99124
         context.goNamed(GoRoutes.home.name);
       } else if (index == 1) {
-        context.goNamed(GoRoutes.permission.name);
+        context.goNamed(GoRoutes.fileSharing.name);
       } else if (index == 2) {
+        context.goNamed(GoRoutes.permission.name);
+      } else if (index == 3) {
         context.goNamed(GoRoutes.editProfile.name);
       }
     }
@@ -50,6 +52,11 @@ class MainBottomTab extends HookWidget {
             icon: Icon(Icons.home),
             label: '홈',
             tooltip: '홈',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.share),
+            label: '파일 공유',
+            tooltip: '파일 공유',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.lock),

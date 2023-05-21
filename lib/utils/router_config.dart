@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:moa_app/models/item_model.dart';
 import 'package:moa_app/navigations/main_bottom_tab.dart';
 import 'package:moa_app/screens/edit_profile.dart';
+import 'package:moa_app/screens/file_sharing/file_sharing.dart';
+import 'package:moa_app/screens/file_sharing/user_listing_screen.dart';
 import 'package:moa_app/screens/home.dart';
 import 'package:moa_app/screens/item_detail.dart';
 import 'package:moa_app/screens/permission_screen.dart';
@@ -18,6 +20,8 @@ enum GoRoutes {
   signIn,
   home,
   permission,
+  fileSharing,
+  userListing,
   itemDetail,
   editProfile,
   sample,
@@ -79,12 +83,38 @@ GoRouter routerConfig([String? initialLocation]) => GoRouter(
                   name: GoRoutes.itemDetail.name,
                   path: ':id',
                   builder: (context, state) {
-                    var item = state.extra! as ItemModel;
+                    var item = state.extra as ItemModel;
                     return ItemDetail(item: item);
                   },
                 ),
               ],
             ),
+            GoRoute(
+                name: GoRoutes.fileSharing.name,
+                path: GoRoutes.fileSharing.fullPath,
+                pageBuilder: (context, state) =>
+                    buildPageWithDefaultTransition<void>(
+                      context: context,
+                      state: state,
+                      child: const FileSharing(),
+                    ),
+                routes: [
+                  GoRoute(
+                    name: GoRoutes.userListing.name,
+                    path: ':id',
+                    pageBuilder: (context, state) {
+                      var item = state.extra as UserListingScreen;
+                      return buildPageWithDefaultTransition<void>(
+                        context: context,
+                        state: state,
+                        child: UserListingScreen(
+                          files: item.files,
+                          text: item.text,
+                        ),
+                      );
+                    },
+                  ),
+                ]),
             GoRoute(
               name: GoRoutes.permission.name,
               path: GoRoutes.permission.fullPath,

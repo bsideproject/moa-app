@@ -1,6 +1,0 @@
-const appName = 'moa_app';
-
-const mobileMaxWith = 850;
-const tableMaxWith = 1100;
-
-const imageLogo = 'res/images/logo.png';

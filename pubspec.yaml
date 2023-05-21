@@ -57,6 +57,9 @@ dependencies:
   google_sign_in: ^6.1.0
   flutter_naver_login: ^1.8.0
   kakao_flutter_sdk: ^1.4.2
+  receive_sharing_intent: ^1.4.5
+  flutter_cache_manager: ^3.3.0
+  html: ^0.15.3
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2
