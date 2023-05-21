@@ -73,75 +73,80 @@ class SignIn extends HookConsumerWidget {
               ),
             ),
             Container(
-                margin: const EdgeInsets.only(left: 32, top: 25, right: 32),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20),
-                      child: InkWell(
-                        onTap: () async {
-                          var user = await KakaoAuthRepository.instance.login();
-                          if (context.mounted && user != null) {
-                            context.go(GoRoutes.home.fullPath);
-                          }
-                        },
-                        child: Image(
-                          width: 60,
-                          image: Assets.kakao,
-                        ),
+              margin: const EdgeInsets.only(left: 32, top: 25, right: 32),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(60),
+                      onTap: () async {
+                        var user = await AuthRepository.instance.kakaoLogin();
+                        print('user222:$user');
+                        if (context.mounted && user != null) {
+                          context.go(GoRoutes.home.fullPath);
+                        }
+                      },
+                      child: Image(
+                        width: 60,
+                        image: Assets.kakao,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20),
-                      child: InkWell(
-                        onTap: () async {
-                          var user = await NaverAuthRepository.instance.login();
-                          if (context.mounted && user != null) {
-                            context.go(GoRoutes.home.fullPath);
-                          }
-                        },
-                        child: Image(
-                          height: 60,
-                          image: Assets.naver,
-                        ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(60),
+                      onTap: () async {
+                        var user = await AuthRepository.instance.naverLogin();
+                        if (context.mounted && user != null) {
+                          context.go(GoRoutes.home.fullPath);
+                        }
+                      },
+                      child: Image(
+                        height: 60,
+                        image: Assets.naver,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20),
-                      child: InkWell(
-                        onTap: () async {
-                          var user =
-                              await GoogleAuthRepository.instance.login();
-                          if (context.mounted && user != null) {
-                            context.go(GoRoutes.home.fullPath);
-                          }
-                        },
-                        child: Image(
-                          width: 60,
-                          height: 60,
-                          image: Assets.google,
-                        ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(60),
+                      onTap: () async {
+                        var user = await AuthRepository.instance.googleLogin();
+                        if (context.mounted && user != null) {
+                          context.go(GoRoutes.home.fullPath);
+                        }
+                      },
+                      child: Image(
+                        width: 60,
+                        height: 60,
+                        image: Assets.google,
                       ),
                     ),
-                    Platform.isIOS
-                        ? InkWell(
-                            onTap: () async {
-                              var user =
-                                  await AppleAuthRepository.instance.login();
-                              if (context.mounted && user != null) {
-                                context.go(GoRoutes.home.fullPath);
-                              }
-                            },
-                            child: Image(
-                              width: 60,
-                              height: 60,
-                              image: Assets.apple,
-                            ),
-                          )
-                        : const SizedBox(),
-                  ],
-                )),
+                  ),
+                  Platform.isIOS
+                      ? InkWell(
+                          borderRadius: BorderRadius.circular(60),
+                          onTap: () async {
+                            var user =
+                                await AuthRepository.instance.appleLogin();
+                            if (context.mounted && user != null) {
+                              context.go(GoRoutes.home.fullPath);
+                            }
+                          },
+                          child: Image(
+                            width: 60,
+                            height: 60,
+                            image: Assets.apple,
+                          ),
+                        )
+                      : const SizedBox(),
+                ],
+              ),
+            ),
           ],
         ),
       ),

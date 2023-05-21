@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:moa_app/generated/l10n.dart';
 import 'package:moa_app/providers/user_provider.dart';
 import 'package:moa_app/utils/config.dart';
@@ -38,7 +38,9 @@ void main() async {
   await dotenv.load(fileName: '.env');
 
   // KaKao login setup
-  KakaoSdk.init(nativeAppKey: Config().nativeAppKey);
+  KakaoSdk.init(
+      nativeAppKey: Config().nativeAppKey,
+      javaScriptAppKey: Config().javaScriptAppKey);
   runApp(ProviderScope(observers: [Logger()], child: const MyApp()));
 }
 

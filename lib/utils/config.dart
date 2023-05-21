@@ -9,4 +9,5 @@ class Config {
   static final Config _singleton = Config._internal();
 
   String get nativeAppKey => env('NATIVE_APP_KEY');
+  String get javaScriptAppKey => env('JAVASCRIPT_APP_KEY');
 }

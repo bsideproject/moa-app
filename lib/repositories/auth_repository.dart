@@ -1,53 +1,53 @@
-import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:moa_app/models/user_model.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 abstract class IAuthRepository {
-  Future<UserModel?> login();
-  Future<void> logout();
+  Future<UserModel?> googleLogin();
+  Future<UserModel?> kakaoLogin();
+  Future<UserModel?> naverLogin();
+  Future<UserModel?> appleLogin();
+  Future<void> googleLogout();
+  Future<void> kakaoLogout();
+  Future<void> naverLogout();
+  Future<void> appleLogout();
 }
 
-class GoogleAuthRepository implements IAuthRepository {
-  // Singleton
-  const GoogleAuthRepository._();
-  static GoogleAuthRepository instance = const GoogleAuthRepository._();
+class AuthRepository implements IAuthRepository {
+  const AuthRepository._();
+  static AuthRepository instance = const AuthRepository._();
 
-  // Authentication API Instance
   static final _googleSignIn = GoogleSignIn();
 
   @override
-  Future<UserModel?> login() async {
-    var user = await _googleSignIn.signIn();
+  Future<UserModel?> googleLogin() async {
+    try {
+      var user = await _googleSignIn.signIn();
 
-    if (user == null) {
-      return null;
+      if (user == null) {
+        return null;
+      }
+
+      return UserModel(
+        id: user.id,
+        email: user.email,
+      );
+    } catch (e) {
+      rethrow;
     }
-
-    return UserModel(
-      id: user.id,
-      email: user.email,
-      password: 'Secret',
-    );
   }
 
   @override
-  Future<void> logout() async {
+  Future<void> googleLogout() async {
     await _googleSignIn.disconnect();
   }
-}
-
-class KakaoAuthRepository implements IAuthRepository {
-  // Singleton
-  const KakaoAuthRepository._();
-  static KakaoAuthRepository instance = const KakaoAuthRepository._();
 
   @override
-  Future<UserModel?> login() async {
+  Future<UserModel?> kakaoLogin() async {
     try {
       var isInstalled = await isKakaoTalkInstalled();
 
@@ -55,72 +55,84 @@ class KakaoAuthRepository implements IAuthRepository {
           ? await UserApi.instance.loginWithKakaoTalk()
           : await UserApi.instance.loginWithKakaoAccount();
 
-      var url = Uri.https('kapi.kakao.com', '/v2/user/me');
+      var dio = Dio();
 
-      var response = await http.get(
-        url,
-        headers: {
-          HttpHeaders.authorizationHeader: 'Bearer ${token.accessToken}'
-        },
+      var response = await dio.get(
+        'https://kapi.kakao.com/v2/user/me',
+        options: Options(
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer ${token.accessToken}'
+          },
+        ),
       );
 
-      var user = json.decode(response.body);
-
-      return UserModel(
-        id: user.id,
-        email: user.kakao_account.email,
-        password: 'Secret',
-      );
-    } catch (error) {
+      if (response.data != null) {
+        return UserModel.fromJson({
+          'id': response.data['id'].toString(),
+          'email': response.data['kakao_account']['email'],
+        });
+      }
       return null;
+    } catch (e) {
+      rethrow;
     }
   }
 
   @override
-  Future<void> logout() async {}
-}
-
-class NaverAuthRepository implements IAuthRepository {
-  // Singleton
-  const NaverAuthRepository._();
-  static NaverAuthRepository instance = const NaverAuthRepository._();
-
-  @override
-  Future<UserModel?> login() async {
-    var user = await FlutterNaverLogin.logIn();
-    if (user.status != NaverLoginStatus.loggedIn) {
-      return null;
-    }
-    return UserModel(
-      id: user.account.id,
-      email: user.account.email,
-      password: 'Secret',
-    );
+  Future<void> kakaoLogout() async {
+    await UserApi.instance.logout();
   }
 
   @override
-  Future<void> logout() async {
+  Future<UserModel?> naverLogin() async {
+    try {
+      var user = await FlutterNaverLogin.logIn();
+      var res = await FlutterNaverLogin.currentAccessToken;
+
+      if (user.status != NaverLoginStatus.loggedIn) {
+        return null;
+      }
+
+      if (res.accessToken.isNotEmpty) {
+        return UserModel(
+          id: user.account.id,
+          email: user.account.email,
+        );
+      }
+      return null;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> naverLogout() async {
     await FlutterNaverLogin.logOut();
   }
-}
 
-class AppleAuthRepository {
-  const AppleAuthRepository._();
-  static AppleAuthRepository instance = const AppleAuthRepository._();
+  @override
+  Future<UserModel?> appleLogin() async {
+    try {
+      var credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
 
-  Future<String?> login() async {
-    var credential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-    );
-
-    if (credential.identityToken != null) {
-      return credential.identityToken;
+      if (credential.identityToken != null &&
+          credential.userIdentifier != null) {
+        return UserModel(
+          id: credential.userIdentifier!,
+          email: credential.email ?? '',
+        );
+      }
+      return null;
+    } catch (e) {
+      rethrow;
     }
-    return null;
   }
 
-  Future<void> logout() async {}
+  @override
+  Future<void> appleLogout() async {}
 }
