@@ -56,11 +56,12 @@ dependencies:
   # OAuth related packages
   google_sign_in: ^6.1.0
   flutter_naver_login: ^1.8.0
-  kakao_flutter_sdk: ^1.4.2
+  kakao_flutter_sdk_user: ^1.4.3
   sign_in_with_apple: ^4.3.0
-  receive_sharing_intent: ^1.4.5
   flutter_cache_manager: ^3.3.0
   html: ^0.15.3
+  receive_sharing_intent: ^1.4.5
+  dio: ^5.1.2
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2
