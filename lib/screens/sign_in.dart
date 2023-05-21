@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/user_model.dart';
-import 'package:moa_app/providers/user_provider.dart';
 import 'package:moa_app/repositories/auth_repository.dart';
 import 'package:moa_app/repositories/user_repository.dart';
 import 'package:moa_app/utils/router_config.dart';
