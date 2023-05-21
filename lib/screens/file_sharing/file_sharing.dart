@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moa_app/constants/app_constants.dart';
@@ -13,6 +14,9 @@ class FileSharing extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    var text = useState('');
+    // var files = useState(<SharedMediaFile>[]);
+
     void navigateToShareMedia(
         BuildContext context, List<SharedMediaFile> value) {
       if (value.isNotEmpty) {
@@ -40,14 +44,8 @@ class FileSharing extends HookWidget {
     }
 
     void navigateToShareText(BuildContext context, String? value) {
-      if (value != null && value.toString().isNotEmpty) {
-        context.push(
-          '${GoRoutes.fileSharing.fullPath}/$value',
-          extra: UserListingScreen(
-            files: const [],
-            text: value,
-          ),
-        );
+      if (value != null && value.toString().isNotEmpty && context.mounted) {
+        text.value = value;
       }
     }
 
@@ -80,7 +78,9 @@ class FileSharing extends HookWidget {
     }
 
     useEffect(() {
-      listenShareMediaFiles(context);
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        listenShareMediaFiles(context);
+      });
       return null;
     }, []);
 
@@ -88,7 +88,13 @@ class FileSharing extends HookWidget {
       appBar: AppBar(
         title: const Text('Receive Sharing Files'),
       ),
-      body: const Center(child: Text('File Sharing')),
+      body: Column(
+        children: [
+          text.value.isEmpty
+              ? const Expanded(child: Center(child: Text('File Sharing')))
+              : UserListingScreen(text: text.value)
+        ],
+      ),
     );
   }
 }
