@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:http/http.dart' as http;
+import 'package:moa_app/constants/text_style_constants.dart';
 import 'package:moa_app/models/content_model.dart';
-import 'package:moa_app/widgets/common/button.dart';
-import 'package:moa_app/widgets/common/image.dart';
-import 'package:moa_app/widgets/common/styles.dart';
+import 'package:moa_app/widgets/button.dart';
+import 'package:moa_app/widgets/image.dart';
 
 class UserListingScreen extends HookWidget {
   const UserListingScreen({super.key, this.files, this.text});

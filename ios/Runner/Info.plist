@@ -84,10 +84,19 @@
                <string>moaapp</string>
            </array>
        </dict>
+       <dict>
+			  <key>CFBundleTypeRole</key>
+			  <string>Editor</string>
+			  <key>CFBundleURLSchemes</key>
+			  <array>
+				  <string>kakao425f4fa4567f8679a573604ddf734236</string>
+			  </array>
+		</dict>
    </array>
 
    <key>LSApplicationQueriesSchemes</key>
    <array>
+       <string>kakaokompassauth</string>
        <string>naversearchapp</string>
        <string>naversearchthirdlogin</string>
    </array>
