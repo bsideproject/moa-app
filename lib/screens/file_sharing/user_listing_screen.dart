@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:html/parser.dart' as htmlParser;
+import 'package:html/parser.dart' as html_parser;
 import 'package:http/http.dart' as http;
 import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/widgets/common/button.dart';
@@ -25,7 +25,7 @@ class UserListingScreen extends HookWidget {
 
     void getCrawlUrl(String text) async {
       await http.get(Uri.parse(text)).then((response) {
-        var document = htmlParser.parse(response.body);
+        var document = html_parser.parse(response.body);
 
         var title = document.head
             ?.querySelector("meta[property='og:title']")
