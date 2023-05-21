@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/models/user_model.dart';
 import 'package:moa_app/providers/user_provider.dart';
+import 'package:moa_app/repositories/auth_repository.dart';
 import 'package:moa_app/repositories/user_repository.dart';
 import 'package:moa_app/utils/colors.dart';
 import 'package:moa_app/utils/localization.dart';
@@ -41,7 +42,7 @@ class SignIn extends HookConsumerWidget {
                   Container(
                     margin: const EdgeInsets.only(bottom: 64),
                     child: const Text(
-                      'Flutter BoilerPlate',
+                      'MOA',
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -72,11 +73,55 @@ class SignIn extends HookConsumerWidget {
                       await ref.watch(userStateProvider.notifier).getMe();
                       if (context.mounted) {
                         context.go(GoRoutes.home.fullPath);
+
                       }
                     },
                   ),
                 ],
               ),
+            ),
+            Container(
+                margin: const EdgeInsets.only(left: 32, top: 25, right: 32),
+                child: Row(
+                  children: [
+                    Button(
+                      text: '구글',
+                      onPress: () async {
+                        var user = await GoogleAuthRepository.instance.login();
+                        if(context.mounted && user != null) {
+                          context.go(GoRoutes.home.fullPath);
+                        }
+                      },
+                    ),
+                    Button(
+                      text: '애플',
+                      onPress: () async {
+                        var user = await AppleAuthRepository.instance.login();
+                        if(context.mounted && user != null) {
+                          context.go(GoRoutes.home.fullPath);
+                        }
+                      },
+                    ),
+                    Button(
+                      text: '카카오',
+                      onPress: () async {
+                        var user = await KakaoAuthRepository.instance.login();
+                        if(context.mounted && user != null) {
+                          context.go(GoRoutes.home.fullPath);
+                        }
+                      },
+                    ),
+                    Button(
+                      text: '네이버',
+                      onPress: () async {
+                        var user = await NaverAuthRepository.instance.login();
+                        if(context.mounted && user != null) {
+                          context.go(GoRoutes.home.fullPath);
+                        }
+                      },
+                    ),
+                  ],
+                )
             ),
             Container(
               margin: const EdgeInsets.only(top: 56, bottom: 48),

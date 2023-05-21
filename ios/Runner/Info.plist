@@ -61,5 +61,57 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+   <!-- 추가 -->
+   <key>CFBundleURLTypes</key>
+   <array>
+       <dict>
+           <key>CFBundleTypeRole</key>
+           <string>Editor</string>
+           <key>CFBundleURLSchemes</key>
+           <array>
+               <string>moaapp</string>
+           </array>
+       </dict>
+   </array>
+
+   <key>LSApplicationQueriesSchemes</key>
+   <array>
+       <string>naversearchapp</string>
+       <string>naversearchthirdlogin</string>
+   </array>
+   <key>naverServiceAppUrlScheme</key>
+   <string>moaapp</string>
+   <key>naverConsumerKey</key>
+   <string>K10uUCEMBAnAY0ZtJMeo</string>
+   <key>naverConsumerSecret</key>
+   <string>qtCW1qORKI</string>
+   <key>naverServiceAppName</key>
+   <string>Moa-app</string>
+
+   <!-- http allows configurations -->
+   <key>NSAppTransportSecurity</key>
+   <dict>
+      <key>NSAllowsArbitraryLoads</key>
+      <true/>
+      <key>NSExceptionDomains</key>
+      <dict>
+         <key>naver.com</key>
+         <dict>
+            <key>NSExceptionRequiresForwardSecrecy</key>
+            <false/>
+            <key>NSIncludesSubdomains</key>
+            <true/>
+         </dict>
+         <key>naver.net</key>
+         <dict>
+            <key>NSExceptionRequiresForwardSecrecy</key>
+            <false/>
+            <key>NSIncludesSubdomains</key>
+            <true/>
+         </dict>
+      </dict>
+   </dict>
+   <!-- 추가 -->
 </dict>
 </plist>

@@ -5,11 +5,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:moa_app/generated/l10n.dart';
 import 'package:moa_app/providers/user_provider.dart';
 import 'package:moa_app/utils/router_config.dart';
 import 'package:moa_app/utils/themes.dart';
 import 'package:moa_app/widgets/model_theme.dart';
+
 
 class Logger extends ProviderObserver {
   @override
@@ -35,6 +37,8 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await dotenv.load(fileName: '.env');
 
+  // KaKao login setup
+  KakaoSdk.init(nativeAppKey: '425f4fa4567f8679a573604ddf734236');
   runApp(ProviderScope(observers: [Logger()], child: const MyApp()));
 }
 
