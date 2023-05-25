@@ -7,7 +7,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:moa_app/generated/l10n.dart';
-import 'package:moa_app/providers/user_provider.dart';
+import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/utils/config.dart';
 import 'package:moa_app/utils/router_config.dart';
 import 'package:moa_app/utils/themes.dart';
@@ -50,16 +50,16 @@ class MyApp extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var themeNotifier = ref.watch(modelProvider);
-    var currentUser = ref.watch(userStateProvider);
+    var token = ref.watch(tokenStateProvider);
 
     useEffect(() {
-      if (!currentUser.isLoading) {
+      if (!token.isLoading) {
         FlutterNativeSplash.remove();
       }
       return null;
-    }, [currentUser.isLoading]);
+    }, [token.isLoading]);
 
-    if (currentUser.isLoading) {
+    if (token.isLoading) {
       return const MaterialApp(
         home: Scaffold(body: SizedBox()),
       );
@@ -83,7 +83,7 @@ class MyApp extends HookConsumerWidget {
           Locale('ko', 'KR'),
         ],
         routerConfig: routerConfig(
-          (currentUser.value != null && currentUser.value!.isNotEmpty)
+          (token.value != null)
               ? GoRoutes.home.fullPath
               : GoRoutes.signIn.fullPath,
         ),

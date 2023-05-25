@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:moa_app/repositories/user_repository.dart';
+import 'package:moa_app/repositories/non_member_repository.dart';
 import 'package:moa_app/utils/router_config.dart';
 import 'package:mockito/mockito.dart';
 
 import '../test_utils.dart';
 
-class MockUserRepository extends Mock implements UserRepository {}
+class MockUserRepository extends Mock implements NonMemberRepository {}
 
 extension PumpApp on WidgetTester {
   Future<void> pumpRealRouterApp(
