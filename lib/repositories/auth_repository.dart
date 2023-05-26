@@ -5,25 +5,25 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:moa_app/repositories/token_repository.dart';
 import 'package:moa_app/utils/api.dart';
+import 'package:moa_app/utils/logger.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 abstract class IAuthRepository {
-  Future<bool> googleLogin();
-  Future<bool> kakaoLogin();
-  Future<bool> naverLogin();
-  Future<bool> appleLogin();
+  Future<bool?> googleLogin();
+  Future<bool?> kakaoLogin();
+  Future<bool?> naverLogin();
+  Future<bool?> appleLogin();
 }
 
 class AuthRepository implements IAuthRepository {
   const AuthRepository._();
   static AuthRepository instance = const AuthRepository._();
 
-  static final _googleSignIn = GoogleSignIn();
-
   @override
-  Future<bool> googleLogin() async {
+  Future<bool?> googleLogin() async {
+    var googleSignIn = GoogleSignIn();
     try {
-      var user = await _googleSignIn.signIn();
+      var user = await googleSignIn.signIn();
 
       if (user != null) {
         var token = await user.authentication;
@@ -35,7 +35,7 @@ class AuthRepository implements IAuthRepository {
             'email': user.email,
           },
           options: Options(
-            headers: {'oauth-token': token},
+            headers: {'oauth-token': token.accessToken},
           ),
         );
 
@@ -47,12 +47,13 @@ class AuthRepository implements IAuthRepository {
 
       return false;
     } catch (e) {
-      rethrow;
+      logger.d(e);
     }
+    return null;
   }
 
   @override
-  Future<bool> kakaoLogin() async {
+  Future<bool?> kakaoLogin() async {
     try {
       var isInstalled = await isKakaoTalkInstalled();
 
@@ -90,12 +91,13 @@ class AuthRepository implements IAuthRepository {
       }
       return false;
     } catch (e) {
-      rethrow;
+      logger.d(e);
     }
+    return null;
   }
 
   @override
-  Future<bool> naverLogin() async {
+  Future<bool?> naverLogin() async {
     try {
       var user = await FlutterNaverLogin.logIn();
       var response = await FlutterNaverLogin.currentAccessToken;
@@ -124,12 +126,13 @@ class AuthRepository implements IAuthRepository {
       }
       return false;
     } catch (e) {
-      rethrow;
+      logger.d(e);
     }
+    return null;
   }
 
   @override
-  Future<bool> appleLogin() async {
+  Future<bool?> appleLogin() async {
     try {
       var credential = await SignInWithApple.getAppleIDCredential(
         scopes: [
@@ -159,7 +162,8 @@ class AuthRepository implements IAuthRepository {
       }
       return false;
     } catch (e) {
-      rethrow;
+      logger.d(e);
     }
+    return null;
   }
 }

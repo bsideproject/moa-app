@@ -87,6 +87,16 @@
 				  <string>kakao425f4fa4567f8679a573604ddf734236</string>
 			  </array>
 		  </dict>
+      <dict>
+			  <key>CFBundleTypeRole</key>
+			  <string>Editor</string>
+			  <key>CFBundleURLName</key>
+			  <string>google</string>
+			  <key>CFBundleURLSchemes</key>
+			  <array>
+				  <string>com.googleusercontent.apps.286463462021-iop44e8d803t61tsi86bdp48ht5v077i</string>
+			  </array>
+		  </dict>
     </array>
    <key>LSApplicationQueriesSchemes</key>
    <array>
