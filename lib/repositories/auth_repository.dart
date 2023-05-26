@@ -3,18 +3,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:moa_app/models/user_model.dart';
+import 'package:moa_app/repositories/token_repository.dart';
+import 'package:moa_app/utils/api.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 abstract class IAuthRepository {
-  Future<UserModel?> googleLogin();
-  Future<UserModel?> kakaoLogin();
-  Future<UserModel?> naverLogin();
-  Future<UserModel?> appleLogin();
-  Future<void> googleLogout();
-  Future<void> kakaoLogout();
-  Future<void> naverLogout();
-  Future<void> appleLogout();
+  Future<bool> googleLogin();
+  Future<bool> kakaoLogin();
+  Future<bool> naverLogin();
+  Future<bool> appleLogin();
 }
 
 class AuthRepository implements IAuthRepository {
@@ -24,40 +21,47 @@ class AuthRepository implements IAuthRepository {
   static final _googleSignIn = GoogleSignIn();
 
   @override
-  Future<UserModel?> googleLogin() async {
+  Future<bool> googleLogin() async {
     try {
       var user = await _googleSignIn.signIn();
 
-      if (user == null) {
-        return null;
+      if (user != null) {
+        var token = await user.authentication;
+        var res = await dio.post(
+          '/api/v1/user/oauth',
+          data: {
+            'platform': 'google',
+            'id': user.id,
+            'email': user.email,
+          },
+          options: Options(
+            headers: {'oauth-token': token},
+          ),
+        );
+
+        if (res.data['token'].isNotEmpty) {
+          await TokenRepository.instance.setToken(token: res.data['token']);
+          return true;
+        }
       }
 
-      return UserModel(
-        id: user.id,
-        email: user.email,
-      );
+      return false;
     } catch (e) {
       rethrow;
     }
   }
 
   @override
-  Future<void> googleLogout() async {
-    await _googleSignIn.disconnect();
-  }
-
-  @override
-  Future<UserModel?> kakaoLogin() async {
+  Future<bool> kakaoLogin() async {
     try {
       var isInstalled = await isKakaoTalkInstalled();
 
       var token = isInstalled
           ? await UserApi.instance.loginWithKakaoTalk()
           : await UserApi.instance.loginWithKakaoAccount();
+      Dio kakaoDio = Dio();
 
-      var dio = Dio();
-
-      var response = await dio.get(
+      var response = await kakaoDio.get(
         'https://kapi.kakao.com/v2/user/me',
         options: Options(
           headers: {
@@ -66,52 +70,66 @@ class AuthRepository implements IAuthRepository {
         ),
       );
 
-      if (response.data != null) {
-        return UserModel.fromJson({
-          'id': response.data['id'].toString(),
-          'email': response.data['kakao_account']['email'],
-        });
+      if (response.data.isNotEmpty) {
+        var res = await dio.post(
+          '/api/v1/user/oauth',
+          data: {
+            'platform': 'kakao',
+            'id': response.data['id'],
+            'email': response.data['kakao_account']['email'],
+          },
+          options: Options(
+            headers: {'oauth-token': token.accessToken},
+          ),
+        );
+
+        if (res.data['token'].isNotEmpty) {
+          await TokenRepository.instance.setToken(token: res.data['token']);
+          return true;
+        }
       }
-      return null;
+      return false;
     } catch (e) {
       rethrow;
     }
   }
 
   @override
-  Future<void> kakaoLogout() async {
-    await UserApi.instance.logout();
-  }
-
-  @override
-  Future<UserModel?> naverLogin() async {
+  Future<bool> naverLogin() async {
     try {
       var user = await FlutterNaverLogin.logIn();
-      var res = await FlutterNaverLogin.currentAccessToken;
+      var response = await FlutterNaverLogin.currentAccessToken;
 
       if (user.status != NaverLoginStatus.loggedIn) {
-        return null;
+        return false;
       }
 
-      if (res.accessToken.isNotEmpty) {
-        return UserModel(
-          id: user.account.id,
-          email: user.account.email,
+      if (response.accessToken.isNotEmpty) {
+        var res = await dio.post(
+          '/api/v1/user/oauth',
+          data: {
+            'platform': 'naver',
+            'id': user.account.id,
+            'email': user.account.email,
+          },
+          options: Options(
+            headers: {'oauth-token': response.accessToken},
+          ),
         );
+
+        if (res.data['token'].isNotEmpty) {
+          await TokenRepository.instance.setToken(token: res.data['token']);
+          return true;
+        }
       }
-      return null;
+      return false;
     } catch (e) {
       rethrow;
     }
   }
 
   @override
-  Future<void> naverLogout() async {
-    await FlutterNaverLogin.logOut();
-  }
-
-  @override
-  Future<UserModel?> appleLogin() async {
+  Future<bool> appleLogin() async {
     try {
       var credential = await SignInWithApple.getAppleIDCredential(
         scopes: [
@@ -122,17 +140,26 @@ class AuthRepository implements IAuthRepository {
 
       if (credential.identityToken != null &&
           credential.userIdentifier != null) {
-        return UserModel(
-          id: credential.userIdentifier!,
-          email: credential.email ?? '',
+        var res = await dio.post(
+          '/api/v1/user/oauth',
+          data: {
+            'platform': 'apple',
+            'id': credential.userIdentifier,
+            'email': credential.email,
+          },
+          options: Options(
+            headers: {'oauth-token': credential.identityToken},
+          ),
         );
+
+        if (res.data['token'].isNotEmpty) {
+          await TokenRepository.instance.setToken(token: res.data['token']);
+          return true;
+        }
       }
-      return null;
+      return false;
     } catch (e) {
       rethrow;
     }
   }
-
-  @override
-  Future<void> appleLogout() async {}
 }

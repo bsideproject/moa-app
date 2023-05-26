@@ -13,6 +13,7 @@
       "prefs",
       "pubspec",
       "riverpod",
-      "Schyler"
+      "Schyler",
+      "sqflite"
     ]
 }

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:moa_app/models/item_model.dart';
-import 'package:moa_app/repositories/item_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'item_provider.g.dart';
@@ -33,8 +32,8 @@ class AsyncItems extends _$AsyncItems {
       timer?.cancel();
     });
 
-    var itemData = ItemRepository.instance.getItems();
-    return itemData;
+    // var itemData = ItemRepository.instance.getItems();
+    return [];
   }
 
   @override
@@ -48,7 +47,7 @@ class AsyncItems extends _$AsyncItems {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      await ItemRepository.instance.addItem(item: item);
+      // await ItemRepository.instance.addItem(item: item);
       return fetchItem();
     });
   }
@@ -59,7 +58,7 @@ class AsyncItems extends _$AsyncItems {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      await ItemRepository.instance.removeItem(id: id);
+      // await ItemRepository.instance.removeItem(id: id);
       return fetchItem();
     });
   }
@@ -70,7 +69,7 @@ class AsyncItems extends _$AsyncItems {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      await ItemRepository.instance.updateItem(item: item);
+      // await ItemRepository.instance.updateItem(item: item);
       return fetchItem();
     });
   }
