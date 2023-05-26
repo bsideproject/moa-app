@@ -62,6 +62,7 @@ dependencies:
   html: ^0.15.3
   receive_sharing_intent: ^1.4.5
   dio: ^5.1.2
+  flutter_secure_storage: ^8.0.0
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2
