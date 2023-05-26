@@ -58,7 +58,7 @@ class MyApp extends HookConsumerWidget {
       }
       return null;
     }, [token.isLoading]);
-
+    
     if (token.isLoading) {
       return const MaterialApp(
         home: Scaffold(body: SizedBox()),
