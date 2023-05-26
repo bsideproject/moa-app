@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/providers/token_provider.dart';
+import 'package:moa_app/widgets/alert_dialog.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/model_theme.dart';
@@ -71,7 +72,15 @@ class EditProfile extends HookConsumerWidget {
             color: Theme.of(context).iconTheme.color,
             icon: const Icon(Icons.exit_to_app),
             onPressed: () async {
-              await ref.watch(tokenStateProvider.notifier).removeToken();
+              alertDialog.confirm(
+                context,
+                onPress: () async {
+                  await ref.watch(tokenStateProvider.notifier).removeToken();
+                },
+                showCancelButton: true,
+                title: '로그아웃',
+                content: '로그아웃 하시겠습니까?',
+              );
             },
             iconSize: 30,
           )

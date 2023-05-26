@@ -26,8 +26,8 @@ class _CustomCheckboxState extends State<CustomCheckbox> {
 
   @override
   void initState() {
-    _value = widget.value;
     super.initState();
+    _value = widget.value;
   }
 
   @override

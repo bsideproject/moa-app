@@ -83,7 +83,7 @@ class MyApp extends HookConsumerWidget {
           Locale('ko', 'KR'),
         ],
         routerConfig: routerConfig(
-          (token.value != null)
+          token.value != null
               ? GoRoutes.home.fullPath
               : GoRoutes.signIn.fullPath,
         ),

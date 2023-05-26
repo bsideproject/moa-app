@@ -13,7 +13,7 @@ class _AlertDialog {
 
   void confirm(
     BuildContext context, {
-    bool barrierDismissible = false,
+    bool barrierDismissible = true,
     required String title,
     required String content,
     String? confirmText = '예',
