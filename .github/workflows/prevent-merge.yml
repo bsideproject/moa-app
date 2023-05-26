@@ -1,0 +1,19 @@
+name: Prevent Merge of Draft PRs
+
+on:
+  pull_request:
+    types:
+      - synchronize
+      - opened
+      - labeled
+
+jobs:
+  prevent_merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if PR is a draft
+        run: |
+          if [ "${{ github.event.pull_request.draft }}" == "true" ]; then
+            echo "Draft PRs are not allowed to be merged."
+            exit 1
+          fi

@@ -35,7 +35,7 @@ class AuthRepository implements IAuthRepository {
             'email': user.email,
           },
           options: Options(
-            headers: {'oauth-token': token.accessToken},
+            headers: {'oauth-token': token.idToken},
           ),
         );
 

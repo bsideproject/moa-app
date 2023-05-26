@@ -1,3 +1,4 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/models/user_model.dart';
 import 'package:moa_app/repositories/token_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -8,8 +9,7 @@ part 'token_provider.g.dart';
 class TokenState extends _$TokenState {
   @override
   Future<Object?> build() async {
-    var token = await TokenRepository.instance.getToken();
-    return token;
+    return await TokenRepository.instance.getToken();
   }
 
   Future<Object?> addToken() async {
@@ -37,6 +37,9 @@ class TokenState extends _$TokenState {
     });
   }
 }
+
+final searchProvider = StateProvider((ref) => '');
+
 
 /// NotifierProvider
 // @riverpod
