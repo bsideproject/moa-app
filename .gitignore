@@ -51,3 +51,5 @@ coverage
 *.g.dart 
 *.freezed.dart
 .fvm
+
+GoogleService-Info.plist
