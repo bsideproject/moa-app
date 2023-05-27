@@ -18,7 +18,10 @@ class ItemDetail extends HookWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(item.content, style: const TextStyle(fontSize: 20)),
+            Text(
+              item.content,
+              style: const TextStyle(fontSize: 20),
+            ),
           ],
         ),
       ),

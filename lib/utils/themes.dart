@@ -7,6 +7,7 @@ class Themes {
   Themes._();
 
   static final light = ThemeData.light().copyWith(
+    useMaterial3: true,
     primaryColor: AppColors.role.primary,
     scaffoldBackgroundColor: Colors.white,
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(

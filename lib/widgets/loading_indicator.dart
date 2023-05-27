@@ -16,7 +16,7 @@ class LoadingIndicator extends StatelessWidget {
       child: SizedBox(
         width: size,
         height: size,
-        child: CircularProgressIndicator(
+        child: CircularProgressIndicator.adaptive(
           semanticsLabel: '로딩중...',
           backgroundColor: Theme.of(context).primaryColor,
           strokeWidth: strokeWidth,

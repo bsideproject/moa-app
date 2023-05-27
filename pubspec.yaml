@@ -70,6 +70,12 @@ dependencies:
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2
 
+conditional_dependencies:
+  sqflite:
+    not: 'dart.library.html'
+  receive_sharing_intent:
+    not: 'dart.library.html'
+
 dev_dependencies:
   integration_test:
     sdk: flutter
@@ -138,7 +144,7 @@ flutter_native_splash:
   # Note: https://pub.dev/packages/flutter_native_splash
   color: "#ffffff"
   image: assets/icons/logo.png
-  web: false
+  web: true
 
 flutter_intl:
   enabled: true
