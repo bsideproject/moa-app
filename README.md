@@ -16,6 +16,10 @@ flutter pub get
 
 ```sh
 dart run build_runner build --delete-conflicting-outputs
+```
+## riverpod
+riverpod 코드 수정시에는 상시 `build_runner` 가 실행되게 `watch` 상태로 두세요
+```sh
 dart run build_runner watch
 ```
 ## 커밋 컨벤션
