@@ -10,9 +10,7 @@ class Themes {
     useMaterial3: true,
     primaryColor: AppColors.role.primary,
     scaffoldBackgroundColor: Colors.white,
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        // backgroundColor: Colors.white,
-        ),
+    // bottomNavigationBarTheme: const BottomNavigationBarThemeData(),
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -42,7 +40,8 @@ class Themes {
     colorScheme: ColorScheme.fromSwatch().copyWith(
       secondary: AppColors.bg.borderContrast,
       background: Colors.white,
-      primary: AppColors.text.basic,
+      primary: AppColors.role.primary,
+      surfaceTint: Colors.white,
     ),
     inputDecorationTheme: const InputDecorationTheme(
         border: OutlineInputBorder(
@@ -56,10 +55,26 @@ class Themes {
     iconTheme: const IconThemeData(
       color: Colors.black,
     ),
+    dialogTheme: const DialogTheme(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      backgroundColor: Colors.white,
+      titleTextStyle: TextStyle(
+        color: Colors.black,
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+      ),
+      contentTextStyle: TextStyle(
+        color: Colors.black,
+        fontSize: 14,
+      ),
+    ),
   );
 
   static final dark = ThemeData.dark().copyWith(
     // dark theme settings
+    useMaterial3: true,
     colorScheme: const ColorScheme.light(
       background: Colors.black,
     ),

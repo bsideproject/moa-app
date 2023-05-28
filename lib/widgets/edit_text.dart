@@ -70,20 +70,24 @@ class _EditTextState extends State<EditText> {
           hintText: widget.hintText,
           enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                  width: 1,
-                  color: Theme.of(context)
-                      .inputDecorationTheme
-                      .border!
-                      .borderSide
-                      .color)),
+            width: 1,
+            color: Theme.of(context)
+                    .inputDecorationTheme
+                    .border
+                    ?.borderSide
+                    .color ??
+                Colors.black,
+          )),
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                  width: 2,
-                  color: Theme.of(context)
-                      .inputDecorationTheme
-                      .focusedBorder!
-                      .borderSide
-                      .color)),
+            width: 2,
+            color: Theme.of(context)
+                    .inputDecorationTheme
+                    .focusedBorder
+                    ?.borderSide
+                    .color ??
+                Colors.black,
+          )),
         ),
         onChanged: (txt) => widget.onChanged(txt),
         keyboardType: widget.keyboardType,

@@ -103,7 +103,6 @@ class AuthRepository implements IAuthRepository {
     try {
       var user = await FlutterNaverLogin.logIn();
       var response = await FlutterNaverLogin.currentAccessToken;
-
       if (user.status != NaverLoginStatus.loggedIn) {
         return false;
       }

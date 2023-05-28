@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/user_model.dart';
 import 'package:moa_app/providers/token_provider.dart';
@@ -16,6 +17,7 @@ class SignIn extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var size = MediaQuery.of(context).size;
     var user =
         useState<UserModel>(const UserModel(id: '0', email: '', password: ''));
 
@@ -50,7 +52,7 @@ class SignIn extends HookConsumerWidget {
             Container(
               margin: const EdgeInsets.only(left: 32, top: 60, right: 32),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                // crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
                     alignment: Alignment.center,
@@ -62,24 +64,37 @@ class SignIn extends HookConsumerWidget {
                     ),
                   ),
                   Column(children: [
-                    EditText(
-                      onChanged: (txt) {
-                        user.value = user.value.copyWith(email: txt);
-                      },
-                      keyboardType: TextInputType.emailAddress,
-                      hintText: 'Email',
+                    SizedBox(
+                      width: size.width < Breakpoints.md
+                          ? size.width
+                          : size.width / 3,
+                      child: EditText(
+                        onChanged: (txt) {
+                          user.value = user.value.copyWith(email: txt);
+                        },
+                        keyboardType: TextInputType.emailAddress,
+                        hintText: 'Email',
+                      ),
                     ),
-                    EditText(
-                      onChanged: (txt) {
-                        user.value = user.value.copyWith(password: txt);
-                      },
-                      hintText: 'Password',
-                      obscureText: true,
-                      enableSuggestions: false,
-                      autocorrect: false,
+                    SizedBox(
+                      width: size.width < Breakpoints.md
+                          ? size.width
+                          : size.width / 3,
+                      child: EditText(
+                        onChanged: (txt) {
+                          user.value = user.value.copyWith(password: txt);
+                        },
+                        hintText: 'Password',
+                        obscureText: true,
+                        enableSuggestions: false,
+                        autocorrect: false,
+                      ),
                     ),
                   ]),
                   Button(
+                    width: size.width < Breakpoints.md
+                        ? size.width
+                        : size.width / 3,
                     text: '로그인 하기',
                     disabled:
                         user.value.email == '' || user.value.password == '',

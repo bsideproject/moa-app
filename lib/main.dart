@@ -86,8 +86,6 @@ class MyApp extends HookConsumerWidget {
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         theme: Themes.light,
-        // theme: ThemeData(
-        //     colorSchemeSeed: const Color(0xff6750a4), useMaterial3: true),
         darkTheme: Themes.dark,
         themeMode: themeNotifier.isDark ? ThemeMode.dark : ThemeMode.light,
         localizationsDelegates: const [
