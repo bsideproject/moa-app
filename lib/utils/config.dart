@@ -11,4 +11,5 @@ class Config {
   String get nativeAppKey => env('NATIVE_APP_KEY');
   String get javaScriptAppKey => env('JAVASCRIPT_APP_KEY');
   String get baseUrl => env('BASE_URL');
+  String get webFcmKey => env('WEB_FCM_KEY');
 }
