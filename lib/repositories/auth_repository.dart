@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
@@ -46,11 +47,16 @@ class AuthRepository implements IAuthRepository {
 
   @override
   Future<void> kakaoLogin() async {
-    var isInstalled = await isKakaoTalkInstalled();
+    late OAuthToken token;
+    if (kIsWeb) {
+      token = await UserApi.instance.loginWithKakaoAccount();
+    } else {
+      var isInstalled = await isKakaoTalkInstalled();
 
-    var token = isInstalled
-        ? await UserApi.instance.loginWithKakaoTalk()
-        : await UserApi.instance.loginWithKakaoAccount();
+      token = isInstalled
+          ? await UserApi.instance.loginWithKakaoTalk()
+          : await UserApi.instance.loginWithKakaoAccount();
+    }
     Dio kakaoDio = Dio();
 
     var response = await kakaoDio.get(

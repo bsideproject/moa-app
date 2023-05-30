@@ -16,7 +16,6 @@ import 'package:moa_app/utils/config.dart';
 import 'package:moa_app/utils/router_config.dart';
 import 'package:moa_app/utils/themes.dart';
 import 'package:moa_app/utils/tools.dart';
-import 'package:moa_app/widgets/model_theme.dart';
 
 class Logger extends ProviderObserver {
   @override
@@ -65,9 +64,7 @@ class MyApp extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var themeNotifier = ref.watch(modelProvider);
     var token = ref.watch(tokenStateProvider);
-
     useEffect(() {
       if (!token.isLoading) {
         FlutterNativeSplash.remove();
@@ -87,7 +84,8 @@ class MyApp extends HookConsumerWidget {
         debugShowCheckedModeBanner: false,
         theme: Themes.light,
         darkTheme: Themes.dark,
-        themeMode: themeNotifier.isDark ? ThemeMode.dark : ThemeMode.light,
+        // themeMode: themeNotifier.isDark ? ThemeMode.dark : ThemeMode.light,
+        themeMode: ThemeMode.system,
         localizationsDelegates: const [
           S.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -99,7 +97,7 @@ class MyApp extends HookConsumerWidget {
           Locale('ko', 'KR'),
         ],
         routerConfig: routerConfig(
-          token.value != null
+          (token.value != null && context.mounted)
               ? GoRoutes.home.fullPath
               : GoRoutes.signIn.fullPath,
         ),

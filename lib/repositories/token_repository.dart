@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moa_app/utils/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class ITokenRepository {
   Future<void> setToken({required String token});
@@ -14,9 +16,17 @@ class TokenRepository implements ITokenRepository {
   static const storage = FlutterSecureStorage();
   static const String key = 'SecuredAuthToken';
 
+  static final Future<SharedPreferences> _prefs =
+      SharedPreferences.getInstance();
+
   @override
   Future<void> setToken({required String token}) async {
     try {
+      if (kIsWeb) {
+        SharedPreferences prefs = await _prefs;
+        await prefs.setString('token', token);
+        return;
+      }
       await storage.write(key: key, value: token);
     } catch (e) {
       logger.d(e);
@@ -26,6 +36,11 @@ class TokenRepository implements ITokenRepository {
   @override
   Future<void> removeToken() async {
     try {
+      if (kIsWeb) {
+        SharedPreferences prefs = await _prefs;
+        await prefs.remove('token');
+        return;
+      }
       await storage.delete(key: key);
     } catch (e) {
       logger.d(e);
@@ -35,6 +50,11 @@ class TokenRepository implements ITokenRepository {
   @override
   Future<Object?> getToken() async {
     try {
+      if (kIsWeb) {
+        SharedPreferences prefs = await _prefs;
+        var token = prefs.getString('token');
+        return token;
+      }
       var token = await storage.read(key: key);
       return token;
     } catch (e) {

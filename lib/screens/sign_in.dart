@@ -9,6 +9,7 @@ import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/user_model.dart';
 import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/repositories/auth_repository.dart';
+import 'package:moa_app/utils/logger.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
@@ -19,7 +20,6 @@ class SignIn extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var size = MediaQuery.of(context).size;
     var loading = useState(false);
     var user =
         useState<UserModel>(const UserModel(id: '0', email: '', password: ''));
@@ -27,9 +27,12 @@ class SignIn extends HookConsumerWidget {
     void handleLogin(Function login) async {
       try {
         loading.value = true;
-        await login();
-        await ref.watch(tokenStateProvider.notifier).addToken();
+        if (context.mounted) {
+          await login();
+          await ref.watch(tokenStateProvider.notifier).addToken();
+        }
       } catch (e) {
+        logger.d(e);
         snackbar.alert(context,
             kDebugMode ? e.toString() : '회원가입 중 에러가 발생했습니다. 관리자에게 문의해주세요.');
       } finally {
@@ -57,10 +60,10 @@ class SignIn extends HookConsumerWidget {
                         ),
                       ),
                       Column(children: [
-                        SizedBox(
-                          width: size.width < Breakpoints.md
-                              ? size.width
-                              : size.width / 3,
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxWidth: Breakpoints.sm,
+                          ),
                           child: EditText(
                             onChanged: (txt) {
                               user.value = user.value.copyWith(email: txt);
@@ -69,10 +72,10 @@ class SignIn extends HookConsumerWidget {
                             hintText: 'Email',
                           ),
                         ),
-                        SizedBox(
-                          width: size.width < Breakpoints.md
-                              ? size.width
-                              : size.width / 3,
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxWidth: Breakpoints.sm,
+                          ),
                           child: EditText(
                             onChanged: (txt) {
                               user.value = user.value.copyWith(password: txt);
@@ -84,18 +87,20 @@ class SignIn extends HookConsumerWidget {
                           ),
                         ),
                       ]),
-                      Button(
-                        width: size.width < Breakpoints.md
-                            ? size.width
-                            : size.width / 3,
-                        text: '로그인 하기',
-                        disabled:
-                            user.value.email == '' || user.value.password == '',
-                        onPress: () async {
-                          // if (context.mounted) {
-                          //   context.go(GoRoutes.home.fullPath);
-                          // }
-                        },
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxWidth: Breakpoints.sm,
+                        ),
+                        child: Button(
+                          text: '로그인 하기',
+                          disabled: user.value.email == '' ||
+                              user.value.password == '',
+                          onPress: () async {
+                            // if (context.mounted) {
+                            //   context.go(GoRoutes.home.fullPath);
+                            // }
+                          },
+                        ),
                       ),
                     ],
                   ),
