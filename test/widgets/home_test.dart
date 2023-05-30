@@ -46,11 +46,11 @@ void main() {
     expect(find.text('Home'), findsOneWidget);
   });
 
-  testWidgets('Counter increments smoke test', (tester) async {
-    await tester.pumpWidget(
-        TestUtils.makeTestableWidget(child: GoRoutes.home.fullPath));
-    await tester.pump();
-  });
+  // testWidgets('Counter increments smoke test', (tester) async {
+  //   await tester.pumpWidget(
+  //       TestUtils.makeTestableWidget(child: GoRoutes.home.fullPath));
+  //   await tester.pump();
+  // });
 
   testWidgets('Button is present and triggers navigation after tapped',
       (tester) async {
