@@ -11,7 +11,6 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:moa_app/firebase_options.dart';
 import 'package:moa_app/generated/l10n.dart';
 import 'package:moa_app/providers/token_provider.dart';
-import 'package:moa_app/services/fcm_service.dart';
 import 'package:moa_app/utils/config.dart';
 import 'package:moa_app/utils/router_config.dart';
 import 'package:moa_app/utils/themes.dart';
@@ -50,10 +49,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await FcmService.instance.foregroundMessageHandler();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  await FcmService.instance.foregroundClickHandler();
-  await FcmService.instance.backgroundClickHandler();
 
   // KaKao login setup
   KakaoSdk.init(

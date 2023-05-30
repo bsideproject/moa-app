@@ -1,8 +1,11 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:moa_app/utils/config.dart';
+import 'package:moa_app/utils/router_config.dart';
 import 'package:moa_app/utils/tools.dart';
 
 class FcmService {
@@ -13,7 +16,6 @@ class FcmService {
 
   Future<void> requestIosFirebaseMessaging() async {
     var messaging = FirebaseMessaging.instance;
-
     var settings = await messaging.requestPermission(
       alert: true,
       announcement: false,
@@ -94,26 +96,7 @@ class FcmService {
     });
   }
 
-  Future<void> backgroundClickHandler() async {
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
-
-    // 종료상태에서 클릭한 푸시 알림 메세지 핸들링
-    if (initialMessage != null) _handleMessage(initialMessage);
-
-    // 앱이 백그라운드 상태에서 푸시 알림 클릭 하여 열릴 경우 메세지 스트림을 통해 처리
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
-  }
-
-  void _handleMessage(RemoteMessage message) {
-    logger.d('message = ${message.notification!.title}');
-    if (message.data['type'] == 'chat') {
-      // todo 해당화면으로 이동
-      // Get.toNamed('/chat', arguments: message.data);
-    }
-  }
-
-  Future<void> foregroundClickHandler() async {
+  Future<void> foregroundClickHandler(BuildContext context) async {
     var flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
     const AndroidInitializationSettings initializationSettingsAndroid =
@@ -128,12 +111,13 @@ class FcmService {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse: (payload) {
       // todo 해당화면으로 이동
-      // Get.to(const NextPage(), arguments: payload);
+      context.go(GoRoutes.editProfile.fullPath);
     });
   }
 
-  Future<void> getToken() async {
+  Future<String?> getToken() async {
     token = await FirebaseMessaging.instance.getToken();
+    return token;
   }
 
   Future<void> deleteToken() async {

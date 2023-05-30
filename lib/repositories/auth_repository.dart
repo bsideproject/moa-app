@@ -39,8 +39,9 @@ class AuthRepository implements IAuthRepository {
           ),
         );
 
-        if (res.data['token'].isNotEmpty) {
-          await TokenRepository.instance.setToken(token: res.data['token']);
+        if (res.data['access_token'].isNotEmpty) {
+          await TokenRepository.instance
+              .setToken(token: res.data['access_token']);
           return true;
         }
       }
@@ -84,8 +85,9 @@ class AuthRepository implements IAuthRepository {
           ),
         );
 
-        if (res.data['token'].isNotEmpty) {
-          await TokenRepository.instance.setToken(token: res.data['token']);
+        if (res.data['access_token'].isNotEmpty) {
+          await TokenRepository.instance
+              .setToken(token: res.data['access_token']);
           return true;
         }
       }
@@ -119,8 +121,9 @@ class AuthRepository implements IAuthRepository {
           ),
         );
 
-        if (res.data['token'].isNotEmpty) {
-          await TokenRepository.instance.setToken(token: res.data['token']);
+        if (res.data['access_token'].isNotEmpty) {
+          await TokenRepository.instance
+              .setToken(token: res.data['access_token']);
           return true;
         }
       }
@@ -155,8 +158,9 @@ class AuthRepository implements IAuthRepository {
           ),
         );
 
-        if (res.data['token'].isNotEmpty) {
-          await TokenRepository.instance.setToken(token: res.data['token']);
+        if (res.data['access_token'].isNotEmpty) {
+          await TokenRepository.instance
+              .setToken(token: res.data['access_token']);
           return true;
         }
       }

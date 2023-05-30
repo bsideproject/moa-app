@@ -83,9 +83,7 @@ class SignIn extends HookConsumerWidget {
                     disabled:
                         user.value.email == '' || user.value.password == '',
                     onPress: () async {
-                      // if (context.mounted) {
-                      //   context.go(GoRoutes.home.fullPath);
-                      // }
+                      // context.go(GoRoutes.home.fullPath);
                     },
                   ),
                 ],
