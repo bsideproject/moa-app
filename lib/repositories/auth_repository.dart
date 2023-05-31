@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
@@ -21,8 +22,14 @@ class AuthRepository implements IAuthRepository {
 
   @override
   Future<void> googleLogin() async {
+    late GoogleSignInAccount? user;
     var googleSignIn = GoogleSignIn();
-    var user = await googleSignIn.signIn();
+
+    if (kIsWeb) {
+      user = await googleSignIn.signInSilently();
+    } else {
+      user = await googleSignIn.signIn();
+    }
 
     if (user != null) {
       var token = await user.authentication;
@@ -77,7 +84,9 @@ class AuthRepository implements IAuthRepository {
           'email': response.data['kakao_account']['email'],
         },
         options: Options(
-          headers: {'oauth-token': token.accessToken},
+          headers: {
+            'oauth-token': token.accessToken,
+          },
         ),
       );
 
@@ -90,13 +99,23 @@ class AuthRepository implements IAuthRepository {
 
   @override
   Future<void> naverLogin() async {
-    var user = await FlutterNaverLogin.logIn();
-    var response = await FlutterNaverLogin.currentAccessToken;
-    if (user.status != NaverLoginStatus.loggedIn) {
-      return;
+    late NaverAccessToken token;
+    late NaverLoginResult user;
+    if (kIsWeb) {
+      Dio naverDio = Dio();
+      // todo front에서 요청시 cors 에러 back에서 처리하고 응답 받아야할듯
+      await naverDio.get(
+        'https://nid.naver.com/oauth2.0/authorize?client_id=K10uUCEMBAnAY0ZtJMeo&redirect_uri=http://localhost:8080&response_type=code&state=test',
+      );
+    } else {
+      user = await FlutterNaverLogin.logIn();
+      token = await FlutterNaverLogin.currentAccessToken;
+      if (user.status != NaverLoginStatus.loggedIn) {
+        return;
+      }
     }
 
-    if (response.accessToken.isNotEmpty) {
+    if (token.accessToken.isNotEmpty) {
       var res = await dio.post(
         '/api/v1/user/oauth',
         data: {
@@ -105,7 +124,7 @@ class AuthRepository implements IAuthRepository {
           'email': user.account.email,
         },
         options: Options(
-          headers: {'oauth-token': response.accessToken},
+          headers: {'oauth-token': token.accessToken},
         ),
       );
 

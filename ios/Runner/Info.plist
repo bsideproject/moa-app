@@ -117,5 +117,27 @@
 	<string>Moa-app</string>
 	<key>naverServiceAppUrlScheme</key>
 	<string>moaapp</string>
+  <key>NSAppTransportSecurity</key>
+  <dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
+    <key>NSExceptionDomains</key>
+    <dict>
+      <key>naver.com</key>
+      <dict>
+        <key>NSExceptionRequiresForwardSecrecy</key>
+        <false/>
+        <key>NSIncludesSubdomains</key>
+        <true/>
+      </dict>
+      <key>naver.net</key>
+      <dict>
+        <key>NSExceptionRequiresForwardSecrecy</key>
+        <false/>
+        <key>NSIncludesSubdomains</key>
+        <true/>
+      </dict>
+  </dict>
+  </dict>
 </dict>
 </plist>
