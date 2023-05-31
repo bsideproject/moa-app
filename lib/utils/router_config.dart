@@ -11,6 +11,7 @@ import 'package:moa_app/screens/permission_screen.dart';
 import 'package:moa_app/screens/result.dart';
 import 'package:moa_app/screens/sample.dart';
 import 'package:moa_app/screens/sign_in.dart';
+import 'package:moa_app/services/fcm_service.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -66,7 +67,19 @@ GoRouter routerConfig([String? initialLocation]) => GoRouter(
       initialLocation: initialLocation ?? GoRoutes.home.fullPath,
       routes: <RouteBase>[
         ShellRoute(
-          builder: (context, state, child) => MainBottomTab(child: child),
+          builder: (context, state, child) {
+            //  알람 초기화
+            /// 알람 권한 요청
+            if (!kIsWeb && context.mounted) {
+              FcmService.instance.requestIosFirebaseMessaging();
+
+              FcmService.instance.foregroundMessageHandler();
+              FcmService.instance.foregroundClickHandler(context);
+              FcmService.instance.setupInteractedMessage(context);
+            }
+
+            return MainBottomTab(child: child);
+          },
           routes: [
             GoRoute(
               name: GoRoutes.home.name,
