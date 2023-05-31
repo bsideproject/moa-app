@@ -26,6 +26,11 @@ class FcmService {
       sound: true,
     );
 
+    // 알람 권한 거절시
+    if (settings.authorizationStatus == AuthorizationStatus.denied) {
+      return;
+    }
+
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       await messaging.setForegroundNotificationPresentationOptions(
         alert: true,
@@ -67,10 +72,12 @@ class FcmService {
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
+    // Foreground
     FirebaseMessaging.onMessage.listen((message) {
       logger.d('Got a message whilst in the foreground!');
       logger.d('Message data: ${message.data}');
 
+      // logger.d(message.notification?.title);
       if (message.notification != null) {
         logger.d(
             'Message also contained a notification: ${message.notification}');
@@ -93,6 +100,27 @@ class FcmService {
           ),
         );
       }
+    });
+  }
+
+  Future<void> setupInteractedMessage(BuildContext context) async {
+    // Get any messages which caused the application to open from
+    // a terminated state.
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    // If the message also contains a data property with a "type" of "chat",
+    // navigate to a chat screen
+    // Terminated
+    if (initialMessage != null && context.mounted) {
+      context.go(GoRoutes.editProfile.fullPath);
+    }
+
+    // Also handle any interaction when the app is in the background via a
+    // Stream listener
+    // Background
+    FirebaseMessaging.onMessageOpenedApp.listen((notification) {
+      context.go(GoRoutes.editProfile.fullPath);
     });
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/models/item_model.dart';
 import 'package:moa_app/navigations/main_bottom_tab.dart';
 import 'package:moa_app/screens/edit_profile.dart';
@@ -11,6 +12,7 @@ import 'package:moa_app/screens/permission_screen.dart';
 import 'package:moa_app/screens/result.dart';
 import 'package:moa_app/screens/sample.dart';
 import 'package:moa_app/screens/sign_in.dart';
+import 'package:moa_app/services/fcm_service.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -61,85 +63,101 @@ extension GoRoutesName on GoRoutes {
   }
 }
 
-GoRouter routerConfig([String? initialLocation]) => GoRouter(
-      navigatorKey: _rootNavigatorKey,
-      initialLocation: initialLocation ?? GoRoutes.home.fullPath,
-      routes: <RouteBase>[
-        ShellRoute(
-          builder: (context, state, child) => MainBottomTab(child: child),
-          routes: [
-            GoRoute(
-              name: GoRoutes.home.name,
-              path: GoRoutes.home.fullPath,
-              pageBuilder: (context, state) =>
-                  buildPageWithDefaultTransition<void>(
-                context: context,
-                state: state,
-                child: const Home(),
-              ),
-              routes: [
-                GoRoute(
-                  name: GoRoutes.itemDetail.name,
-                  path: ':id',
-                  builder: (context, state) {
-                    var item = state.extra as ItemModel;
-                    return ItemDetail(item: item);
-                  },
+Provider<GoRouter> routerProvider([String? initialLocation]) => Provider((ref) {
+      return GoRouter(
+        navigatorKey: _rootNavigatorKey,
+        initialLocation: initialLocation ?? GoRoutes.home.fullPath,
+        routes: <RouteBase>[
+          ShellRoute(
+            builder: (context, state, child) {
+              //  알람 초기화
+              /// 알람 권한 요청
+              if (!kIsWeb && context.mounted) {
+                FcmService.instance.requestIosFirebaseMessaging();
+
+                FcmService.instance.foregroundMessageHandler();
+                FcmService.instance.foregroundClickHandler(context);
+                FcmService.instance.setupInteractedMessage(context);
+
+                FcmService.instance.getToken();
+              }
+
+              return MainBottomTab(child: child);
+            },
+            routes: [
+              GoRoute(
+                name: GoRoutes.home.name,
+                path: GoRoutes.home.fullPath,
+                pageBuilder: (context, state) =>
+                    buildPageWithDefaultTransition<void>(
+                  context: context,
+                  state: state,
+                  child: const Home(),
                 ),
-              ],
-            ),
-            GoRoute(
-              name: GoRoutes.fileSharing.name,
-              path: GoRoutes.fileSharing.fullPath,
-              pageBuilder: (context, state) =>
-                  buildPageWithDefaultTransition<void>(
-                context: context,
-                state: state,
-                child: const FileSharing(),
+                routes: [
+                  GoRoute(
+                    name: GoRoutes.itemDetail.name,
+                    path: ':id',
+                    builder: (context, state) {
+                      var item = state.extra as ItemModel;
+                      return ItemDetail(item: item);
+                    },
+                  ),
+                ],
               ),
-            ),
-            GoRoute(
-              name: GoRoutes.permission.name,
-              path: GoRoutes.permission.fullPath,
-              pageBuilder: (context, state) =>
-                  buildPageWithDefaultTransition<void>(
-                context: context,
-                state: state,
-                child: const PermissionScreen(),
+              GoRoute(
+                name: GoRoutes.fileSharing.name,
+                path: GoRoutes.fileSharing.fullPath,
+                pageBuilder: (context, state) =>
+                    buildPageWithDefaultTransition<void>(
+                  context: context,
+                  state: state,
+                  child: const FileSharing(),
+                ),
               ),
-            ),
-            GoRoute(
-              name: GoRoutes.editProfile.name,
-              path: GoRoutes.editProfile.fullPath,
-              pageBuilder: (context, state) =>
-                  buildPageWithDefaultTransition<void>(
-                context: context,
-                state: state,
-                child: const EditProfile(),
+              GoRoute(
+                name: GoRoutes.permission.name,
+                path: GoRoutes.permission.fullPath,
+                pageBuilder: (context, state) =>
+                    buildPageWithDefaultTransition<void>(
+                  context: context,
+                  state: state,
+                  child: const PermissionScreen(),
+                ),
               ),
-            ),
-          ],
-        ),
-        GoRoute(
-          name: GoRoutes.signIn.name,
-          path: GoRoutes.signIn.fullPath,
-          builder: (context, state) {
-            return const SignIn();
-          },
-        ),
-        GoRoute(
-          name: GoRoutes.sample.name,
-          path: GoRoutes.sample.fullPath,
-          builder: (context, state) {
-            return const Sample();
-          },
-        ),
-        GoRoute(
-          name: GoRoutes.result.name,
-          path: GoRoutes.result.fullPath,
-          builder: (context, state) {
-            return const Result();
-          },
-        ),
-      ],
-    );
+              GoRoute(
+                name: GoRoutes.editProfile.name,
+                path: GoRoutes.editProfile.fullPath,
+                pageBuilder: (context, state) =>
+                    buildPageWithDefaultTransition<void>(
+                  context: context,
+                  state: state,
+                  child: const EditProfile(),
+                ),
+              ),
+            ],
+          ),
+          GoRoute(
+            name: GoRoutes.signIn.name,
+            path: GoRoutes.signIn.fullPath,
+            builder: (context, state) {
+              return const SignIn();
+            },
+          ),
+          GoRoute(
+            name: GoRoutes.sample.name,
+            path: GoRoutes.sample.fullPath,
+            builder: (context, state) {
+              return const Sample();
+            },
+          ),
+          GoRoute(
+            name: GoRoutes.result.name,
+            path: GoRoutes.result.fullPath,
+            builder: (context, state) {
+              return const Result();
+            },
+          ),
+        ],
+      );
+    });

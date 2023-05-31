@@ -65,6 +65,7 @@ class MyApp extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var token = ref.watch(tokenStateProvider);
+
     useEffect(() {
       if (!token.isLoading) {
         FlutterNativeSplash.remove();
@@ -85,7 +86,8 @@ class MyApp extends HookConsumerWidget {
         theme: Themes.light,
         darkTheme: Themes.dark,
         // themeMode: themeNotifier.isDark ? ThemeMode.dark : ThemeMode.light,
-        themeMode: ThemeMode.system,
+        // themeMode: ThemeMode.system,
+        themeMode: ThemeMode.light,
         localizationsDelegates: const [
           S.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -96,10 +98,10 @@ class MyApp extends HookConsumerWidget {
           Locale('en', 'US'),
           Locale('ko', 'KR'),
         ],
-        routerConfig: routerConfig(
-          (token.value != null && context.mounted)
+        routerConfig: ref.watch(
+          routerProvider((token.value != null && context.mounted)
               ? GoRoutes.home.fullPath
-              : GoRoutes.signIn.fullPath,
+              : GoRoutes.signIn.fullPath),
         ),
       ),
     );
