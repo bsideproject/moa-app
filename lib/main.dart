@@ -98,10 +98,10 @@ class MyApp extends HookConsumerWidget {
           Locale('en', 'US'),
           Locale('ko', 'KR'),
         ],
-        routerConfig: ref.watch(
-          routerProvider((token.value != null && context.mounted)
+        routerConfig: routerConfig(
+          (token.value != null && context.mounted)
               ? GoRoutes.home.fullPath
-              : GoRoutes.signIn.fullPath),
+              : GoRoutes.signIn.fullPath,
         ),
       ),
     );
