@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -15,7 +16,6 @@ import 'package:moa_app/utils/config.dart';
 import 'package:moa_app/utils/router_config.dart';
 import 'package:moa_app/utils/themes.dart';
 import 'package:moa_app/utils/tools.dart';
-import 'package:moa_app/widgets/model_theme.dart';
 
 class Logger extends ProviderObserver {
   @override
@@ -44,6 +44,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   var widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await dotenv.load(fileName: '.env');
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -63,9 +64,7 @@ class MyApp extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var themeNotifier = ref.watch(modelProvider);
     var token = ref.watch(tokenStateProvider);
-
     useEffect(() {
       if (!token.isLoading) {
         FlutterNativeSplash.remove();
@@ -85,7 +84,8 @@ class MyApp extends HookConsumerWidget {
         debugShowCheckedModeBanner: false,
         theme: Themes.light,
         darkTheme: Themes.dark,
-        themeMode: themeNotifier.isDark ? ThemeMode.dark : ThemeMode.light,
+        // themeMode: themeNotifier.isDark ? ThemeMode.dark : ThemeMode.light,
+        themeMode: ThemeMode.system,
         localizationsDelegates: const [
           S.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -97,7 +97,7 @@ class MyApp extends HookConsumerWidget {
           Locale('ko', 'KR'),
         ],
         routerConfig: routerConfig(
-          token.value != null
+          (token.value != null && context.mounted)
               ? GoRoutes.home.fullPath
               : GoRoutes.signIn.fullPath,
         ),
