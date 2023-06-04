@@ -1,5 +1,4 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:moa_app/models/user_model.dart';
 import 'package:moa_app/repositories/token_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,13 +18,6 @@ class TokenState extends _$TokenState {
       return await TokenRepository.instance.getToken();
     });
     return null;
-  }
-
-  Future<List<UserModel>?> getMe() async {
-    return null;
-
-    // var user = UserRepository.instance.getMe();
-    // return user;
   }
 
   Future<void> removeToken() async {
