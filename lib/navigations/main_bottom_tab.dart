@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moa_app/constants/color_constants.dart';
-import 'package:moa_app/utils/router_config.dart';
+import 'package:moa_app/utils/router_provider.dart';
 
 enum ScreenType { social, generalMeetings }
 
@@ -36,39 +36,80 @@ class MainBottomTab extends HookWidget {
 
     return Scaffold(
       body: child,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex.value,
-        type: BottomNavigationBarType.fixed,
-        selectedFontSize: 12,
-        unselectedFontSize: 12,
-        selectedItemColor: AppColors.primaryColor,
-        unselectedItemColor: AppColors.placeholder,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        iconSize: 24,
-        onTap: (index) => tap(context, index),
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: '홈',
-            tooltip: '홈',
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+      floatingActionButton: SizedBox(
+        width: 60,
+        height: 60,
+        child: FloatingActionButton(
+          shape: const CircleBorder(),
+          //Floating action button on Scaffold
+          onPressed: () {
+            //code to execute on button press
+          },
+          child: const Icon(
+            size: 30,
+            Icons.add,
+          ), //icon inside button
+        ),
+      ),
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 25),
+              color: Color.fromRGBO(0, 0, 0, 0.25),
+              blurRadius: 40,
+            ),
+          ],
+        ),
+        child: BottomAppBar(
+          // color: Colors.green,
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 5,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                // Bottom of the screen
+                IconButton(
+                  iconSize: 28,
+                  onPressed: () => tap(context, 0),
+                  icon: const Icon(Icons.home),
+                  color: currentIndex.value == 0
+                      ? AppColors.primaryColor
+                      : AppColors.placeholder,
+                ),
+                IconButton(
+                  iconSize: 28,
+                  onPressed: () => tap(context, 1),
+                  icon: const Icon(Icons.share),
+                  color: currentIndex.value == 1
+                      ? AppColors.primaryColor
+                      : AppColors.placeholder,
+                ),
+                IconButton(
+                  iconSize: 28,
+                  onPressed: () => tap(context, 2),
+                  icon: const Icon(Icons.lock),
+                  color: currentIndex.value == 2
+                      ? AppColors.primaryColor
+                      : AppColors.placeholder,
+                ),
+                IconButton(
+                  iconSize: 28,
+                  onPressed: () => tap(context, 3),
+                  icon: const Icon(Icons.person),
+                  color: currentIndex.value == 3
+                      ? AppColors.primaryColor
+                      : AppColors.placeholder,
+                ),
+              ],
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.share),
-            label: '파일 공유',
-            tooltip: '파일 공유',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.lock),
-            label: '권한',
-            tooltip: '권한',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: '프로필',
-            tooltip: '프로필',
-          ),
-        ],
+        ),
       ),
     );
   }

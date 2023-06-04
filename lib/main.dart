@@ -13,7 +13,7 @@ import 'package:moa_app/firebase_options.dart';
 import 'package:moa_app/generated/l10n.dart';
 import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/utils/config.dart';
-import 'package:moa_app/utils/router_config.dart';
+import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/utils/themes.dart';
 import 'package:moa_app/utils/tools.dart';
 
@@ -98,11 +98,7 @@ class MyApp extends HookConsumerWidget {
           Locale('en', 'US'),
           Locale('ko', 'KR'),
         ],
-        routerConfig: routerConfig(
-          (token.value != null && context.mounted)
-              ? GoRoutes.home.fullPath
-              : GoRoutes.signIn.fullPath,
-        ),
+        routerConfig: ref.watch(routeProvider),
       ),
     );
   }

@@ -5,7 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:moa_app/utils/config.dart';
-import 'package:moa_app/utils/router_config.dart';
+import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/utils/tools.dart';
 
 class FcmService {

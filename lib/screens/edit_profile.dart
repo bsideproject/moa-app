@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/providers/token_provider.dart';
+import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/alert_dialog.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
@@ -76,6 +78,9 @@ class EditProfile extends HookConsumerWidget {
                 context,
                 onPress: () async {
                   await ref.watch(tokenStateProvider.notifier).removeToken();
+                  if (context.mounted) {
+                    context.go(GoRoutes.signIn.fullPath);
+                  }
                 },
                 showCancelButton: true,
                 title: '로그아웃',

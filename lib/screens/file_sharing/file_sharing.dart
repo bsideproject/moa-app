@@ -7,7 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/screens/file_sharing/user_listing_screen.dart';
-import 'package:moa_app/utils/router_config.dart';
+import 'package:moa_app/utils/router_provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 class FileSharing extends HookWidget {
