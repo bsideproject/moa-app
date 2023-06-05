@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
@@ -10,6 +11,7 @@ import 'package:moa_app/models/user_model.dart';
 import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/repositories/auth_repository.dart';
 import 'package:moa_app/utils/logger.dart';
+import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
@@ -27,9 +29,10 @@ class SignIn extends HookConsumerWidget {
     void handleLogin(Function login) async {
       try {
         loading.value = true;
+        await login();
+        await ref.watch(tokenStateProvider.notifier).addToken();
         if (context.mounted) {
-          await login();
-          await ref.watch(tokenStateProvider.notifier).addToken();
+          context.go(GoRoutes.home.fullPath);
         }
       } catch (e) {
         logger.d(e);
