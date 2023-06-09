@@ -4,4 +4,5 @@
     <string name="client_id">K10uUCEMBAnAY0ZtJMeo</string>
     <string name="client_secret">qtCW1qORKI</string>
     <string name="client_name">Moa-app</string>
+    <string name="title_activity_share">Moa</string>
 </resources>
