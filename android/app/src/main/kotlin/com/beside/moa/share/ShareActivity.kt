@@ -1,60 +1,112 @@
 package com.beside.moa.share
 
-
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import androidx.appcompat.app.AlertDialog
+import android.util.Base64
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import com.beside.moa.R
-import io.flutter.embedding.android.FlutterActivity
+import java.nio.charset.Charset
 
 
-class ShareActivity : FragmentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // todo flutter 에서 ui를 전달받아서 띄워줘야함 
-        setContentView(R.layout.activity_share)
-        handleIntent(intent, true)
-    }
+class ShareActivity : FragmentActivity(){
 
-    private fun handleIntent(intent: Intent, initial: Boolean) {
-        val value = intent.getStringExtra(Intent.EXTRA_TEXT)
-        Log.d("TAG", "The value is: $value")
 
-//        when {
-//            (intent.type?.startsWith("text") != true)
-//                    && (intent.action == Intent.ACTION_SEND
-//                    || intent.action == Intent.ACTION_SEND_MULTIPLE) -> { // Sharing images or videos
-//
-//                val value = getMediaUris(intent)
-//                if (initial) initialMedia = value
-//                latestMedia = value
-//                eventSinkMedia?.success(latestMedia?.toString())
-//            }
-//            (intent.type == null || intent.type?.startsWith("text") == true)
-//                    && intent.action == Intent.ACTION_SEND -> { // Sharing text
-//                val value = intent.getStringExtra(Intent.EXTRA_TEXT)
-//                if (initial) initialText = value
-//                latestText = value
-//                eventSinkText?.success(latestText)
-//            }
-//            intent.action == Intent.ACTION_VIEW -> { // Opening URL
-//                val value = intent.dataString
-//                if (initial) initialText = value
-//                latestText = value
-//                eventSinkText?.success(latestText)
+
+
+//    override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
+//        super.configureFlutterEngine(flutterEngine)
+//        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SHARE_CHANNEL).setMethodCallHandler {
+//            call, result ->
+//            if (call.method == "shareSheet") {
+//              shareSheet(result)
+//            } else {
+//                result.notImplemented()
 //            }
 //        }
+//    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setContent {
+            BottomSheetContent()
+        }
+//        handleIntent(intent, true)
+        super.onCreate(savedInstanceState)
+    }
+
+    @Composable
+    fun ShowPopup() {
+      var isPopupVisible by remember { mutableStateOf(true) }
+      if(isPopupVisible){
+        AlertDialog(
+            onDismissRequest = {
+                this.finish()
+            },
+            title = { Text(text = "Popup Title") },
+            text = { Text(text = "This is a simple popup.") },
+            confirmButton = {
+                Button(onClick = {
+                    this.finish()
+                }) {
+                    Text(text = "OK")
+                }
+            }
+        )
+      }
     }
 
 
-}
 
+
+    @Composable
+    fun BottomSheetContent() {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable(
+                    onClick = {
+                        this.finish()
+                    },
+                ),
+            contentAlignment = Alignment.BottomEnd
+        ){
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White)
+                    .padding(16.dp),
+            ) {
+                Text(text = "Bottom Sheet Content", fontSize = 16.sp)
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(
+                    onClick = {
+                        this@ShareActivity.finish()
+                    },
+                    modifier = Modifier.align(Alignment.End)
+                ) {
+                    Text(text = "Close")
+                }
+            }
+        }
+    }
+}
