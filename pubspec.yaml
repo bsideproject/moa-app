@@ -123,11 +123,11 @@ flutter:
   fonts:
     - family: Pretendard
       fonts:
-        - asset: assets/Pretendard-Regular.ttf
+        - asset: assets/fonts/Pretendard-Regular.ttf
           weight: 400
-        - asset: assets/Pretendard-Medium.ttf
+        - asset: assets/fonts/Pretendard-Medium.ttf
           weight: 500
-        - asset: assets/Pretendard-Bold.ttf
+        - asset: assets/fonts/Pretendard-Bold.ttf
           weight: 700
   #
   # For details regarding fonts from package dependencies,
