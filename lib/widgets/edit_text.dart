@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:moa_app/constants/text_style_constants.dart';
+import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/utils/colors.dart';
 
 OutlineInputBorder focusedOutlineBorder = OutlineInputBorder(

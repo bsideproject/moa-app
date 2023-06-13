@@ -14,7 +14,7 @@ class Button extends StatelessWidget {
     this.width,
 
     /// Adhoc used for button with default width but with specific height
-    this.height = 52,
+    this.height = 50,
     this.onPress,
     this.color = Colors.white,
     this.fontWeight = FontWeight.w600,
