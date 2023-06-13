@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:http/http.dart' as http;
-import 'package:moa_app/constants/text_style_constants.dart';
+import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/image.dart';
@@ -56,7 +56,7 @@ class UserListingScreen extends HookWidget {
         children: [
           const Text(
             'receive url',
-            style: TitleTextStyle(),
+            style: H1(),
           ),
           const SizedBox(height: 10),
           Text('$text'),
@@ -79,7 +79,7 @@ class UserListingScreen extends HookWidget {
           const SizedBox(height: 20),
           Text(
             content.value.title,
-            style: const TitleTextStyle(),
+            style: const H1(),
           ),
           const SizedBox(height: 5),
           Text(

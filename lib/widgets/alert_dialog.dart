@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moa_app/constants/text_style_constants.dart';
+import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/utils/colors.dart';
 import 'package:moa_app/widgets/button.dart';
 
@@ -34,7 +34,7 @@ class _AlertDialog {
           contentPadding:
               const EdgeInsets.only(left: 24, right: 24, bottom: 24),
           actionsPadding: const EdgeInsets.all(24),
-          title: Text(title, style: const TitleTextStyle()),
+          title: Text(title, style: const H1()),
           content: Text(content, style: const SubTitleTextStyle()),
           actions: <Widget>[
             Button(
