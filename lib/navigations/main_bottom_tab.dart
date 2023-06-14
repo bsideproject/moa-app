@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -75,7 +77,10 @@ class MainBottomTab extends HookWidget {
           child: BottomAppBar(
             shape: const CircularNotchedRectangle(),
             notchMargin: 5,
-            padding: const EdgeInsets.only(top: 15),
+            padding: EdgeInsets.only(
+              top: 10,
+              bottom: Platform.isAndroid ? 10 : 0,
+            ),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
