@@ -75,11 +75,11 @@ class PermissionScreen extends HookWidget {
             ),
             title: Text(
               'Permission',
-              style: H1(),
+              style: TitleTextStyle(),
             ),
             trailing: Text(
               'Type',
-              style: H1(),
+              style: TitleTextStyle(),
             ),
           ),
           buildItem: (item, index) {

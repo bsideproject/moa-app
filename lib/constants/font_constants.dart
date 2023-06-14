@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:moa_app/constants/color_constants.dart';
 
-class H1 extends TextStyle {
-  const H1()
+class TitleTextStyle extends TextStyle {
+  const TitleTextStyle()
       : super(
           fontSize: 22,
           height: 1.2,
@@ -16,9 +16,27 @@ class H1 extends TextStyle {
 class SubTitleTextStyle extends TextStyle {
   const SubTitleTextStyle()
       : super(
-          fontSize: 14,
+          fontSize: 16,
+          fontWeight: FontConstants.fontWeightNormal,
           fontFamily: FontConstants.pretendard,
-          fontWeight: FontConstants.fontWeightMedium,
+        );
+}
+
+class FolderTitleTextStyle extends TextStyle {
+  const FolderTitleTextStyle()
+      : super(
+          fontSize: 16,
+          fontWeight: FontConstants.fontWeightBold,
+          fontFamily: FontConstants.pretendard,
+        );
+}
+
+class FolderSubTitleTextStyle extends TextStyle {
+  const FolderSubTitleTextStyle()
+      : super(
+          fontSize: 10,
+          fontWeight: FontConstants.fontWeightNormal,
+          fontFamily: FontConstants.pretendard,
         );
 }
 
