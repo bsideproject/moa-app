@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moa_app/constants/app_constants.dart';
@@ -14,24 +13,10 @@ import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 class FileSharing extends HookWidget {
   const FileSharing({super.key});
 
-  static const platform = MethodChannel('come.beside.moa/share');
-
   @override
   Widget build(BuildContext context) {
     var text = useState('');
     // var files = useState(<SharedMediaFile>[]);
-
-    Future<void> showShareSheet() async {
-      String batteryLevel;
-
-      try {
-        int result = await platform.invokeMethod('shareSheet');
-        print('result22:$result');
-        batteryLevel = 'Battery level at $result % .';
-      } on PlatformException catch (e) {
-        batteryLevel = "Failed to get battery level: '${e.message}'.";
-      }
-    }
 
     void navigateToShareMedia(
         BuildContext context, List<SharedMediaFile> value) {

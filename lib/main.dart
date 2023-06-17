@@ -16,6 +16,7 @@ import 'package:moa_app/utils/config.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/utils/themes.dart';
 import 'package:moa_app/utils/tools.dart';
+import 'package:moa_app/widgets/snackbar.dart';
 
 class Logger extends ProviderObserver {
   @override
@@ -62,9 +63,34 @@ void main() async {
 class MyApp extends HookConsumerWidget {
   const MyApp({super.key});
 
+  static const platform = MethodChannel('com.beside.moa/share');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var token = ref.watch(tokenStateProvider);
+    var isShareScreen = useState(false);
+
+    Future<void> sendShareSheetToken() async {
+      try {
+        var res = await platform.invokeMethod(
+          'shareSheet',
+          <String, dynamic>{
+            'token': token.value,
+          },
+        );
+        if (res == 'shareSheet') {
+          isShareScreen.value = true;
+        }
+      } on PlatformException catch (e) {
+        logger.d('e.message:${e.message}');
+        snackbar.alert(context, kDebugMode ? e.toString() : 'error');
+      }
+    }
+
+    useEffect(() {
+      sendShareSheetToken();
+      return null;
+    }, [isShareScreen.value]);
 
     useEffect(() {
       if (!token.isLoading) {
@@ -72,6 +98,21 @@ class MyApp extends HookConsumerWidget {
       }
       return null;
     }, [token.isLoading]);
+
+    if (isShareScreen.value) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          backgroundColor: Colors.transparent.withOpacity(0),
+          bottomSheet: Center(
+            child: Container(
+              color: Colors.green,
+              child: const Text('Share Screen'),
+            ),
+          ),
+        ),
+      );
+    }
 
     if (token.isLoading) {
       return const MaterialApp(

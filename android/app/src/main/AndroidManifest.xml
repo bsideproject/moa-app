@@ -68,9 +68,9 @@
         </activity>
 
         <activity
-        android:name=".share.ShareActivity"
-        android:label="@string/title_activity_share"
-        android:theme="@style/Theme.Share.Transparent"
+            android:name=".share.ShareActivity"
+            android:label="@string/title_activity_share"
+            android:theme="@style/Theme.Share.Transparent"
         >
 
         <intent-filter>
