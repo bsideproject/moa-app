@@ -11,6 +11,12 @@ flutter upgrade
 
 ```sh
 flutter pub get
+flutter run
+```
+
+## 웹
+```sh
+flutter run -d chrome --web-port=8080
 ```
 ## freezed 모델 빌드
 

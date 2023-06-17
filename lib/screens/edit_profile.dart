@@ -51,12 +51,12 @@ class EditProfile extends HookConsumerWidget {
               ? Image(
                   width: 230,
                   height: 230,
-                  image: Assets.dooboolabLogo,
+                  image: Assets.home,
                 )
               : Image(
                   width: 230,
                   height: 230,
-                  image: Assets.dooboolab,
+                  image: Assets.home,
                 ),
         ),
         leadingWidth: 50,

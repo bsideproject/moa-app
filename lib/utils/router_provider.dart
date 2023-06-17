@@ -4,13 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:moa_app/models/item_model.dart';
 import 'package:moa_app/navigations/main_bottom_tab.dart';
 import 'package:moa_app/providers/token_provider.dart';
-import 'package:moa_app/screens/edit_profile.dart';
 import 'package:moa_app/screens/file_sharing/file_sharing.dart';
-import 'package:moa_app/screens/home.dart';
+import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/screens/item_detail.dart';
-import 'package:moa_app/screens/permission_screen.dart';
-import 'package:moa_app/screens/result.dart';
-import 'package:moa_app/screens/sample.dart';
 import 'package:moa_app/screens/sign_in.dart';
 import 'package:moa_app/services/fcm_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -123,26 +119,6 @@ final routeProvider = Provider((ref) {
               child: const FileSharing(),
             ),
           ),
-          GoRoute(
-            name: GoRoutes.permission.name,
-            path: GoRoutes.permission.fullPath,
-            pageBuilder: (context, state) =>
-                buildPageWithDefaultTransition<void>(
-              context: context,
-              state: state,
-              child: const PermissionScreen(),
-            ),
-          ),
-          GoRoute(
-            name: GoRoutes.editProfile.name,
-            path: GoRoutes.editProfile.fullPath,
-            pageBuilder: (context, state) =>
-                buildPageWithDefaultTransition<void>(
-              context: context,
-              state: state,
-              child: const EditProfile(),
-            ),
-          ),
         ],
       ),
       GoRoute(
@@ -150,20 +126,6 @@ final routeProvider = Provider((ref) {
         path: GoRoutes.signIn.fullPath,
         builder: (context, state) {
           return const SignIn();
-        },
-      ),
-      GoRoute(
-        name: GoRoutes.sample.name,
-        path: GoRoutes.sample.fullPath,
-        builder: (context, state) {
-          return const Sample();
-        },
-      ),
-      GoRoute(
-        name: GoRoutes.result.name,
-        path: GoRoutes.result.fullPath,
-        builder: (context, state) {
-          return const Result();
         },
       ),
     ],

@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moa_app/constants/color_constants.dart';
+import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/utils/router_provider.dart';
 
 enum ScreenType { social, generalMeetings }
@@ -27,10 +30,6 @@ class MainBottomTab extends HookWidget {
         context.goNamed(GoRoutes.home.name);
       } else if (index == 1) {
         context.goNamed(GoRoutes.fileSharing.name);
-      } else if (index == 2) {
-        context.goNamed(GoRoutes.permission.name);
-      } else if (index == 3) {
-        context.goNamed(GoRoutes.editProfile.name);
       }
     }
 
@@ -42,13 +41,15 @@ class MainBottomTab extends HookWidget {
         width: 60,
         height: 60,
         child: FloatingActionButton(
+          elevation: 0,
+          backgroundColor: AppColors.primaryColor,
           shape: const CircleBorder(),
           //Floating action button on Scaffold
           onPressed: () {
             //code to execute on button press
           },
           child: const Icon(
-            size: 30,
+            size: 40,
             Icons.add,
           ), //icon inside button
         ),
@@ -57,54 +58,56 @@ class MainBottomTab extends HookWidget {
         decoration: const BoxDecoration(
           boxShadow: [
             BoxShadow(
-              offset: Offset(0, 25),
-              color: Color.fromRGBO(0, 0, 0, 0.25),
-              blurRadius: 40,
+              offset: Offset(0, -4),
+              color: Color.fromRGBO(0, 0, 0, 0.05),
+              blurRadius: 8,
             ),
           ],
         ),
-        child: BottomAppBar(
-          // color: Colors.green,
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 5,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Container(
+          decoration: const BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(0, -4),
+                color: Color.fromRGBO(0, 0, 0, 0.05),
+                blurRadius: 8,
+              ),
+            ],
+          ),
+          child: BottomAppBar(
+            shape: const CircularNotchedRectangle(),
+            notchMargin: 5,
+            padding: EdgeInsets.only(
+              top: 10,
+              bottom: Platform.isAndroid ? 10 : 0,
+            ),
             child: Row(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 // Bottom of the screen
-                IconButton(
-                  iconSize: 28,
-                  onPressed: () => tap(context, 0),
-                  icon: const Icon(Icons.home),
-                  color: currentIndex.value == 0
-                      ? AppColors.primaryColor
-                      : AppColors.placeholder,
+                Expanded(
+                  child: IconButton(
+                    iconSize: 28,
+                    onPressed: () => tap(context, 0),
+                    icon: Image(
+                      color: currentIndex.value == 0
+                          ? AppColors.primaryColor
+                          : AppColors.blackColor,
+                      image: Assets.home,
+                    ),
+                  ),
                 ),
-                IconButton(
-                  iconSize: 28,
-                  onPressed: () => tap(context, 1),
-                  icon: const Icon(Icons.share),
-                  color: currentIndex.value == 1
-                      ? AppColors.primaryColor
-                      : AppColors.placeholder,
-                ),
-                IconButton(
-                  iconSize: 28,
-                  onPressed: () => tap(context, 2),
-                  icon: const Icon(Icons.lock),
-                  color: currentIndex.value == 2
-                      ? AppColors.primaryColor
-                      : AppColors.placeholder,
-                ),
-                IconButton(
-                  iconSize: 28,
-                  onPressed: () => tap(context, 3),
-                  icon: const Icon(Icons.person),
-                  color: currentIndex.value == 3
-                      ? AppColors.primaryColor
-                      : AppColors.placeholder,
+                Expanded(
+                  child: IconButton(
+                    iconSize: 28,
+                    onPressed: () => tap(context, 1),
+                    icon: Image(
+                      color: currentIndex.value == 1
+                          ? AppColors.primaryColor
+                          : AppColors.blackColor,
+                      image: Assets.setting,
+                    ),
+                  ),
                 ),
               ],
             ),
