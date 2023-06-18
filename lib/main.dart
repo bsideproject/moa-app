@@ -16,6 +16,7 @@ import 'package:moa_app/utils/config.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/utils/themes.dart';
 import 'package:moa_app/utils/tools.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 class Logger extends ProviderObserver {
   @override
@@ -42,6 +43,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 void main() async {
+  setPathUrlStrategy();
   var widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
