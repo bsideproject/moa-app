@@ -150,7 +150,7 @@ class SignIn extends HookConsumerWidget {
                           ),
                         ),
                       ),
-                      (!kIsWeb && Platform.isIOS)
+                      (kIsWeb || Platform.isIOS)
                           ? GestureDetector(
                               onTap: () {
                                 handleLogin(AuthRepository.instance.appleLogin);

@@ -7,6 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:moa_app/repositories/token_repository.dart';
 import 'package:moa_app/utils/api.dart';
+import 'package:moa_app/utils/config.dart';
 import 'package:moa_app/utils/logger.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:uuid/uuid.dart';
@@ -57,45 +58,83 @@ class AuthRepository implements IAuthRepository {
 
   @override
   Future<void> kakaoLogin() async {
-    late OAuthToken token;
+
+    late String? token;
     if (kIsWeb) {
-      token = await UserApi.instance.loginWithKakaoAccount();
-    } else {
-      var isInstalled = await isKakaoTalkInstalled();
 
-      token = isInstalled
-          ? await UserApi.instance.loginWithKakaoTalk()
-          : await UserApi.instance.loginWithKakaoAccount();
-    }
-    Dio kakaoDio = Dio();
+      // Kakao web authentication
+      var respAuth = await FlutterWebAuth.authenticate(
+        url: Uri.https('kauth.kakao.com','oauth/authorize', {
+          'client_id': Config().kakaoClientId,
+          'redirect_uri': Config().socialRedirectUrl,
+          'response_type': 'code',
+          'state': const Uuid().v4()
+        }).toString(),
+        callbackUrlScheme: 'moaapp',
+      );
 
-    var response = await kakaoDio.get(
-      'https://kapi.kakao.com/v2/user/me',
-      options: Options(
-        headers: {
-          HttpHeaders.authorizationHeader: 'Bearer ${token.accessToken}'
-        },
-      ),
-    );
+      // Handling Authentication Exception
+      String? authCode = Uri.parse(respAuth).queryParameters['code'];
+      if (authCode == null){
+        String resp = Uri.parse(respAuth).toString();
+        throw 'Fail authentication with kakao\n- $resp';
+      }
 
-    if (response.data.isNotEmpty) {
-      var res = await dio.post(
-        '/api/v1/user/oauth',
+      // Request Token
+      var respToken = await Dio().post(
+        'https://kauth.kakao.com/oauth/token',
         data: {
-          'platform': 'kakao',
-          'id': response.data['id'],
-          'email': response.data['kakao_account']['email'],
+          'grant_type': 'authorization_code',
+          'client_id': Config().kakaoClientId,
+          'redirect_uri': Config().socialRedirectUrl,
+          'code': authCode,
         },
         options: Options(
           headers: {
-            'oauth-token': token.accessToken,
+            HttpHeaders.contentTypeHeader: 'application/x-www-form-urlencoded;charset=utf-8'
           },
         ),
       );
 
-      if (res.data['access_token'].isNotEmpty) {
-        await TokenRepository.instance
-            .setToken(token: res.data['access_token']);
+      token = respToken.data['access_token'];
+
+    } else {
+      var isInstalled = await isKakaoTalkInstalled();
+      OAuthToken oauthToken = isInstalled
+          ? await UserApi.instance.loginWithKakaoTalk()
+          : await UserApi.instance.loginWithKakaoAccount();
+      token = oauthToken.accessToken;
+    }
+
+    if (token != null){
+      var response = await Dio().get(
+        'https://kapi.kakao.com/v2/user/me',
+        options: Options(
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token'
+          },
+        ),
+      );
+
+      if (response.data.isNotEmpty) {
+        var res = await dio.post(
+          '/api/v1/user/oauth',
+          data: {
+            'platform': 'kakao',
+            'id': response.data['id'],
+            'email': response.data['kakao_account']['email'],
+          },
+          options: Options(
+            headers: {
+              'oauth-token': token,
+            },
+          ),
+        );
+
+        if (res.data['access_token'].isNotEmpty) {
+          await TokenRepository.instance
+              .setToken(token: res.data['access_token']);
+        }
       }
     }
   }
@@ -107,13 +146,11 @@ class AuthRepository implements IAuthRepository {
     if (kIsWeb) {
       // Web NAVER social login
 
-
       // Present the dialog to the user
       var resultAuth = await FlutterWebAuth.authenticate(
         url: Uri.https('nid.naver.com','oauth2.0/authorize', {
-          'client_id': 'K10uUCEMBAnAY0ZtJMeo',
-          // TODO: 배포 시, 도메인 설정 해줘야 함
-          'redirect_uri': 'http://localhost:8080/sign-in',
+          'client_id': Config().naverClientId,
+          'redirect_uri': Config().socialRedirectUrl,
           'response_type': 'code',
           'state': const Uuid().v4()
         }).toString(),
@@ -123,22 +160,16 @@ class AuthRepository implements IAuthRepository {
       // result = http://localhost:8080/sign-in?code=dXi4LtnBGvkWwupyr7&state=test
       var code = Uri.parse(resultAuth).queryParameters['code'];
 
-
-
-      logger.d(code);
       var resToken = await Dio().get(
-          'http://moa.gomj.kr:6001/proxy_auth/naver_token',
+          '${Config().moaDjangoUrl}/proxy_auth/naver_token',
           queryParameters: {
-            // TODO: 이거 숨겨야 함
-            'client_id': 'K10uUCEMBAnAY0ZtJMeo',
-            'client_secret': 'qtCW1qORKI',
+            'client_id': Config().naverClientId,
+            'client_secret': Config().naverClientSecret,
             'grant_type': 'authorization_code',
             'code': code,
             'state': const Uuid().v4(),
           },
       );
-
-      logger.d(resToken.data);
 
       if (resToken.statusCode==200) {
         var res = await dio.post(
@@ -195,6 +226,10 @@ class AuthRepository implements IAuthRepository {
         AppleIDAuthorizationScopes.email,
         AppleIDAuthorizationScopes.fullName,
       ],
+      webAuthenticationOptions: kIsWeb? WebAuthenticationOptions(
+        clientId: 'asd',
+        redirectUri: Uri.parse(Config().socialRedirectUrl)
+      ) : null
     );
 
     if (credential.identityToken != null && credential.userIdentifier != null) {
