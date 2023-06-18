@@ -80,7 +80,6 @@ final routeProvider = Provider((ref) {
           /// 알람 권한 요청
           if (!kIsWeb && context.mounted) {
             FcmService.instance.requestIosFirebaseMessaging();
-
             FcmService.instance.foregroundMessageHandler();
             FcmService.instance.foregroundClickHandler(context);
             FcmService.instance.setupInteractedMessage(context);

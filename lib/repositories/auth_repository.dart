@@ -29,6 +29,7 @@ class AuthRepository implements IAuthRepository {
 
     if (kIsWeb) {
       user = await googleSignIn.signInSilently();
+      user ??= await googleSignIn.signIn();
     } else {
       user = await googleSignIn.signIn();
     }
