@@ -31,6 +31,14 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <meta name="google-signin-client_id" content="286463462021-ubqeqqth4lmmohjbgqi8lo017rs3r7ph.apps.googleusercontent.com">
 
+  <!-- flutter web auth -->
+  <script>
+    window.opener.postMessage({
+      'flutter-web-auth': window.location.href
+    }, window.location.origin);
+    window.close();
+  </script>
+
   <title>moa_app</title>
   <link rel="manifest" href="manifest.json">
   
