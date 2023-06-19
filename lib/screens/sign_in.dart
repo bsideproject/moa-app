@@ -34,8 +34,9 @@ class SignIn extends HookConsumerWidget {
         if (context.mounted) {
           context.go(GoRoutes.home.fullPath);
         }
-      } catch (e) {
+      } catch (e, traceback) {
         logger.d(e);
+        logger.d(traceback);
         snackbar.alert(context,
             kDebugMode ? e.toString() : '회원가입 중 에러가 발생했습니다. 관리자에게 문의해주세요.');
       } finally {
@@ -150,7 +151,7 @@ class SignIn extends HookConsumerWidget {
                           ),
                         ),
                       ),
-                      (!kIsWeb && Platform.isIOS)
+                      (kIsWeb || Platform.isIOS)
                           ? GestureDetector(
                               onTap: () {
                                 handleLogin(AuthRepository.instance.appleLogin);

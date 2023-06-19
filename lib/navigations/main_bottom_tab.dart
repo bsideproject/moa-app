@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
+import 'package:moa_app/utils/my_platform.dart';
 import 'package:moa_app/utils/router_provider.dart';
 
 enum ScreenType { social, generalMeetings }
@@ -79,7 +78,7 @@ class MainBottomTab extends HookWidget {
             notchMargin: 5,
             padding: EdgeInsets.only(
               top: 10,
-              bottom: Platform.isAndroid ? 10 : 0,
+              bottom: MyPlatform().isAndroid ? 10 : 0,
             ),
             child: Row(
               mainAxisSize: MainAxisSize.max,
