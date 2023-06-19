@@ -268,9 +268,7 @@ class AuthRepository implements IAuthRepository {
 
   Future<void> _loginAndSetTokenWith(AuthDto authDto) async {
     if(!authDto.isSuccess) {
-      // TODO: 로그인에 실패 예외처리 하기, 메세지를 띄운다든지 등등
-      logger.d('Login Fail');
-      return ;
+      throw 'Login failed with oauth provider';
     }
 
     var res = await dio.post(
@@ -286,9 +284,7 @@ class AuthRepository implements IAuthRepository {
     );
 
     if (res.statusCode != 200) {
-      // TODO: 우리 백엔드 쪽, 처리 실패 관련 예외처리 하기
-      logger.d('Moa-Spring Error - $res.statusCode\n$res.data');
-      return ;
+      throw 'Login failed with moa-spring with ${res.statusCode} cdoe';
     }
 
     await TokenRepository.instance
