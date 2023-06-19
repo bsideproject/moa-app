@@ -24,6 +24,7 @@ RUN flutter config --enable-web
 RUN mkdir /app/
 COPY . /app/
 WORKDIR /app/
+RUN dart run build_runner build --delete-conflicting-outputs
 RUN flutter build web
 
 # Stage 2 - Create the run-time image
