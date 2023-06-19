@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  moa-web:
+    build: .
+    ports:
+      - 6002:80
+    volumes:
+      - ./:/app
