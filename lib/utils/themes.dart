@@ -74,7 +74,7 @@ class Themes {
 
   static final dark = ThemeData.dark().copyWith(
     // dark theme settings
-    useMaterial3: true,
+    // useMaterial3: true,
     colorScheme: const ColorScheme.light(
       background: Colors.black,
     ),

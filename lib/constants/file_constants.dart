@@ -11,12 +11,15 @@ class Assets {
   static AssetImage setting = const AssetImage('$_icPath/setting.png');
   static AssetImage folderIcon = const AssetImage('$_icPath/folderIcon.png');
   static AssetImage hashtag = const AssetImage('$_icPath/hashtag.png');
+  static AssetImage searchIcon = const AssetImage('$_icPath/searchIcon.png');
+  static AssetImage newestIcon = const AssetImage('$_icPath/newestIcon.png');
 
   static AssetImage kakao = const AssetImage('$_imgPath/kakao.png');
   static AssetImage naver = const AssetImage('$_imgPath/naver.png');
   static AssetImage google = const AssetImage('$_imgPath/google.png');
   static AssetImage apple = const AssetImage('$_imgPath/apple.png');
   static AssetImage folder = const AssetImage('$_imgPath/folder.png');
+  static AssetImage emptyFolder = const AssetImage('$_imgPath/emptyFolder.png');
   static AssetImage moaBannerImg =
       const AssetImage('$_imgPath/moaBannerImg.png');
   static AssetImage moaSwitchImg =

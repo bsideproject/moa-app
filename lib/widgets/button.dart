@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moa_app/utils/colors.dart';
+import 'package:moa_app/constants/color_constants.dart';
 
 enum ButtonType {
   solid,
@@ -61,7 +61,7 @@ class Button extends StatelessWidget {
   Widget _renderLoading(BuildContext context) {
     return CircularProgressIndicator(
       semanticsLabel: '로딩',
-      backgroundColor: backgroundColor ?? AppColors.role.brand,
+      backgroundColor: backgroundColor ?? AppColors.primaryColor,
       strokeWidth: 3,
       valueColor: AlwaysStoppedAnimation<Color>(color),
     );
@@ -97,14 +97,14 @@ class Button extends StatelessWidget {
               : null,
       autofocus: autofocus,
       style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor ?? AppColors.role.brand,
+        backgroundColor: backgroundColor ?? AppColors.primaryColor,
         padding: padding,
         fixedSize: Size(width ?? double.infinity, height),
         textStyle: TextStyle(color: color, fontWeight: FontWeight.w600)
             .merge(textStyle),
         disabledForegroundColor: Colors.black,
         disabledBackgroundColor:
-            disabledBackgroundColor ?? AppColors.button.disabled.bg,
+            disabledBackgroundColor ?? AppColors.placeholder,
         elevation: 0,
       ).merge(ButtonStyle(
         overlayColor: MaterialStateProperty.all<Color>(Colors.black12),
@@ -114,7 +114,7 @@ class Button extends StatelessWidget {
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(borderRadius),
                       side: BorderSide(
-                        color: borderColor ?? AppColors.button.disabled.bg,
+                        color: borderColor ?? AppColors.placeholder,
                         width: borderWidth,
                       ),
                     ),
@@ -153,7 +153,7 @@ class Button extends StatelessWidget {
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(borderRadius),
                       side: BorderSide(
-                        color: borderColor ?? AppColors.button.disabled.bg,
+                        color: borderColor ?? AppColors.placeholder,
                         width: borderWidth,
                       ),
                     ),
@@ -177,5 +177,43 @@ class Button extends StatelessWidget {
         child: buttonType == ButtonType.solid
             ? _renderSolidButton(context)
             : _renderOutlineButton(context));
+  }
+}
+
+class CircleIconButton extends StatefulWidget {
+  const CircleIconButton({
+    super.key,
+    required this.onPressed,
+    required this.icon,
+    this.backgroundColor = AppColors.textInputBackground,
+  });
+  final Function() onPressed;
+  final Widget icon;
+  final Color? backgroundColor;
+
+  @override
+  State<CircleIconButton> createState() => _CircleIconButtonState();
+}
+
+class _CircleIconButtonState extends State<CircleIconButton> {
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: widget.onPressed,
+      style: ButtonStyle(
+        elevation: MaterialStateProperty.all(0),
+        shape: MaterialStateProperty.all(const CircleBorder()),
+        backgroundColor: MaterialStateProperty.all(
+          widget.backgroundColor,
+        ), // <-- Button color
+        overlayColor: MaterialStateProperty.resolveWith<Color?>((states) {
+          if (states.contains(MaterialState.pressed)) {
+            return Colors.black.withOpacity(0.1);
+          }
+          return null; // <-- Splash color
+        }),
+      ),
+      child: widget.icon,
+    );
   }
 }
