@@ -6,10 +6,13 @@ import 'package:moa_app/models/hashtag_model.dart';
 import 'package:moa_app/screens/home/widgets/hashtag_button.dart';
 
 class HashtagList extends HookWidget {
-  const HashtagList(
-      {super.key, required this.onPressed, required this.hashtag});
-  final Function() onPressed;
+  const HashtagList({
+    super.key,
+    required this.hashtag,
+    required this.onPressed,
+  });
   final HashtagModel hashtag;
+  final Function() onPressed;
 
   @override
   Widget build(BuildContext context) {

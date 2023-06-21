@@ -1,12 +1,79 @@
+import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:loading_more_list/loading_more_list.dart';
+import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
+import 'package:moa_app/models/folder_model.dart';
+import 'package:moa_app/screens/home/home.dart';
+import 'package:moa_app/widgets/loading_indicator.dart';
+
+class FolderTabView extends HookWidget {
+  const FolderTabView(
+      {super.key, required this.uniqueKey, required this.source});
+  final Key uniqueKey;
+  final FolderSource source;
+
+  @override
+  Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    return Expanded(
+      child: ExtendedVisibilityDetector(
+        uniqueKey: uniqueKey,
+        child: RefreshIndicator(
+          onRefresh: () {
+            // return source.refresh(true);
+            return Future.delayed(
+              const Duration(seconds: 2),
+              () {
+                source.refresh(false);
+              },
+            );
+          },
+          child: LoadingMoreList<FolderModel>(
+            ListConfig<FolderModel>(
+              addRepaintBoundaries: true,
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: width > Breakpoints.md ? 4 : 2,
+                childAspectRatio: 1.3,
+                mainAxisSpacing: 20.0,
+                crossAxisSpacing: 12.0,
+              ),
+              sourceList: source,
+              indicatorBuilder: (context, status) {
+                return const LoadingIndicator();
+              },
+              itemBuilder: (c, item, index) {
+                return index == source.length - 1
+                    ? GestureDetector(
+                        onTap: () {},
+                        child: Image(image: Assets.emptyFolder),
+                      )
+                    : FolderList(
+                        folder: item,
+                        folderColor: folderColors[index % 4],
+                        onPress: () {},
+                      );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class FolderList extends HookWidget {
-  const FolderList(
-      {super.key, required this.folderColor, required this.onPress});
+  const FolderList({
+    super.key,
+    required this.folder,
+    required this.folderColor,
+    required this.onPress,
+  });
+  final FolderModel folder;
   final Color folderColor;
   final Function() onPress;
 
@@ -69,9 +136,9 @@ class FolderList extends HookWidget {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    '인테리어',
-                    style: FolderTitleTextStyle(),
+                  Text(
+                    folder.title,
+                    style: const FolderTitleTextStyle(),
                   ),
                   const SizedBox(height: 3),
                   Text(
