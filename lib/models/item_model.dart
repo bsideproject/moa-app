@@ -1,4 +1,3 @@
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'item_model.freezed.dart';
@@ -10,6 +9,8 @@ class ItemModel with _$ItemModel {
     required int id,
     required String title,
     required String content,
+    double? width,
+    double? height,
   }) = _ItemModel;
 
   factory ItemModel.fromJson(Map<String, dynamic> json) =>

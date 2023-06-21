@@ -1,12 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:moa_app/models/item_model.dart';
 import 'package:moa_app/navigations/main_bottom_tab.dart';
 import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/screens/file_sharing/file_sharing.dart';
+import 'package:moa_app/screens/home/hashtag_detail.dart';
 import 'package:moa_app/screens/home/home.dart';
-import 'package:moa_app/screens/item_detail.dart';
 import 'package:moa_app/screens/sign_in.dart';
 import 'package:moa_app/services/fcm_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -20,7 +19,7 @@ enum GoRoutes {
   permission,
   fileSharing,
   userListing,
-  itemDetail,
+  hashtagDetail,
   editProfile,
   sample,
   result
@@ -99,11 +98,13 @@ final routeProvider = Provider((ref) {
             ),
             routes: [
               GoRoute(
-                name: GoRoutes.itemDetail.name,
+                name: GoRoutes.hashtagDetail.name,
                 path: ':id',
                 builder: (context, state) {
-                  var item = state.extra as ItemModel;
-                  return ItemDetail(item: item);
+                  var filterHashtag = state.extra as String;
+                  return HashtagDetail(
+                    filterHashtag: filterHashtag,
+                  );
                 },
               ),
             ],

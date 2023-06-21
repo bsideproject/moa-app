@@ -26,6 +26,7 @@ class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
         ),
         onPressed: () => context.pop(),
       ),
+      elevation: 0,
       bottom: isBottomBorderDisplayed
           ? PreferredSize(
               preferredSize: Size.fromHeight(bottomBorderStyle.height),
