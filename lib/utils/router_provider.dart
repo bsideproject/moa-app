@@ -6,6 +6,7 @@ import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/screens/file_sharing/file_sharing.dart';
 import 'package:moa_app/screens/home/hashtag_detail.dart';
 import 'package:moa_app/screens/home/home.dart';
+import 'package:moa_app/screens/setting/setting.dart';
 import 'package:moa_app/screens/sign_in.dart';
 import 'package:moa_app/services/fcm_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -22,7 +23,8 @@ enum GoRoutes {
   hashtagDetail,
   editProfile,
   sample,
-  result
+  result,
+  setting
 }
 
 CustomTransitionPage buildPageWithDefaultTransition<T>({
@@ -108,6 +110,16 @@ final routeProvider = Provider((ref) {
                 },
               ),
             ],
+          ),
+          GoRoute(
+            name: GoRoutes.setting.name,
+            path: GoRoutes.setting.fullPath,
+            pageBuilder: (context, state) =>
+                buildPageWithDefaultTransition<void>(
+              context: context,
+              state: state,
+              child: const Setting(),
+            ),
           ),
           GoRoute(
             name: GoRoutes.fileSharing.name,
