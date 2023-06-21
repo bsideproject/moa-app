@@ -127,7 +127,7 @@ class HashtagDetail extends HookWidget {
                   ),
                   itemBuilder: (context, index) {
                     return HashtagList(
-                      onPressed: () {},
+                      type: 'detailView',
                       hashtag: HashtagModel(
                         title: 'title',
                         description: 'description',
