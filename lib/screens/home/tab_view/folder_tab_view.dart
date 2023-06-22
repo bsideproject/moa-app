@@ -19,46 +19,44 @@ class FolderTabView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    return Expanded(
-      child: ExtendedVisibilityDetector(
-        uniqueKey: uniqueKey,
-        child: RefreshIndicator(
-          onRefresh: () {
-            // return source.refresh(true);
-            return Future.delayed(
-              const Duration(seconds: 2),
-              () {
-                source.refresh(false);
-              },
-            );
-          },
-          child: LoadingMoreList<FolderModel>(
-            ListConfig<FolderModel>(
-              addRepaintBoundaries: true,
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: width > Breakpoints.md ? 4 : 2,
-                childAspectRatio: 1.3,
-                mainAxisSpacing: 20.0,
-                crossAxisSpacing: 12.0,
-              ),
-              sourceList: source,
-              indicatorBuilder: (context, status) {
-                return const LoadingIndicator();
-              },
-              itemBuilder: (c, item, index) {
-                return index == source.length - 1
-                    ? GestureDetector(
-                        onTap: () {},
-                        child: Image(image: Assets.emptyFolder),
-                      )
-                    : FolderList(
-                        folder: item,
-                        folderColor: folderColors[index % 4],
-                        onPress: () {},
-                      );
-              },
+    return ExtendedVisibilityDetector(
+      uniqueKey: uniqueKey,
+      child: RefreshIndicator(
+        onRefresh: () {
+          // return source.refresh(true);
+          return Future.delayed(
+            const Duration(seconds: 2),
+            () {
+              source.refresh(false);
+            },
+          );
+        },
+        child: LoadingMoreList<FolderModel>(
+          ListConfig<FolderModel>(
+            addRepaintBoundaries: true,
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: width > Breakpoints.md ? 4 : 2,
+              childAspectRatio: 1.3,
+              mainAxisSpacing: 20.0,
+              crossAxisSpacing: 12.0,
             ),
+            sourceList: source,
+            indicatorBuilder: (context, status) {
+              return const LoadingIndicator();
+            },
+            itemBuilder: (c, item, index) {
+              return index == source.length - 1
+                  ? GestureDetector(
+                      onTap: () {},
+                      child: Image(image: Assets.emptyFolder),
+                    )
+                  : FolderList(
+                      folder: item,
+                      folderColor: folderColors[index % 4],
+                      onPress: () {},
+                    );
+            },
           ),
         ),
       ),
