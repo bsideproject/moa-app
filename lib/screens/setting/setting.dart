@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/providers/token_provider.dart';
-import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/alert_dialog.dart';
 
 class Setting extends HookConsumerWidget {
@@ -22,9 +20,6 @@ class Setting extends HookConsumerWidget {
                   context,
                   onPress: () async {
                     await ref.watch(tokenStateProvider.notifier).removeToken();
-                    if (context.mounted) {
-                      context.go(GoRoutes.signIn.fullPath);
-                    }
                   },
                   showCancelButton: true,
                   title: '로그아웃',
