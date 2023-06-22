@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:moa_app/constants/color_constants.dart';
+
 import 'package:moa_app/constants/font_constants.dart';
-import 'package:moa_app/utils/colors.dart';
 
-OutlineInputBorder focusedOutlineBorder = OutlineInputBorder(
-  borderSide: BorderSide(width: 1.5, color: AppColors.role.basic),
-  borderRadius: const BorderRadius.all(Radius.circular(8)),
+OutlineInputBorder focusedOutlineBorder = const OutlineInputBorder(
+  // borderSide: BorderSide(width: 1.5, color: AppColors.role.basic),
+  borderRadius: BorderRadius.all(Radius.circular(8)),
 );
 
-OutlineInputBorder outlineBorder = OutlineInputBorder(
-  borderSide: BorderSide(width: 1, color: AppColors.role.basic),
-  borderRadius: const BorderRadius.all(Radius.circular(8)),
+OutlineInputBorder outlineBorder = const OutlineInputBorder(
+  // borderSide: BorderSide(width: 1, color: AppColors.role.basic),
+  borderRadius: BorderRadius.all(Radius.circular(8)),
 );
 
-OutlineInputBorder disableBorder = OutlineInputBorder(
-  borderSide: BorderSide(width: 1, color: AppColors.bg.borderContrast),
-  borderRadius: const BorderRadius.all(Radius.circular(8)),
+OutlineInputBorder disableBorder = const OutlineInputBorder(
+  // // borderSide: BorderSide(width: 1, color: AppColors.bg.borderContrast),
+  borderRadius: BorderRadius.all(Radius.circular(8)),
 );
 
-OutlineInputBorder focusedErrorBorder = OutlineInputBorder(
-  borderSide: BorderSide(width: 1.5, color: AppColors.role.danger),
-  borderRadius: const BorderRadius.all(Radius.circular(8)),
+OutlineInputBorder focusedErrorBorder = const OutlineInputBorder(
+  // // borderSide: BorderSide(width: 1.5, color: AppColors.role.danger),
+  borderRadius: BorderRadius.all(Radius.circular(8)),
 );
 
-OutlineInputBorder errorBorder = OutlineInputBorder(
-  borderSide: BorderSide(width: 1, color: AppColors.role.danger),
-  borderRadius: const BorderRadius.all(Radius.circular(8)),
+OutlineInputBorder errorBorder = const OutlineInputBorder(
+  // // borderSide: BorderSide(width: 1, color: AppColors.role.danger),
+  borderRadius: BorderRadius.all(Radius.circular(8)),
 );
 
 class EditText extends StatefulWidget {
@@ -40,6 +41,10 @@ class EditText extends StatefulWidget {
     this.obscureText = false,
     this.enableSuggestions = true,
     this.autocorrect = true,
+    this.height,
+    this.borderRadius = 50,
+    this.suffixIcon,
+    this.backgroundColor = AppColors.textInputBackground,
   });
 
   final void Function(String) onChanged;
@@ -51,6 +56,10 @@ class EditText extends StatefulWidget {
   final bool autocorrect;
   final InputDecoration? decoration;
   final TextInputType? keyboardType;
+  final double? height;
+  final double borderRadius;
+  final Widget? suffixIcon;
+  final Color backgroundColor;
 
   @override
   State<EditText> createState() => _EditTextState();
@@ -60,34 +69,41 @@ class _EditTextState extends State<EditText> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 15),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(50),
+        color: widget.backgroundColor,
+      ),
+      height: widget.height,
       child: TextField(
         obscureText: widget.obscureText,
         enableSuggestions: widget.enableSuggestions,
         autocorrect: widget.autocorrect,
         style: widget.style,
         decoration: InputDecoration(
+          suffixIcon: widget.suffixIcon,
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 12,
+            horizontal: 25,
+          ),
           hintText: widget.hintText,
+          hintStyle: TextStyle(
+            color: AppColors.moaOpacity30,
+            fontSize: 16,
+            fontFamily: FontConstants.pretendard,
+          ),
           enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-            width: 1,
-            color: Theme.of(context)
-                    .inputDecorationTheme
-                    .border
-                    ?.borderSide
-                    .color ??
-                Colors.black,
-          )),
+            borderRadius: BorderRadius.circular(50),
+            borderSide: const BorderSide(
+              color: Colors.white,
+            ),
+          ),
           focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-            width: 2,
-            color: Theme.of(context)
-                    .inputDecorationTheme
-                    .focusedBorder
-                    ?.borderSide
-                    .color ??
-                Colors.black,
-          )),
+            borderRadius: BorderRadius.circular(50),
+            borderSide: const BorderSide(
+              width: 0,
+              color: Colors.white,
+            ),
+          ),
         ),
         onChanged: (txt) => widget.onChanged(txt),
         keyboardType: widget.keyboardType,
@@ -215,10 +231,10 @@ class EditFormText extends HookWidget {
                     InputDecoration(
                       prefixIcon: prefixIcon,
                       counterText: '',
-                      focusColor: AppColors.text.basic,
-                      fillColor: !enabled
-                          ? AppColors.bg.borderContrast
-                          : AppColors.bg.basic,
+                      // focusColor: AppColors.text.basic,
+                      // fillColor: !enabled
+                      //     ? AppColors.bg.borderContrast
+                      //     : AppColors.bg.basic,
                       filled: !enabled,
                       disabledBorder:
                           showBorder ? disableBorder : InputBorder.none,
@@ -236,9 +252,9 @@ class EditFormText extends HookWidget {
                       errorMaxLines: 2,
                       errorStyle: errorStyle,
                     ),
-                style: textStyle.merge(TextStyle(
-                  color: !enabled ? AppColors.text.placeholder : null,
-                )),
+                style: textStyle.merge(const TextStyle(
+                    // color: !enabled ? AppColors.text.placeholder : null,
+                    )),
                 onChanged: onChanged,
                 onFieldSubmitted: onSubmitted,
                 onEditingComplete: onEditingComplete,
@@ -257,104 +273,6 @@ class EditFormText extends HookWidget {
                   : Container(),
             ],
           )
-        ],
-      ),
-    );
-  }
-}
-
-class EditTextSearch extends HookWidget {
-  EditTextSearch({
-    Key? key,
-    this.hintText,
-    this.hintStyle,
-    this.textEditingController,
-    this.onPressSearch,
-    this.onChanged,
-    this.margin,
-    required BuildContext context,
-    this.enabled = true,
-    this.suffixIcon,
-    this.readOnly = false,
-  }) : super(key: key);
-  final String? hintText;
-  final TextStyle? hintStyle;
-  final TextEditingController? textEditingController;
-  final Function(String)? onPressSearch;
-  final dynamic Function(String)? onChanged;
-  final FocusNode focus = FocusNode();
-  final EdgeInsets? margin;
-  final bool enabled;
-  final Widget? suffixIcon;
-  final bool readOnly;
-
-  @override
-  Widget build(BuildContext context) {
-    var text = useState('');
-    var hasFocus = useState<bool>(false);
-    var focusColor =
-        hasFocus.value ? AppColors.text.basic : AppColors.text.placeholder;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.bg.borderContrast,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(8),
-        ),
-      ),
-      margin: margin,
-      padding: const EdgeInsets.only(left: 16),
-      child: Row(
-        children: [
-          Icon(
-            Icons.search,
-            size: 20,
-            color: focusColor,
-          ),
-          const SizedBox(
-            width: 8,
-          ),
-          Flexible(
-            child: Focus(
-              onFocusChange: (focus) => hasFocus.value = focus,
-              child: EditFormText(
-                focusNode: focus,
-                inputDecoration: InputDecoration(
-                    border: InputBorder.none, suffixIcon: suffixIcon),
-                onSubmitted: onPressSearch,
-                textEditingController: textEditingController,
-                enabled: enabled,
-                readOnly: readOnly,
-                onChanged: (val) {
-                  text.value = val;
-                  if (onChanged != null) {
-                    onChanged!(val);
-                  }
-                },
-                hintText: hintText,
-                hintStyle: TextStyle(
-                  color: AppColors.text.placeholder,
-                ).merge(hintStyle),
-                showBorder: false,
-              ),
-            ),
-          ),
-          textEditingController != null &&
-                  textEditingController!.text.isNotEmpty
-              ? TextButton(
-                  onPressed: () {
-                    if (onPressSearch != null) {
-                      onPressSearch!(text.value);
-                    }
-                  },
-                  child: Text(
-                    '검색',
-                    style: const InputLabelTextStyle().merge(
-                      TextStyle(color: focusColor),
-                    ),
-                  ),
-                )
-              : const SizedBox()
         ],
       ),
     );

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:moa_app/models/item_model.dart';
+import 'package:moa_app/models/folder_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'item_provider.g.dart';
@@ -9,7 +9,7 @@ part 'item_provider.g.dart';
 // @Riverpod(keepAlive: true)
 @riverpod
 class AsyncItems extends _$AsyncItems {
-  Future<List<ItemModel>> fetchItem() async {
+  Future<List<FolderModel>> fetchItem() async {
     // get the [KeepAliveLink]
     var link = ref.keepAlive();
     // a timer to be used by the callbacks below
@@ -37,12 +37,12 @@ class AsyncItems extends _$AsyncItems {
   }
 
   @override
-  Future<List<ItemModel>> build() async {
+  Future<List<FolderModel>> build() async {
     return fetchItem();
   }
 
   Future<void> addItems({
-    required ItemModel item,
+    required FolderModel item,
   }) async {
     state = const AsyncValue.loading();
 
@@ -64,7 +64,7 @@ class AsyncItems extends _$AsyncItems {
   }
 
   Future<void> updateItems({
-    required ItemModel item,
+    required FolderModel item,
   }) async {
     state = const AsyncValue.loading();
 

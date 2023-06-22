@@ -1,101 +1,83 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:moa_app/constants/color_constants.dart';
-import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
+import 'package:moa_app/models/hashtag_model.dart';
+import 'package:moa_app/screens/home/widgets/hashtag_button.dart';
+import 'package:moa_app/utils/router_provider.dart';
 
 class HashtagList extends HookWidget {
-  const HashtagList({super.key});
+  const HashtagList({
+    super.key,
+    required this.hashtag,
+    this.type = 'list',
+  });
+  final HashtagModel hashtag;
+  final String? type;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.contain,
-          image: Assets.folder,
-          colorFilter: const ColorFilter.mode(
-            AppColors.folderColorECD8F3,
-            BlendMode.srcIn,
-          ),
-        ),
+        borderRadius: BorderRadius.circular(10),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 30),
-                      width: 32,
-                      height: 32,
-                      child: const CircleAvatar(
-                        radius: 30,
-                        backgroundColor: AppColors.blackColor,
-                        child: Icon(Icons.access_alarm),
-                      ),
-                    ),
-                    Positioned(
-                      top: 30,
-                      left: 16,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 7, vertical: 3),
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          '+56',
-                          style: const FolderSubTitleTextStyle()
-                              .merge(const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          )),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  '인테리어',
-                  style: FolderTitleTextStyle(),
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  '최근 저장 23.05.30',
-                  style: const FolderSubTitleTextStyle().merge(
-                    const TextStyle(
-                      color: AppColors.placeholder,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 25),
-            child: Material(
-              clipBehavior: Clip.antiAlias,
-              borderRadius: BorderRadius.circular(25),
-              color: Colors.transparent,
-              child: IconButton(
-                iconSize: 24,
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.more_vert,
-                  color: AppColors.blackColor,
-                ),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.moaOpacity30),
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
           ),
+          const SizedBox(height: 10),
+          Text(
+            hashtag.title,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              fontFamily: FontConstants.pretendard,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            hashtag.description,
+            style: const TextStyle(
+              fontSize: 14,
+              fontFamily: FontConstants.pretendard,
+              color: AppColors.moaDescription,
+            ),
+          ),
+          const SizedBox(height: 15),
+          Row(
+            children: [
+              ...hashtag.tags.map((tag) {
+                if (tag != null) {
+                  return Container(
+                    margin: const EdgeInsets.only(right: 5),
+                    child: HashtagButton(
+                      onPress: () {
+                        if (type == 'detailView') {
+                          // todo hash_detail 화면 filterHashtag 업데이트 시키기
+                          return;
+                        }
+                        // tag text
+                        context.push(
+                          '${GoRoutes.home.fullPath}/1',
+                          extra: tag,
+                        );
+                      },
+                      text: tag,
+                    ),
+                  );
+                }
+                return const SizedBox();
+              }).toList(),
+            ],
+          )
         ],
       ),
     );

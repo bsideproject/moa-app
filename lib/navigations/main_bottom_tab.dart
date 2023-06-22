@@ -28,7 +28,7 @@ class MainBottomTab extends HookWidget {
         // https://github.com/flutter/flutter/issues/99124
         context.goNamed(GoRoutes.home.name);
       } else if (index == 1) {
-        context.goNamed(GoRoutes.fileSharing.name);
+        context.goNamed(GoRoutes.setting.name);
       }
     }
 
