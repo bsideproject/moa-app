@@ -32,10 +32,10 @@ class AuthDto {
 }
 
 abstract class IAuthRepository {
-  Future<void> googleLogin();
-  Future<void> kakaoLogin();
-  Future<void> naverLogin();
-  Future<void> appleLogin();
+  Future<String?> googleLogin();
+  Future<String?> kakaoLogin();
+  Future<String?> naverLogin();
+  Future<String?> appleLogin();
 }
 
 class AuthRepository implements IAuthRepository {
@@ -43,7 +43,7 @@ class AuthRepository implements IAuthRepository {
   static AuthRepository instance = const AuthRepository._();
 
   @override
-  Future<void> googleLogin() async {
+  Future<String?> googleLogin() async {
     late GoogleSignInAccount? user;
     var googleSignIn = GoogleSignIn(
       signInOption: SignInOption.standard,
@@ -64,7 +64,7 @@ class AuthRepository implements IAuthRepository {
     }
 
     if (user == null) {
-      return;
+      return null;
     }
 
     var token = await user.authentication;
@@ -78,17 +78,18 @@ class AuthRepository implements IAuthRepository {
           )
         : AuthDto.fail();
 
-    await _loginAndSetTokenWith(authDto);
+    return await _loginAndSetTokenWith(authDto);
   }
 
   @override
-  Future<void> kakaoLogin() async {
+  Future<String?> kakaoLogin() async {
     AuthDto authDto =
         kIsWeb ? await _kakaoLoginWeb() : await _kakaoLoginMobile();
 
     if (authDto.isSuccess) {
-      await _loginAndSetTokenWith(authDto);
+      return await _loginAndSetTokenWith(authDto);
     }
+    return null;
   }
 
   Future<AuthDto> _kakaoLoginWeb() async {
@@ -164,11 +165,11 @@ class AuthRepository implements IAuthRepository {
   }
 
   @override
-  Future<void> naverLogin() async {
+  Future<String?> naverLogin() async {
     AuthDto authDto =
         kIsWeb ? await _naverLoginWeb() : await _naverLoginMobile();
 
-    await _loginAndSetTokenWith(authDto);
+    return await _loginAndSetTokenWith(authDto);
   }
 
   Future<AuthDto> _naverLoginWeb() async {
@@ -230,7 +231,7 @@ class AuthRepository implements IAuthRepository {
   }
 
   @override
-  Future<void> appleLogin() async {
+  Future<String?> appleLogin() async {
     var credential = await SignInWithApple.getAppleIDCredential(
         scopes: [
           AppleIDAuthorizationScopes.email,
@@ -246,20 +247,19 @@ class AuthRepository implements IAuthRepository {
             : null);
 
     if (credential.identityToken != null && credential.userIdentifier != null) {
-      await _loginAndSetTokenWith(AuthDto.success(
+      return await _loginAndSetTokenWith(AuthDto.success(
         id: credential.userIdentifier!,
         email: credential.email!,
         token: credential.identityToken!,
         platform: 'apple',
       ));
     }
+    return null;
   }
 
-  Future<void> _loginAndSetTokenWith(AuthDto authDto) async {
-
-    if(!authDto.isSuccess) {
+  Future<String> _loginAndSetTokenWith(AuthDto authDto) async {
+    if (!authDto.isSuccess) {
       throw 'Login failed with oauth provider';
-
     }
 
     var res = await dio.post(
@@ -275,7 +275,7 @@ class AuthRepository implements IAuthRepository {
     );
 
     if (res.statusCode != 200) {
-      throw 'Login failed with moa-spring with ${res.statusCode} cdoe';
+      throw 'Login failed with moa-spring with ${res.statusCode} code';
     }
 
     await TokenRepository.instance.setToken(token: res.data['access_token']);
@@ -286,5 +286,6 @@ class AuthRepository implements IAuthRepository {
         'id      : ${authDto.id}\n'
         'email   : ${authDto.email}\n'
         'token   : ${authDto.token}\n');
+    return res.data['access_token'];
   }
 }
