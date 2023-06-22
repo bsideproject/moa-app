@@ -29,10 +29,12 @@ class SignIn extends HookConsumerWidget {
     void handleLogin(Function login) async {
       try {
         loading.value = true;
-        await login();
-        await ref.watch(tokenStateProvider.notifier).addToken();
-        if (context.mounted) {
-          context.go(GoRoutes.home.fullPath);
+        var token = await login();
+        if (token != null) {
+          await ref.watch(tokenStateProvider.notifier).addToken(token);
+          if (context.mounted) {
+            context.go(GoRoutes.home.fullPath);
+          }
         }
       } catch (e, traceback) {
         logger.d(e);
