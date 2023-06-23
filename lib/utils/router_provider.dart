@@ -4,7 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:moa_app/navigations/main_bottom_tab.dart';
 import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/screens/file_sharing/file_sharing.dart';
-import 'package:moa_app/screens/home/hashtag_detail.dart';
+import 'package:moa_app/screens/home/folder_detail_view.dart';
+import 'package:moa_app/screens/home/hashtag_detail_view.dart';
 import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/screens/setting/setting.dart';
 import 'package:moa_app/screens/sign_in.dart';
@@ -20,6 +21,7 @@ enum GoRoutes {
   permission,
   fileSharing,
   userListing,
+  folderDetail,
   hashtagDetail,
   editProfile,
   sample,
@@ -100,13 +102,19 @@ final routeProvider = Provider((ref) {
             ),
             routes: [
               GoRoute(
-                name: GoRoutes.hashtagDetail.name,
-                path: ':id',
+                name: GoRoutes.folderDetail.name,
+                path: '${GoRoutes.folderDetail.path}/:id',
                 builder: (context, state) {
-                  var filterHashtag = state.extra as String;
-                  return HashtagDetail(
-                    filterHashtag: filterHashtag,
-                  );
+                  var detailView = state.extra as FolderDetailView;
+                  return FolderDetailView(folderName: detailView.folderName);
+                },
+              ),
+              GoRoute(
+                name: GoRoutes.hashtagDetail.name,
+                path: '${GoRoutes.hashtagDetail.path}/:id',
+                builder: (context, state) {
+                  var detailView = state.extra as HashtagDetailView;
+                  return HashtagDetailView(filterName: detailView.filterName);
                 },
               ),
             ],

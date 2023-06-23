@@ -1,14 +1,17 @@
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:loading_more_list/loading_more_list.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/hashtag_model.dart';
+import 'package:moa_app/screens/home/hashtag_detail_view.dart';
 import 'package:moa_app/screens/home/home.dart';
-import 'package:moa_app/screens/home/widgets/hashtag_list.dart';
+import 'package:moa_app/screens/home/widgets/hashtag_card.dart';
+import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
@@ -22,6 +25,14 @@ class HashtagTabView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
+
+    void goHashtagDetailView(String tag) {
+      context.push(
+        '${GoRoutes.home.fullPath}/${GoRoutes.hashtagDetail.path}/$tag',
+        extra: HashtagDetailView(filterName: tag),
+      );
+    }
+
     return Column(
       children: [
         Container(
@@ -125,7 +136,10 @@ class HashtagTabView extends HookWidget {
                     return const LoadingIndicator();
                   },
                   itemBuilder: (c, item, index) {
-                    return HashtagList(hashtag: item);
+                    return HashtagCard(
+                      hashtag: item,
+                      onPressHashtag: (tag) => goHashtagDetailView(tag),
+                    );
                   },
                 ),
               ),

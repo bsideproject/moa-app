@@ -349,10 +349,10 @@ packages:
     dependency: "direct main"
     description:
       name: extended_nested_scroll_view
-      sha256: adb98e3a92c16245789699f9ddd3cbaa47f14f744b5bbd8d7fef54b7e86089a2
+      sha256: "49c0de4f648a7ed4dc5501db7855aec38582d076ef61bb1708ba73d58f0f2525"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.0"
+    version: "6.1.1"
   fake_async:
     dependency: transitive
     description:
@@ -600,6 +600,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  flutter_staggered_grid_view:
+    dependency: "direct main"
+    description:
+      name: flutter_staggered_grid_view
+      sha256: "1312314293acceb65b92754298754801b0e1f26a1845833b740b30415bbbcf07"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.2"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -1533,10 +1541,10 @@ packages:
     dependency: transitive
     description:
       name: visibility_detector
-      sha256: "15c54a459ec2c17b4705450483f3d5a2858e733aee893dcee9d75fd04814940d"
+      sha256: dd5cc11e13494f432d15939c3aa8ae76844c42b723398643ce9addb88a5ed420
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.3"
+    version: "0.4.0+2"
   vm_service:
     dependency: transitive
     description:

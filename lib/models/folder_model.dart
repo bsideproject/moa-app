@@ -9,8 +9,6 @@ class FolderModel with _$FolderModel {
     required int id,
     required String title,
     required String content,
-    double? width,
-    double? height,
   }) = _FolderModel;
 
   factory FolderModel.fromJson(Map<String, dynamic> json) =>

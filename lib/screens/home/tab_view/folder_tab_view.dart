@@ -1,13 +1,16 @@
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:loading_more_list/loading_more_list.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/folder_model.dart';
+import 'package:moa_app/screens/home/folder_detail_view.dart';
 import 'package:moa_app/screens/home/home.dart';
+import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
 
 class FolderTabView extends HookWidget {
@@ -19,6 +22,16 @@ class FolderTabView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
+
+    void addFolder() {}
+
+    void goFolderDetailView(String title) {
+      context.push(
+        '${GoRoutes.home.fullPath}/${GoRoutes.folderDetail.path}/$title',
+        extra: FolderDetailView(folderName: title),
+      );
+    }
+
     return ExtendedVisibilityDetector(
       uniqueKey: uniqueKey,
       child: RefreshIndicator(
@@ -47,14 +60,16 @@ class FolderTabView extends HookWidget {
             },
             itemBuilder: (c, item, index) {
               return index == source.length - 1
-                  ? GestureDetector(
-                      onTap: () {},
+                  ? InkWell(
+                      splashColor: Colors.transparent,
+                      borderRadius: BorderRadius.circular(15),
+                      onTap: addFolder,
                       child: Image(image: Assets.emptyFolder),
                     )
                   : FolderList(
                       folder: item,
                       folderColor: folderColors[index % 4],
-                      onPress: () {},
+                      onPress: () => goFolderDetailView(item.title),
                     );
             },
           ),
@@ -77,19 +92,21 @@ class FolderList extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPress,
-      child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.contain,
-            image: Assets.folder,
-            colorFilter: ColorFilter.mode(
-              folderColor,
-              BlendMode.srcIn,
-            ),
+    return Ink(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          fit: BoxFit.contain,
+          image: Assets.folder,
+          colorFilter: ColorFilter.mode(
+            folderColor,
+            BlendMode.srcIn,
           ),
         ),
+      ),
+      child: InkWell(
+        splashColor: Colors.transparent,
+        borderRadius: BorderRadius.circular(15),
+        onTap: onPress,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,

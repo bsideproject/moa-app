@@ -1,20 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/hashtag_model.dart';
-import 'package:moa_app/screens/home/widgets/hashtag_list.dart';
+import 'package:moa_app/screens/home/widgets/hashtag_card.dart';
 import 'package:moa_app/widgets/app_bar.dart';
 
-class HashtagDetail extends HookWidget {
-  const HashtagDetail({super.key, required this.filterHashtag});
-  final String filterHashtag;
+class HashtagDetailView extends HookWidget {
+  const HashtagDetailView({super.key, required this.filterName});
+  final String filterName;
 
   @override
   Widget build(BuildContext context) {
+    // var hashTagList = useState(<HashtagModel>[]);
     var gridController = useScrollController();
     var gridPageNum = useState(20);
+
+    Future<void> pullToRefresh() async {
+      return Future.delayed(
+        const Duration(seconds: 2),
+        () {},
+      );
+    }
+
+    // Future<void> getHashtagDetailViewList() async {
+    //     hashTagList.value = await
+    // }
 
     useEffect(() {
       gridController.addListener(() {
@@ -27,6 +40,7 @@ class HashtagDetail extends HookWidget {
 
       return null;
     }, []);
+
     return Scaffold(
       appBar: const AppBarBack(
         bottomBorderStyle: BottomBorderStyle(height: 0),
@@ -46,7 +60,7 @@ class HashtagDetail extends HookWidget {
                     color: AppColors.primaryColor,
                   ),
                   child: Text(
-                    filterHashtag,
+                    filterName,
                     style: const TextStyle(
                       color: AppColors.whiteColor,
                       fontSize: 16,
@@ -109,32 +123,76 @@ class HashtagDetail extends HookWidget {
             const SizedBox(height: 5),
             Expanded(
               child: RefreshIndicator(
-                onRefresh: () {
-                  return Future.delayed(
-                    const Duration(seconds: 2),
-                    () {},
-                  );
-                },
-                child: GridView.builder(
-                  controller: gridController,
-                  padding: EdgeInsets.zero,
-                  itemCount: gridPageNum.value,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                onRefresh: pullToRefresh,
+                child: SingleChildScrollView(
+                  child: StaggeredGrid.count(
+                    axisDirection: AxisDirection.down, // <----- Add this line
                     crossAxisCount: 2,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 20,
-                    childAspectRatio: 9 / 14,
-                  ),
-                  itemBuilder: (context, index) {
-                    return HashtagList(
-                      type: 'detailView',
-                      hashtag: HashtagModel(
-                        title: 'title',
-                        description: 'description',
-                        tags: ['#자취레시피', '#꿀팁'],
+                    children: [
+                      StaggeredGridTile.count(
+                        crossAxisCellCount: 1,
+                        mainAxisCellCount: 1.4,
+                        child: HashtagCard(
+                          onPressHashtag: (tag) {},
+                          hashtag: HashtagModel(
+                            title: 'title',
+                            description: 'description',
+                            tags: ['#자취레시피', '#꿀팁'],
+                          ),
+                        ),
                       ),
-                    );
-                  },
+                      StaggeredGridTile.count(
+                        crossAxisCellCount: 1,
+                        mainAxisCellCount: 1,
+                        child: HashtagCard(
+                          onPressHashtag: (tag) {},
+                          hashtag: HashtagModel(
+                            title: 'title',
+                            description: 'description',
+                            tags: ['#자취레시피', '#꿀팁'],
+                          ),
+                        ),
+                      ),
+                      StaggeredGridTile.count(
+                        crossAxisCellCount: 1,
+                        mainAxisCellCount: 1.4,
+                        child: HashtagCard(
+                          onPressHashtag: (tag) {},
+                          hashtag: HashtagModel(
+                            title: 'title',
+                            description: 'description',
+                            tags: ['#자취레시피', '#꿀팁'],
+                          ),
+                        ),
+                      ),
+                      StaggeredGridTile.count(
+                        crossAxisCellCount: 1,
+                        mainAxisCellCount: 1.1,
+                        child: HashtagCard(
+                          onPressHashtag: (tag) {},
+                          hashtag: HashtagModel(
+                            title: 'title',
+                            description: 'description',
+                            tags: ['#자취레시피', '#꿀팁'],
+                          ),
+                        ),
+                      ),
+                      StaggeredGridTile.count(
+                        crossAxisCellCount: 1,
+                        mainAxisCellCount: 1.5,
+                        child: HashtagCard(
+                          onPressHashtag: (tag) {},
+                          hashtag: HashtagModel(
+                            title: 'title',
+                            description: 'description',
+                            tags: ['#자취레시피', '#꿀팁'],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
