@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:moa_app/repositories/token_repository.dart';
 import 'package:moa_app/utils/api.dart';
+import 'package:moa_app/utils/logger.dart';
 
 abstract class IFolderRepository {
   Future<String?> getFolderList();
@@ -21,7 +22,7 @@ class FolderRepository implements IFolderRepository {
       ),
     );
 
-    print('res:$res');
+    logger.d('res:$res');
     return 'string';
   }
 }
