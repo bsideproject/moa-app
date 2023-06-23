@@ -56,7 +56,7 @@ class UserListingScreen extends HookWidget {
         children: [
           const Text(
             'receive url',
-            style: TitleTextStyle(),
+            style: H1TextStyle(),
           ),
           const SizedBox(height: 10),
           Text('$text'),
@@ -79,17 +79,17 @@ class UserListingScreen extends HookWidget {
           const SizedBox(height: 20),
           Text(
             content.value.title,
-            style: const TitleTextStyle(),
+            style: const H1TextStyle(),
           ),
           const SizedBox(height: 5),
           Text(
             content.value.description,
-            style: const SubTitleTextStyle(),
+            style: const H2TextStyle(),
           ),
           const SizedBox(height: 5),
           Text(
             content.value.url,
-            style: const SubTitleTextStyle(),
+            style: const H2TextStyle(),
           ),
         ],
       ),

@@ -202,6 +202,7 @@ class _CircleIconButtonState extends State<CircleIconButton> {
       onPressed: widget.onPressed,
       style: ButtonStyle(
         elevation: MaterialStateProperty.all(0),
+
         shape: MaterialStateProperty.all(const CircleBorder()),
         backgroundColor: MaterialStateProperty.all(
           widget.backgroundColor,

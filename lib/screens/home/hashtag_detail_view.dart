@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:moa_app/constants/color_constants.dart';
-import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
-import 'package:moa_app/models/hashtag_model.dart';
-import 'package:moa_app/screens/home/widgets/hashtag_card.dart';
+import 'package:moa_app/screens/home/widgets/dynamic_grid_view.dart';
+import 'package:moa_app/screens/home/widgets/type_header.dart';
 import 'package:moa_app/widgets/app_bar.dart';
 
 class HashtagDetailView extends HookWidget {
@@ -72,130 +70,12 @@ class HashtagDetailView extends HookWidget {
               ],
             ),
             const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                RichText(
-                  text: const TextSpan(
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: AppColors.blackColor,
-                      fontFamily: FontConstants.pretendard,
-                    ),
-                    children: [
-                      TextSpan(
-                          text: '146개',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          )),
-                      TextSpan(
-                        text: '의 취향을 모았어요!',
-                      ),
-                    ],
-                  ),
-                ),
-                Material(
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(2),
-                    onTap: () {},
-                    child: Row(
-                      children: [
-                        const Text(
-                          '최신순',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontFamily: FontConstants.pretendard,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(width: 3),
-                        Image(
-                          image: Assets.newestIcon,
-                          width: 15,
-                          height: 15,
-                        )
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ),
+            TypeHeader(typeCount: 146, onPressFilter: () {}),
             const SizedBox(height: 5),
             Expanded(
-              child: RefreshIndicator(
-                onRefresh: pullToRefresh,
-                child: SingleChildScrollView(
-                  child: StaggeredGrid.count(
-                    axisDirection: AxisDirection.down, // <----- Add this line
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 20,
-                    children: [
-                      StaggeredGridTile.count(
-                        crossAxisCellCount: 1,
-                        mainAxisCellCount: 1.4,
-                        child: HashtagCard(
-                          onPressHashtag: (tag) {},
-                          hashtag: HashtagModel(
-                            title: 'title',
-                            description: 'description',
-                            tags: ['#자취레시피', '#꿀팁'],
-                          ),
-                        ),
-                      ),
-                      StaggeredGridTile.count(
-                        crossAxisCellCount: 1,
-                        mainAxisCellCount: 1,
-                        child: HashtagCard(
-                          onPressHashtag: (tag) {},
-                          hashtag: HashtagModel(
-                            title: 'title',
-                            description: 'description',
-                            tags: ['#자취레시피', '#꿀팁'],
-                          ),
-                        ),
-                      ),
-                      StaggeredGridTile.count(
-                        crossAxisCellCount: 1,
-                        mainAxisCellCount: 1.4,
-                        child: HashtagCard(
-                          onPressHashtag: (tag) {},
-                          hashtag: HashtagModel(
-                            title: 'title',
-                            description: 'description',
-                            tags: ['#자취레시피', '#꿀팁'],
-                          ),
-                        ),
-                      ),
-                      StaggeredGridTile.count(
-                        crossAxisCellCount: 1,
-                        mainAxisCellCount: 1.1,
-                        child: HashtagCard(
-                          onPressHashtag: (tag) {},
-                          hashtag: HashtagModel(
-                            title: 'title',
-                            description: 'description',
-                            tags: ['#자취레시피', '#꿀팁'],
-                          ),
-                        ),
-                      ),
-                      StaggeredGridTile.count(
-                        crossAxisCellCount: 1,
-                        mainAxisCellCount: 1.5,
-                        child: HashtagCard(
-                          onPressHashtag: (tag) {},
-                          hashtag: HashtagModel(
-                            title: 'title',
-                            description: 'description',
-                            tags: ['#자취레시피', '#꿀팁'],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+                child: DynamicGridView(
+              pullToRefresh: pullToRefresh,
+            )),
           ],
         ),
       ),

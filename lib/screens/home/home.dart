@@ -81,14 +81,14 @@ class Home extends HookConsumerWidget {
                         children: [
                           const Text(
                             '안녕하세요 Moa님!',
-                            style: TitleTextStyle(),
+                            style: H1TextStyle(),
                           ),
                           const SizedBox(height: 5),
                           Row(
                             children: [
                               Text(
                                 '#카페러버',
-                                style: const SubTitleTextStyle().merge(
+                                style: const Body1TextStyle().merge(
                                   TextStyle(
                                     color:
                                         AppColors.blackColor.withOpacity(0.3),
@@ -98,7 +98,7 @@ class Home extends HookConsumerWidget {
                               const SizedBox(width: 5),
                               Text(
                                 '#취미부자',
-                                style: const SubTitleTextStyle().merge(
+                                style: const Body1TextStyle().merge(
                                   TextStyle(
                                     color:
                                         AppColors.blackColor.withOpacity(0.3),
@@ -181,7 +181,7 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
                           ),
                           TextSpan(
                             text: '146개의 취향',
-                            style: const TitleTextStyle().merge(
+                            style: const H1TextStyle().merge(
                               const TextStyle(
                                 height: 1.4,
                                 fontSize: 24,

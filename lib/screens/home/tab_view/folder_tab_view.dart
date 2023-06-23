@@ -141,8 +141,7 @@ class FolderList extends HookWidget {
                           ),
                           child: Text(
                             '+56',
-                            style: const FolderSubTitleTextStyle()
-                                .merge(const TextStyle(
+                            style: const Hash2TextStyle().merge(const TextStyle(
                               fontWeight: FontWeight.bold,
                             )),
                           ),
@@ -153,12 +152,12 @@ class FolderList extends HookWidget {
                   const SizedBox(height: 20),
                   Text(
                     folder.title,
-                    style: const FolderTitleTextStyle(),
+                    style: const Hash1TextStyle(),
                   ),
                   const SizedBox(height: 3),
                   Text(
                     '최근 저장 23.05.30',
-                    style: const FolderSubTitleTextStyle().merge(
+                    style: const Hash2TextStyle().merge(
                       const TextStyle(
                         color: AppColors.placeholder,
                       ),

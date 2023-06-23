@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
+import 'package:moa_app/widgets/button.dart';
 
 class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
   const AppBarBack({
@@ -21,16 +23,16 @@ class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: title,
-      leadingWidth: 34,
-      leading: InkWell(
-        onTap: () {
-          context.pop();
-        },
-        child: Image(
+      leading: CircleIconButton(
+        backgroundColor: AppColors.whiteColor,
+        icon: Image(
           width: 24,
           height: 24,
           image: Assets.arrowBack,
         ),
+        onPressed: () {
+          context.pop();
+        },
       ),
       elevation: 0,
       titleSpacing: 0.0,

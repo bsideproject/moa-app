@@ -4,13 +4,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loading_more_list/loading_more_list.dart';
 import 'package:moa_app/constants/app_constants.dart';
-import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
-import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/hashtag_model.dart';
 import 'package:moa_app/screens/home/hashtag_detail_view.dart';
 import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/screens/home/widgets/hashtag_card.dart';
+import 'package:moa_app/screens/home/widgets/type_header.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
@@ -56,54 +55,7 @@ class HashtagTabView extends HookWidget {
                 ),
               ),
               const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  RichText(
-                    text: const TextSpan(
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: AppColors.blackColor,
-                        fontFamily: FontConstants.pretendard,
-                      ),
-                      children: [
-                        TextSpan(
-                            text: '146개',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            )),
-                        TextSpan(
-                          text: '의 취향을 모았어요!',
-                        ),
-                      ],
-                    ),
-                  ),
-                  Material(
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(2),
-                      onTap: () {},
-                      child: Row(
-                        children: [
-                          const Text(
-                            '최신순',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontFamily: FontConstants.pretendard,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(width: 3),
-                          Image(
-                            image: Assets.newestIcon,
-                            width: 15,
-                            height: 15,
-                          )
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              )
+              TypeHeader(typeCount: 146, onPressFilter: () {})
             ],
           ),
         ),

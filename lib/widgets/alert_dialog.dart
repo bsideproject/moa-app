@@ -34,8 +34,8 @@ class _AlertDialog {
           contentPadding:
               const EdgeInsets.only(left: 24, right: 24, bottom: 24),
           actionsPadding: const EdgeInsets.all(24),
-          title: Text(title, style: const TitleTextStyle()),
-          content: Text(content, style: const SubTitleTextStyle()),
+          title: Text(title, style: const H1TextStyle()),
+          content: Text(content, style: const H2TextStyle()),
           actions: <Widget>[
             Button(
                 width: MediaQuery.of(context).size.width,
