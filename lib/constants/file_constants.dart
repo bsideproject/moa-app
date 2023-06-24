@@ -13,6 +13,8 @@ class Assets {
   static AssetImage hashtag = const AssetImage('$_icPath/hashtag.png');
   static AssetImage searchIcon = const AssetImage('$_icPath/searchIcon.png');
   static AssetImage newestIcon = const AssetImage('$_icPath/newestIcon.png');
+  static AssetImage menu = const AssetImage('$_icPath/menu.png');
+  static AssetImage arrowBack = const AssetImage('$_icPath/arrowBack.png');
 
   static AssetImage kakao = const AssetImage('$_imgPath/kakao.png');
   static AssetImage naver = const AssetImage('$_imgPath/naver.png');

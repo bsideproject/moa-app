@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/hashtag_model.dart';
 import 'package:moa_app/screens/home/widgets/hashtag_button.dart';
-import 'package:moa_app/utils/router_provider.dart';
 
-class HashtagList extends HookWidget {
-  const HashtagList({
+class HashtagCard extends HookWidget {
+  const HashtagCard({
     super.key,
     required this.hashtag,
-    this.type = 'list',
+    required this.onPressHashtag,
   });
   final HashtagModel hashtag;
-  final String? type;
+  final Function(String) onPressHashtag;
 
   @override
   Widget build(BuildContext context) {
@@ -59,17 +57,7 @@ class HashtagList extends HookWidget {
                   return Container(
                     margin: const EdgeInsets.only(right: 5),
                     child: HashtagButton(
-                      onPress: () {
-                        if (type == 'detailView') {
-                          // todo hash_detail 화면 filterHashtag 업데이트 시키기
-                          return;
-                        }
-                        // tag text
-                        context.push(
-                          '${GoRoutes.home.fullPath}/1',
-                          extra: tag,
-                        );
-                      },
+                      onPress: () => onPressHashtag(tag),
                       text: tag,
                     ),
                   );

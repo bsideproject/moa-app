@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:moa_app/constants/color_constants.dart';
 
-class TitleTextStyle extends TextStyle {
-  const TitleTextStyle()
+class H1TextStyle extends TextStyle {
+  const H1TextStyle()
       : super(
           fontSize: 22,
           height: 1.2,
@@ -13,8 +13,62 @@ class TitleTextStyle extends TextStyle {
         );
 }
 
-class SubTitleTextStyle extends TextStyle {
-  const SubTitleTextStyle()
+class H2TextStyle extends TextStyle {
+  const H2TextStyle()
+      : super(
+          fontSize: 20,
+          fontWeight: FontConstants.fontWeightBold,
+          fontFamily: FontConstants.pretendard,
+        );
+}
+
+class H3TextStyle extends TextStyle {
+  const H3TextStyle()
+      : super(
+          fontSize: 18,
+          fontWeight: FontConstants.fontWeightBold,
+          fontFamily: FontConstants.pretendard,
+        );
+}
+
+class H4TextStyle extends TextStyle {
+  const H4TextStyle()
+      : super(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          fontFamily: FontConstants.pretendard,
+        );
+}
+
+class H5TextStyle extends TextStyle {
+  const H5TextStyle()
+      : super(
+          fontSize: 14,
+          fontWeight: FontConstants.fontWeightBold,
+          fontFamily: FontConstants.pretendard,
+        );
+}
+
+class Body1TextStyle extends TextStyle {
+  const Body1TextStyle()
+      : super(
+          fontSize: 14,
+          fontWeight: FontConstants.fontWeightMedium,
+          fontFamily: FontConstants.pretendard,
+        );
+}
+
+class Body2TextStyle extends TextStyle {
+  const Body2TextStyle()
+      : super(
+          fontSize: 19,
+          fontWeight: FontConstants.fontWeightNormal,
+          fontFamily: FontConstants.pretendard,
+        );
+}
+
+class Hash1TextStyle extends TextStyle {
+  const Hash1TextStyle()
       : super(
           fontSize: 16,
           fontWeight: FontConstants.fontWeightNormal,
@@ -22,17 +76,8 @@ class SubTitleTextStyle extends TextStyle {
         );
 }
 
-class FolderTitleTextStyle extends TextStyle {
-  const FolderTitleTextStyle()
-      : super(
-          fontSize: 16,
-          fontWeight: FontConstants.fontWeightBold,
-          fontFamily: FontConstants.pretendard,
-        );
-}
-
-class FolderSubTitleTextStyle extends TextStyle {
-  const FolderSubTitleTextStyle()
+class Hash2TextStyle extends TextStyle {
+  const Hash2TextStyle()
       : super(
           fontSize: 10,
           fontWeight: FontConstants.fontWeightNormal,

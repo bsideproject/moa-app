@@ -72,9 +72,9 @@ dependencies:
   
   extended_nested_scroll_view: ^6.1.0
   loading_more_list: ^5.0.3
-
   uuid: ^3.0.7
   google_sign_in_web: ^0.12.0+2
+  flutter_staggered_grid_view: ^0.6.2
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2

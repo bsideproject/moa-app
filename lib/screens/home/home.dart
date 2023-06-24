@@ -29,14 +29,21 @@ class Home extends HookConsumerWidget {
     var tabIdx = useState(0);
     TabController tabController = useTabController(initialLength: 2);
 
-    /// SliverPersistentHeader의 tab icon 색깔 리렌더를 위해서 addListener 사용
-    tabController.addListener(() {
-      if (tabController.index == 0) {
-        tabIdx.value = 0;
-      } else {
-        tabIdx.value = 1;
-      }
-    });
+    // Future<void> getFolderList() async {
+    //   await FolderRepository.instance.getFolderList();
+    // }
+
+    useEffect(() {
+      /// SliverPersistentHeader의 tab icon 색깔 리렌더를 위해서 addListener 사용
+      tabController.addListener(() {
+        if (tabController.index == 0) {
+          tabIdx.value = 0;
+        } else {
+          tabIdx.value = 1;
+        }
+      });
+      return null;
+    }, []);
 
     return Container(
       color: AppColors.backgroundColor,
@@ -74,14 +81,14 @@ class Home extends HookConsumerWidget {
                         children: [
                           const Text(
                             '안녕하세요 Moa님!',
-                            style: TitleTextStyle(),
+                            style: H1TextStyle(),
                           ),
                           const SizedBox(height: 5),
                           Row(
                             children: [
                               Text(
                                 '#카페러버',
-                                style: const SubTitleTextStyle().merge(
+                                style: const Body1TextStyle().merge(
                                   TextStyle(
                                     color:
                                         AppColors.blackColor.withOpacity(0.3),
@@ -91,7 +98,7 @@ class Home extends HookConsumerWidget {
                               const SizedBox(width: 5),
                               Text(
                                 '#취미부자',
-                                style: const SubTitleTextStyle().merge(
+                                style: const Body1TextStyle().merge(
                                   TextStyle(
                                     color:
                                         AppColors.blackColor.withOpacity(0.3),
@@ -118,8 +125,8 @@ class Home extends HookConsumerWidget {
                 // physics: const NeverScrollableScrollPhysics(),
                 controller: tabController,
                 children: const <Widget>[
-                  TabViewItem(Key('Tab0')),
-                  TabViewItem(Key('Tab1')),
+                  TabViewItem(Key('folderTab')),
+                  TabViewItem(Key('hashtagTab')),
                 ],
               ),
             ),
@@ -174,7 +181,7 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
                           ),
                           TextSpan(
                             text: '146개의 취향',
-                            style: const TitleTextStyle().merge(
+                            style: const H1TextStyle().merge(
                               const TextStyle(
                                 height: 1.4,
                                 fontSize: 24,
@@ -239,12 +246,12 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => 129.0;
-  // double get maxExtent => tabController.index == 1 ? 245.0 : 129.0;
+  double get maxExtent => 127;
+  // double get maxExtent => kToolbarHeight + 70;
 
   @override
-  double get minExtent => 129.0;
-  // double get minExtent => tabController.index == 1 ? 245.0 : 129.0;
+  double get minExtent => 127;
+  // double get minExtent => kToolbarHeight;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
@@ -359,7 +366,7 @@ class TabViewItemState extends State<TabViewItem>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    if (widget.uniqueKey == const Key('Tab0')) {
+    if (widget.uniqueKey == const Key('folderTab')) {
       return FolderTabView(uniqueKey: widget.uniqueKey, source: folderSource);
     }
     return HashtagTabView(uniqueKey: widget.uniqueKey, source: hashtagSource);
