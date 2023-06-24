@@ -17,6 +17,7 @@ class Setting extends HookConsumerWidget {
         actions: [
           Center(
             child: InkWell(
+              borderRadius: BorderRadius.circular(5),
               onTap: () {
                 alertDialog.confirm(
                   context,
