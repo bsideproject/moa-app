@@ -45,12 +45,11 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<String?> googleLogin() async {
     late GoogleSignInAccount? user;
-    var googleSignIn = GoogleSignIn(
-      signInOption: SignInOption.standard,
-      clientId: Config().googleClientId,
-    );
-
     if (kIsWeb) {
+      var googleSignIn = GoogleSignIn(
+        signInOption: SignInOption.standard,
+        clientId: Config().googleClientId,
+      );
       // !! https 에서만 googleSignIn.signIn(); 가능
       // https://stackoverflow.com/questions/75514725/flutter-error-code-xmlhttprequest-error
       var isSignedIn = await googleSignIn.isSignedIn();
@@ -60,6 +59,7 @@ class AuthRepository implements IAuthRepository {
         user = await googleSignIn.signIn();
       }
     } else {
+      var googleSignIn = GoogleSignIn();
       user = await googleSignIn.signIn();
     }
 

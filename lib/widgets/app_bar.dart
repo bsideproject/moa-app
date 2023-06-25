@@ -36,6 +36,7 @@ class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
       ),
       elevation: 0,
       titleSpacing: 0.0,
+      centerTitle: true,
       bottom: isBottomBorderDisplayed
           ? PreferredSize(
               preferredSize: Size.fromHeight(bottomBorderStyle.height),

@@ -6,8 +6,6 @@ import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/utils/my_platform.dart';
 import 'package:moa_app/utils/router_provider.dart';
 
-enum ScreenType { social, generalMeetings }
-
 class MainBottomTab extends HookWidget {
   const MainBottomTab({super.key, required this.child});
   final Widget child;
