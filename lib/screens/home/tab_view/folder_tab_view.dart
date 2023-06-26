@@ -27,8 +27,9 @@ class FolderTabView extends HookWidget {
 
     void showAddFolderModal() {
       General.instance.showBottomSheet(
-        context,
-        const AddFolderBottomSheet(),
+        context: context,
+        child: const AddFolderBottomSheet(),
+        isContainer: false,
       );
     }
 
