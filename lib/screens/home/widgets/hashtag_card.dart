@@ -25,6 +25,7 @@ class HashtagCard extends HookWidget {
         children: [
           Expanded(
             child: Container(
+              width: double.infinity,
               decoration: BoxDecoration(
                 border: Border.all(color: AppColors.moaOpacity30),
                 borderRadius: BorderRadius.circular(10),

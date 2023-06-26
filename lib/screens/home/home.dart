@@ -164,7 +164,7 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
             clipBehavior: Clip.none,
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 25, bottom: 20),
+                padding: const EdgeInsets.only(top: 25, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -246,12 +246,10 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => 127;
-  // double get maxExtent => kToolbarHeight + 70;
+  double get maxExtent => 117;
 
   @override
-  double get minExtent => 127;
-  // double get minExtent => kToolbarHeight;
+  double get minExtent => 117;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
@@ -323,9 +321,9 @@ class HashtagSource extends LoadingMoreBase<HashtagModel> {
   @override
   Future<bool> loadData([bool isloadMoreAction = false]) {
     return Future<bool>.delayed(const Duration(seconds: 1), () {
-      if (pageIndex == 1) {
-        clear();
-      }
+      // if (pageIndex == 1) {
+      //   clear();
+      // }
       for (int i = 0; i < 4; i++) {
         add(HashtagModel(
           title: 'title',

@@ -10,6 +10,8 @@ import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/folder_model.dart';
 import 'package:moa_app/screens/home/folder_detail_view.dart';
 import 'package:moa_app/screens/home/home.dart';
+import 'package:moa_app/screens/home/widgets/add_folder_bottom_sheet.dart';
+import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
 
@@ -23,7 +25,12 @@ class FolderTabView extends HookWidget {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
-    void addFolder() {}
+    void showAddFolderModal() {
+      General.instance.showBottomSheet(
+        context,
+        const AddFolderBottomSheet(),
+      );
+    }
 
     void goFolderDetailView(String title) {
       context.push(
@@ -47,7 +54,12 @@ class FolderTabView extends HookWidget {
         child: LoadingMoreList<FolderModel>(
           ListConfig<FolderModel>(
             addRepaintBoundaries: true,
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+            padding: const EdgeInsets.only(
+              left: 15,
+              right: 15,
+              top: 10,
+              bottom: kBottomNavigationBarHeight,
+            ),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: width > Breakpoints.md ? 4 : 2,
               childAspectRatio: 1.3,
@@ -63,7 +75,7 @@ class FolderTabView extends HookWidget {
                   ? InkWell(
                       splashColor: Colors.transparent,
                       borderRadius: BorderRadius.circular(15),
-                      onTap: addFolder,
+                      onTap: showAddFolderModal,
                       child: Image(image: Assets.emptyFolder),
                     )
                   : FolderList(

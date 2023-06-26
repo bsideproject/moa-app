@@ -54,8 +54,9 @@ class HashtagTabView extends HookWidget {
                   onPressed: () {},
                 ),
               ),
-              const SizedBox(height: 30),
-              TypeHeader(typeCount: 146, onPressFilter: () {})
+              const SizedBox(height: 20),
+              TypeHeader(typeCount: 146, onPressFilter: () {}),
+              const SizedBox(height: 5),
             ],
           ),
         ),
@@ -75,8 +76,12 @@ class HashtagTabView extends HookWidget {
               child: LoadingMoreList<HashtagModel>(
                 ListConfig<HashtagModel>(
                   addRepaintBoundaries: true,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                  padding: const EdgeInsets.only(
+                    left: 15,
+                    right: 15,
+                    top: 15,
+                    bottom: kBottomNavigationBarHeight,
+                  ),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: width > Breakpoints.md ? 4 : 2,
                     childAspectRatio: 0.7,

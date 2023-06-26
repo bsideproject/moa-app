@@ -15,6 +15,7 @@ class Assets {
   static AssetImage newestIcon = const AssetImage('$_icPath/newestIcon.png');
   static AssetImage menu = const AssetImage('$_icPath/menu.png');
   static AssetImage arrowBack = const AssetImage('$_icPath/arrowBack.png');
+  static AssetImage circleClose = const AssetImage('$_icPath/circleClose.png');
 
   static AssetImage kakao = const AssetImage('$_imgPath/kakao.png');
   static AssetImage naver = const AssetImage('$_imgPath/naver.png');

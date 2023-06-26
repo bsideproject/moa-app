@@ -13,6 +13,7 @@ class DynamicGridView extends HookWidget {
     return RefreshIndicator(
       onRefresh: pullToRefresh,
       child: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
         child: StaggeredGrid.count(
           axisDirection: AxisDirection.down, // <----- Add this line
           crossAxisCount: 2,
@@ -22,6 +23,30 @@ class DynamicGridView extends HookWidget {
             StaggeredGridTile.count(
               crossAxisCellCount: 1,
               mainAxisCellCount: 1.4,
+              child: HashtagCard(
+                onPressHashtag: (tag) {},
+                hashtag: HashtagModel(
+                  title: 'title',
+                  description: 'description',
+                  tags: ['#자취레시피', '#꿀팁'],
+                ),
+              ),
+            ),
+            StaggeredGridTile.count(
+              crossAxisCellCount: 1,
+              mainAxisCellCount: 1.9,
+              child: HashtagCard(
+                onPressHashtag: (tag) {},
+                hashtag: HashtagModel(
+                  title: 'title',
+                  description: 'description',
+                  tags: ['#자취레시피', '#꿀팁'],
+                ),
+              ),
+            ),
+            StaggeredGridTile.count(
+              crossAxisCellCount: 1,
+              mainAxisCellCount: 1.9,
               child: HashtagCard(
                 onPressHashtag: (tag) {},
                 hashtag: HashtagModel(
@@ -46,30 +71,6 @@ class DynamicGridView extends HookWidget {
             StaggeredGridTile.count(
               crossAxisCellCount: 1,
               mainAxisCellCount: 1.4,
-              child: HashtagCard(
-                onPressHashtag: (tag) {},
-                hashtag: HashtagModel(
-                  title: 'title',
-                  description: 'description',
-                  tags: ['#자취레시피', '#꿀팁'],
-                ),
-              ),
-            ),
-            StaggeredGridTile.count(
-              crossAxisCellCount: 1,
-              mainAxisCellCount: 1.1,
-              child: HashtagCard(
-                onPressHashtag: (tag) {},
-                hashtag: HashtagModel(
-                  title: 'title',
-                  description: 'description',
-                  tags: ['#자취레시피', '#꿀팁'],
-                ),
-              ),
-            ),
-            StaggeredGridTile.count(
-              crossAxisCellCount: 1,
-              mainAxisCellCount: 1.5,
               child: HashtagCard(
                 onPressHashtag: (tag) {},
                 hashtag: HashtagModel(

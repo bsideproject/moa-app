@@ -9,7 +9,6 @@ import 'package:moa_app/screens/home/hashtag_detail_view.dart';
 import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/screens/setting/setting.dart';
 import 'package:moa_app/screens/sign_in.dart';
-import 'package:moa_app/services/fcm_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -40,6 +39,30 @@ CustomTransitionPage buildPageWithDefaultTransition<T>({
     transitionDuration: const Duration(milliseconds: 120),
     transitionsBuilder: (context, animation, secondaryAnimation, child) =>
         FadeTransition(opacity: animation, child: child),
+  );
+}
+
+CustomTransitionPage buildIosPageTransitions<T>({
+  required BuildContext context,
+  required GoRouterState state,
+  required Widget child,
+}) {
+  return CustomTransitionPage<T>(
+    key: state.pageKey,
+    child: child,
+    transitionDuration: const Duration(milliseconds: 250),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = const Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.easeOut;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
   );
 }
 
@@ -81,12 +104,13 @@ final routeProvider = Provider((ref) {
         builder: (context, state, child) {
           //  알람 초기화
           /// 알람 권한 요청
-          if (!kIsWeb && context.mounted) {
-            FcmService.instance.requestIosFirebaseMessaging();
-            FcmService.instance.foregroundMessageHandler();
-            FcmService.instance.foregroundClickHandler(context);
-            FcmService.instance.setupInteractedMessage(context);
-          }
+          // * 알람기능 추가후 주석 해제
+          // if (!kIsWeb && context.mounted) {
+          //   FcmService.instance.requestIosFirebaseMessaging();
+          //   FcmService.instance.foregroundMessageHandler();
+          //   FcmService.instance.foregroundClickHandler(context);
+          //   FcmService.instance.setupInteractedMessage(context);
+          // }
 
           return MainBottomTab(child: child);
         },
@@ -104,17 +128,25 @@ final routeProvider = Provider((ref) {
               GoRoute(
                 name: GoRoutes.folderDetail.name,
                 path: '${GoRoutes.folderDetail.path}/:id',
-                builder: (context, state) {
+                pageBuilder: (context, state) {
                   var detailView = state.extra as FolderDetailView;
-                  return FolderDetailView(folderName: detailView.folderName);
+                  return buildIosPageTransitions<void>(
+                    context: context,
+                    state: state,
+                    child: FolderDetailView(folderName: detailView.folderName),
+                  );
                 },
               ),
               GoRoute(
                 name: GoRoutes.hashtagDetail.name,
                 path: '${GoRoutes.hashtagDetail.path}/:id',
-                builder: (context, state) {
+                pageBuilder: (context, state) {
                   var detailView = state.extra as HashtagDetailView;
-                  return HashtagDetailView(filterName: detailView.filterName);
+                  return buildIosPageTransitions<void>(
+                    context: context,
+                    state: state,
+                    child: HashtagDetailView(filterName: detailView.filterName),
+                  );
                 },
               ),
             ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moa_app/constants/color_constants.dart';
+import 'package:moa_app/constants/font_constants.dart';
 
 enum ButtonType {
   solid,
@@ -78,8 +79,7 @@ class Button extends StatelessWidget {
                 ? _renderLoading(context)
                 : Text(
                     text!,
-                    style: TextStyle(color: color, fontWeight: fontWeight)
-                        .merge(textStyle),
+                    style: const H3TextStyle().merge(textStyle),
                   ),
           ),
         ),
@@ -102,7 +102,7 @@ class Button extends StatelessWidget {
         fixedSize: Size(width ?? double.infinity, height),
         textStyle: TextStyle(color: color, fontWeight: FontWeight.w600)
             .merge(textStyle),
-        disabledForegroundColor: Colors.black,
+        disabledForegroundColor: Colors.white,
         disabledBackgroundColor:
             disabledBackgroundColor ?? AppColors.placeholder,
         elevation: 0,

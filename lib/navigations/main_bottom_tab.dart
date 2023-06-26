@@ -13,6 +13,7 @@ class MainBottomTab extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var currentIndex = useState(0);
+    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom == 0;
 
     void tap(BuildContext context, int index) {
       if (index == currentIndex.value) {
@@ -37,18 +38,27 @@ class MainBottomTab extends HookWidget {
       floatingActionButton: SizedBox(
         width: 60,
         height: 60,
-        child: FloatingActionButton(
-          elevation: 0,
-          backgroundColor: AppColors.primaryColor,
-          shape: const CircleBorder(),
-          //Floating action button on Scaffold
-          onPressed: () {
-            //code to execute on button press
-          },
-          child: const Icon(
-            size: 40,
-            Icons.add,
-          ), //icon inside button
+        child: Visibility(
+          maintainAnimation: true,
+          maintainState: true,
+          visible: keyboardIsOpen,
+          child: AnimatedOpacity(
+            opacity: keyboardIsOpen ? 1 : 0,
+            duration: const Duration(milliseconds: 100),
+            child: FloatingActionButton(
+              elevation: 0,
+              backgroundColor: AppColors.primaryColor,
+              shape: const CircleBorder(),
+              //Floating action button on Scaffold
+              onPressed: () {
+                //code to execute on button press
+              },
+              child: const Icon(
+                size: 40,
+                Icons.add,
+              ), //icon inside button
+            ),
+          ),
         ),
       ),
       bottomNavigationBar: Container(

@@ -4,29 +4,11 @@ import 'package:moa_app/constants/color_constants.dart';
 
 import 'package:moa_app/constants/font_constants.dart';
 
-OutlineInputBorder focusedOutlineBorder = const OutlineInputBorder(
-  // borderSide: BorderSide(width: 1.5, color: AppColors.role.basic),
-  borderRadius: BorderRadius.all(Radius.circular(8)),
-);
-
-OutlineInputBorder outlineBorder = const OutlineInputBorder(
-  // borderSide: BorderSide(width: 1, color: AppColors.role.basic),
-  borderRadius: BorderRadius.all(Radius.circular(8)),
-);
-
-OutlineInputBorder disableBorder = const OutlineInputBorder(
-  // // borderSide: BorderSide(width: 1, color: AppColors.bg.borderContrast),
-  borderRadius: BorderRadius.all(Radius.circular(8)),
-);
-
-OutlineInputBorder focusedErrorBorder = const OutlineInputBorder(
-  // // borderSide: BorderSide(width: 1.5, color: AppColors.role.danger),
-  borderRadius: BorderRadius.all(Radius.circular(8)),
-);
-
-OutlineInputBorder errorBorder = const OutlineInputBorder(
-  // // borderSide: BorderSide(width: 1, color: AppColors.role.danger),
-  borderRadius: BorderRadius.all(Radius.circular(8)),
+OutlineInputBorder inputBorder = OutlineInputBorder(
+  borderRadius: BorderRadius.circular(100),
+  borderSide: const BorderSide(
+    color: AppColors.whiteColor,
+  ),
 );
 
 class EditText extends StatefulWidget {
@@ -45,6 +27,8 @@ class EditText extends StatefulWidget {
     this.borderRadius = 50,
     this.suffixIcon,
     this.backgroundColor = AppColors.textInputBackground,
+    this.controller,
+    this.maxLines,
   });
 
   final void Function(String) onChanged;
@@ -60,6 +44,8 @@ class EditText extends StatefulWidget {
   final double borderRadius;
   final Widget? suffixIcon;
   final Color backgroundColor;
+  final TextEditingController? controller;
+  final int? maxLines;
 
   @override
   State<EditText> createState() => _EditTextState();
@@ -70,38 +56,38 @@ class _EditTextState extends State<EditText> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(50),
+        borderRadius: BorderRadius.circular(100),
         color: widget.backgroundColor,
       ),
       height: widget.height,
       child: TextField(
+        maxLines: widget.maxLines,
+        controller: widget.controller,
         obscureText: widget.obscureText,
         enableSuggestions: widget.enableSuggestions,
         autocorrect: widget.autocorrect,
-        style: widget.style,
+        style: const Hash1TextStyle().merge(widget.style),
         decoration: InputDecoration(
           suffixIcon: widget.suffixIcon,
           contentPadding: const EdgeInsets.symmetric(
-            vertical: 12,
+            vertical: 16,
             horizontal: 25,
           ),
           hintText: widget.hintText,
-          hintStyle: TextStyle(
-            color: AppColors.moaOpacity30,
-            fontSize: 16,
-            fontFamily: FontConstants.pretendard,
-          ),
+          hintStyle: const Hash1TextStyle()
+              .merge(TextStyle(color: AppColors.moaOpacity30))
+              .merge(widget.style),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(50),
+            borderRadius: BorderRadius.circular(100),
             borderSide: const BorderSide(
-              color: Colors.white,
+              color: AppColors.whiteColor,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(50),
+            borderRadius: BorderRadius.circular(100),
             borderSide: const BorderSide(
               width: 0,
-              color: Colors.white,
+              color: AppColors.whiteColor,
             ),
           ),
         ),
@@ -116,13 +102,10 @@ class EditFormText extends HookWidget {
   const EditFormText({
     super.key,
     this.focusNode,
-    this.margin,
-    this.padding,
-    this.label = '',
     this.hintText,
     this.cursorColor,
     this.errorText,
-    this.textEditingController,
+    this.controller,
     this.onChanged,
     this.onSubmitted,
     this.onEditingComplete,
@@ -136,12 +119,8 @@ class EditFormText extends HookWidget {
     this.maxLines = 1,
     this.inputDecoration,
     this.labelStyle = const InputLabelTextStyle(),
-    this.textStyle = const TextStyle(
-      fontSize: 16.0,
-    ),
-    this.hintStyle = const TextStyle(
-      fontSize: 16.0,
-    ),
+    this.textStyle,
+    this.hintStyle,
     this.errorStyle = const TextStyle(
       fontSize: 14.0,
       fontWeight: FontWeight.w500,
@@ -153,27 +132,26 @@ class EditFormText extends HookWidget {
     this.autofocus = false,
     this.maxLength,
     this.initialValue,
+    this.backgroundColor = AppColors.textInputBackground,
+    this.suffixIcon,
   });
 
   final FocusNode? focusNode;
-  final EdgeInsets? margin;
-  final EdgeInsets? padding;
-  final String label;
   final int minLines;
   final int maxLines;
   final InputDecoration? inputDecoration;
   final TextStyle labelStyle;
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
   final String? hintText;
   final Color? cursorColor;
-  final TextStyle hintStyle;
+  final TextStyle? hintStyle;
   final String? errorText;
   final TextStyle errorStyle;
   final bool isSecret;
   final bool hasChecked;
   final bool showBorder;
   final TextInputType? keyboardType;
-  final TextEditingController? textEditingController;
+  final TextEditingController? controller;
   final Function(String)? onChanged;
   final Function(String)? onSubmitted;
   final VoidCallback? onEditingComplete;
@@ -186,95 +164,63 @@ class EditFormText extends HookWidget {
   final bool autofocus;
   final int? maxLength;
   final String? initialValue;
+  final Color backgroundColor;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: margin,
-      padding: padding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          label.isNotEmpty
-              ? Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Text(
-                    label,
-                    style: labelStyle,
-                  ),
-                )
-              : const SizedBox(),
-          Stack(
-            alignment: Alignment.centerLeft,
-            children: <Widget>[
-              TextFormField(
-                initialValue: initialValue,
-                key: key,
-                maxLength: maxLength,
-                validator: validator,
-                keyboardType: keyboardType,
-                obscureText: isSecret,
-                focusNode: focusNode,
-                minLines: minLines,
-                cursorColor: cursorColor,
-                maxLines: maxLines,
-                controller: textEditingController,
-                enabled: enabled,
-                readOnly: readOnly,
-                autofocus: autofocus,
+    return TextFormField(
+      initialValue: initialValue,
+      key: key,
+      maxLength: maxLength,
+      validator: validator,
+      keyboardType: keyboardType,
+      obscureText: isSecret,
+      focusNode: focusNode,
+      minLines: minLines,
+      cursorColor: cursorColor,
+      maxLines: maxLines,
+      controller: controller,
+      enabled: enabled,
+      readOnly: readOnly,
+      autofocus: autofocus,
 
-                /// Set default [InputDecoration] below instead of constructor
-                /// because we need to apply optional parameters given in other props.
-                ///
-                /// You can pass [inputDecoration] to replace default [InputDecoration].
-                decoration: inputDecoration ??
-                    InputDecoration(
-                      prefixIcon: prefixIcon,
-                      counterText: '',
-                      // focusColor: AppColors.text.basic,
-                      // fillColor: !enabled
-                      //     ? AppColors.bg.borderContrast
-                      //     : AppColors.bg.basic,
-                      filled: !enabled,
-                      disabledBorder:
-                          showBorder ? disableBorder : InputBorder.none,
-                      contentPadding: const EdgeInsets.all(16),
-                      focusedBorder:
-                          showBorder ? focusedOutlineBorder : InputBorder.none,
-                      enabledBorder:
-                          showBorder ? outlineBorder : InputBorder.none,
-                      errorBorder: showBorder ? errorBorder : InputBorder.none,
-                      focusedErrorBorder:
-                          showBorder ? focusedErrorBorder : InputBorder.none,
-                      hintText: hintText,
-                      hintStyle: hintStyle,
-                      errorText: errorText,
-                      errorMaxLines: 2,
-                      errorStyle: errorStyle,
-                    ),
-                style: textStyle.merge(const TextStyle(
-                    // color: !enabled ? AppColors.text.placeholder : null,
-                    )),
-                onChanged: onChanged,
-                onFieldSubmitted: onSubmitted,
-                onEditingComplete: onEditingComplete,
-                textInputAction: textInputAction,
-                onTap: onTap,
-                autocorrect: false,
-              ),
-              hasChecked
-                  ? const Positioned(
-                      right: 0.0,
-                      top: 16.0,
-                      child: Icon(
-                        Icons.check,
-                      ),
-                    )
-                  : Container(),
-            ],
-          )
-        ],
-      ),
+      /// Set default [InputDecoration] below instead of constructor
+      /// because we need to apply optional parameters given in other props.
+      ///
+      /// You can pass [inputDecoration] to replace default [InputDecoration].
+      decoration: inputDecoration ??
+          InputDecoration(
+            fillColor: backgroundColor,
+            filled: true,
+            suffixIcon: suffixIcon,
+            prefixIcon: prefixIcon,
+            counterText: '',
+            disabledBorder: inputBorder,
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 16,
+              horizontal: 20,
+            ),
+            focusedBorder: inputBorder,
+            enabledBorder: inputBorder,
+            errorBorder: inputBorder,
+            focusedErrorBorder: inputBorder,
+            hintText: hintText,
+            hintStyle: const Hash1TextStyle()
+                .merge(TextStyle(color: AppColors.moaOpacity30))
+                .merge(hintStyle),
+            errorText: errorText,
+            errorMaxLines: 2,
+            errorStyle: errorStyle,
+          ),
+      style: const Hash1TextStyle().merge(textStyle),
+
+      onChanged: onChanged,
+      onFieldSubmitted: onSubmitted,
+      onEditingComplete: onEditingComplete,
+      textInputAction: textInputAction,
+      onTap: onTap,
+      autocorrect: false,
     );
   }
 }

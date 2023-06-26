@@ -14,6 +14,7 @@ class AppColors {
   static const Color textInputBackground = Color(0xFFF9F9F9);
   static const Color blackColor = Colors.black;
   static const Color whiteColor = Colors.white;
+  static const Color danger = Color(0xffFF0000);
 
   ///font color
   static const Color fontTitleColor = Color(0xff000000);
@@ -23,7 +24,6 @@ class AppColors {
   /// deprecated
   static const Color appBarShadowColor = Color(0x4D202020);
   static const Color offWhiteColor = Color(0xffF5F5F5);
-  static const Color danger = Color(0xffFF0000);
   static const Color greyColor = Colors.grey;
   static const Color disabled = Colors.grey;
 }
