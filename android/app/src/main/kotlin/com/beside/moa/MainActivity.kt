@@ -3,7 +3,11 @@ import android.os.Bundle
 import io.flutter.embedding.android.FlutterActivity
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import androidx.annotation.NonNull
+import io.flutter.FlutterInjector
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.embedding.engine.FlutterEngineCache
+import io.flutter.embedding.engine.dart.DartExecutor
+import io.flutter.embedding.engine.dart.DartExecutor.DartEntrypoint
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity: FlutterActivity() {

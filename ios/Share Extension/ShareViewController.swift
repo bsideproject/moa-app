@@ -3,7 +3,7 @@ import Social
 import MobileCoreServices
 import Photos
 
-class ShareViewController: SLComposeServiceViewController {
+class ShareViewController: UIViewController {
     let hostAppBundleIdentifier = "com.beside.moa"
     let sharedKey = "ShareKey"
     var sharedMedia: [SharedMediaFile] = []
@@ -14,12 +14,21 @@ class ShareViewController: SLComposeServiceViewController {
     let urlContentType = kUTTypeURL as String
     let fileURLType = kUTTypeFileURL as String;
 
-    override func isContentValid() -> Bool {
-        return true
-    }
+//    override func isContentValid() -> Bool {
+//        return true
+//    }
 
     override func viewDidLoad() {
         super.viewDidLoad();
+        // view.backgroundColor = .clear
+
+        // let blurEffect = UIBlurEffect(style: .dark)
+        // let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        //     //always fill the view
+        // blurEffectView.frame = self.view.bounds
+        // blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+        // view.insertSubview(blurEffectView, at: 0)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -45,14 +54,14 @@ class ShareViewController: SLComposeServiceViewController {
         }
     }
 
-    override func didSelectPost() {
-        print("didSelectPost");
-    }
-
-    override func configurationItems() -> [Any]! {
-        // To add configuration options via table cells at the bottom of the sheet, return an array of SLComposeSheetConfigurationItem here.
-        return []
-    }
+//    override func didSelectPost() {
+//        print("didSelectPost");
+//    }
+//
+//    override func configurationItems() -> [Any]! {
+//        // To add configuration options via table cells at the bottom of the sheet, return an array of SLComposeSheetConfigurationItem here.
+//        return []
+//    }
 
     private func handleText (content: NSExtensionItem, attachment: NSItemProvider, index: Int) {
         attachment.loadItem(forTypeIdentifier: textContentType, options: nil) { [weak self] data, error in

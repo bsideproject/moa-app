@@ -12,7 +12,6 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:moa_app/firebase_options.dart';
 import 'package:moa_app/generated/l10n.dart';
 import 'package:moa_app/providers/token_provider.dart';
-import 'package:moa_app/share_overlay.dart';
 import 'package:moa_app/utils/config.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/utils/themes.dart';
@@ -42,11 +41,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   logger.d('Handling a background message: ${message.messageId}');
 }
 
-@pragma('vm:entry-point')
-void showOverlay() {
-  runApp(const ShareOverlay());
-}
-
 void main() async {
   var widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -73,6 +67,7 @@ class MyApp extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var token = ref.watch(tokenStateProvider);
+    var isShareScreen = useState(false);
 
     useEffect(() {
       if (!token.isLoading) {
@@ -84,6 +79,31 @@ class MyApp extends HookConsumerWidget {
     if (token.isLoading) {
       return const MaterialApp(
         home: Scaffold(body: SizedBox()),
+      );
+    }
+
+    void getShare() async {
+      var result = await platform.invokeMethod('shareSheet');
+      print('result:$result');
+      if (result == 'shareSheet') {
+        isShareScreen.value = true;
+        return;
+      }
+      isShareScreen.value = false;
+    }
+
+    useEffect(() {
+      // getShare();
+      return null;
+    }, []);
+
+    if (isShareScreen.value) {
+      return const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+            body: Center(
+          child: Text('ShareScreen'),
+        )),
       );
     }
 
