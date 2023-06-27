@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/constants/color_constants.dart';
-import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/alert_dialog.dart';
-import 'package:moa_app/widgets/button.dart';
-import 'package:moa_app/widgets/edit_text.dart';
 
 class Setting extends HookConsumerWidget {
   const Setting({super.key});
