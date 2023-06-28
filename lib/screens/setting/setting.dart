@@ -13,44 +13,45 @@ class Setting extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          Center(
-            child: InkWell(
-              borderRadius: BorderRadius.circular(5),
-              onTap: () {
-                alertDialog.confirm(
-                  context,
-                  onPress: () async {
-                    await ref.watch(tokenStateProvider.notifier).removeToken();
-                    if (context.mounted) {
-                      context.go(GoRoutes.signIn.fullPath);
-                    }
-                  },
-                  showCancelButton: true,
-                  title: '로그아웃',
-                  content: '로그아웃 하시겠습니까?',
-                );
-              },
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                child: const Text(
-                  '로그아웃',
-                  style: TextStyle(
-                    color: AppColors.primaryColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: FontConstants.pretendard,
+        appBar: AppBar(
+          actions: [
+            Center(
+              child: InkWell(
+                borderRadius: BorderRadius.circular(5),
+                onTap: () {
+                  alertDialog.confirm(
+                    context,
+                    onPress: () async {
+                      await ref
+                          .watch(tokenStateProvider.notifier)
+                          .removeToken();
+                      if (context.mounted) {
+                        context.go(GoRoutes.signIn.fullPath);
+                      }
+                    },
+                    showCancelButton: true,
+                    title: '로그아웃',
+                    content: '로그아웃 하시겠습니까?',
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  child: const Text(
+                    '로그아웃',
+                    style: TextStyle(
+                      color: AppColors.primaryColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: FontConstants.pretendard,
+                    ),
                   ),
                 ),
               ),
-            ),
-          )
-        ],
-      ),
-      body: const Center(
-        child: Text('Setting'),
-      ),
-    );
+            )
+          ],
+        ),
+        body: const Center(
+          child: Text('setting'),
+        ));
   }
 }
