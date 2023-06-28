@@ -5,13 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:moa_app/firebase_options.dart';
-import 'package:moa_app/generated/l10n.dart';
 import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/utils/config.dart';
 import 'package:moa_app/utils/router_provider.dart';
@@ -90,16 +88,6 @@ class MyApp extends HookConsumerWidget {
         // themeMode: themeNotifier.isDark ? ThemeMode.dark : ThemeMode.light,
         // themeMode: ThemeMode.system,
         themeMode: ThemeMode.light,
-        localizationsDelegates: const [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: const [
-          Locale('en', 'US'),
-          Locale('ko', 'KR'),
-        ],
         routerConfig: ref.watch(routeProvider),
       ),
     );

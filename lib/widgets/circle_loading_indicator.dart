@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:moa_app/utils/localization.dart';
-
 class CircleLoadingIndicator extends StatelessWidget {
   const CircleLoadingIndicator({Key? key}) : super(key: key);
 
@@ -10,7 +8,7 @@ class CircleLoadingIndicator extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: CircularProgressIndicator(
-          semanticsLabel: localization(context).loading,
+          semanticsLabel: 'loading',
           backgroundColor: Theme.of(context).primaryColor,
           strokeWidth: 2,
           valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
