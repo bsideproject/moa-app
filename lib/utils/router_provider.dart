@@ -12,7 +12,6 @@ import 'package:moa_app/screens/on_boarding/input_name_view.dart';
 import 'package:moa_app/screens/on_boarding/notice_view.dart';
 import 'package:moa_app/screens/on_boarding/sign_in.dart';
 import 'package:moa_app/screens/setting/edit_my_type_view.dart';
-import 'package:moa_app/screens/setting/setting.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -252,6 +251,20 @@ final routeProvider = Provider((ref) {
           return NoticeView(
             nickname: notice.nickname,
           );
+        },
+      ),
+      GoRoute(
+        name: GoRoutes.inputName.name,
+        path: GoRoutes.inputName.fullPath,
+        builder: (context, state) {
+          return const InputNameView();
+        },
+      ),
+      GoRoute(
+        name: GoRoutes.notice.name,
+        path: GoRoutes.notice.fullPath,
+        builder: (context, state) {
+          return const NoticeView();
         },
       ),
     ],
