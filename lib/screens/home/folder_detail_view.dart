@@ -3,11 +3,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
-import 'package:moa_app/screens/home/widgets/dynamic_grid_view.dart';
 import 'package:moa_app/screens/home/widgets/type_header.dart';
 import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/widgets/app_bar.dart';
 import 'package:moa_app/widgets/button.dart';
+import 'package:moa_app/widgets/dynamic_grid_list.dart';
 
 class FolderDetailView extends HookWidget {
   const FolderDetailView({super.key, required this.folderName});
@@ -113,7 +113,7 @@ class FolderDetailView extends HookWidget {
             TypeHeader(typeCount: 56, onPressFilter: () {}),
             const SizedBox(height: 5),
             Expanded(
-              child: DynamicGridView(
+              child: DynamicGridList(
                 pullToRefresh: pullToRefresh,
               ),
             ),

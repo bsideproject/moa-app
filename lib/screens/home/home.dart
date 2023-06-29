@@ -13,13 +13,6 @@ import 'package:moa_app/screens/home/tab_view/folder_tab_view.dart';
 import 'package:moa_app/screens/home/tab_view/hashtag_tab_view.dart';
 import 'package:moa_app/screens/home/widgets/moa_comment_img.dart';
 
-List<Color> folderColors = [
-  AppColors.folderColorFAE3CB,
-  AppColors.folderColorFFD4D7,
-  AppColors.folderColorD7E5FC,
-  AppColors.folderColorECD8F3,
-];
-
 class Home extends HookConsumerWidget {
   const Home({super.key});
 
@@ -141,15 +134,19 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
   const PersistentTabBar({
     required this.isClick,
     required this.tabController,
+    this.backgroundColor,
+    this.isEditScreen = false,
   });
   final bool isClick;
   final TabController tabController;
+  final Color? backgroundColor;
+  final bool isEditScreen;
 
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: AppColors.backgroundColor,
+      color: backgroundColor ?? AppColors.backgroundColor,
       child: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -159,7 +156,11 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
           color: AppColors.whiteColor,
         ),
         child: Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
+          padding: EdgeInsets.only(
+            left: 15,
+            right: 15,
+            top: isEditScreen ? 0 : 20,
+          ),
           child: Stack(
             clipBehavior: Clip.none,
             children: [
@@ -180,7 +181,9 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
                             text: '지금까지 모아온\n',
                           ),
                           TextSpan(
-                            text: '146개의 취향',
+                            text: tabController.index == 0
+                                ? '146개의 폴더'
+                                : '146개의 취향',
                             style: const H1TextStyle().merge(
                               const TextStyle(
                                 height: 1.4,
@@ -246,10 +249,10 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => 117;
+  double get maxExtent => isEditScreen ? 99 : 117;
 
   @override
-  double get minExtent => 117;
+  double get minExtent => isEditScreen ? 99 : 117;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
