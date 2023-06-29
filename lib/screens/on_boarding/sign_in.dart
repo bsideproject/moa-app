@@ -1,0 +1,237 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:moa_app/constants/app_constants.dart';
+import 'package:moa_app/constants/color_constants.dart';
+import 'package:moa_app/constants/file_constants.dart';
+import 'package:moa_app/models/user_model.dart';
+import 'package:moa_app/providers/token_provider.dart';
+import 'package:moa_app/repositories/auth_repository.dart';
+import 'package:moa_app/utils/logger.dart';
+import 'package:moa_app/widgets/button.dart';
+import 'package:moa_app/widgets/edit_text.dart';
+import 'package:moa_app/widgets/loading_indicator.dart';
+import 'package:moa_app/widgets/snackbar.dart';
+
+class SignIn extends HookConsumerWidget {
+  const SignIn({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    var loading = useState(false);
+    var user =
+        useState<UserModel>(const UserModel(id: '0', email: '', password: ''));
+
+    void handleLogin(Function login) async {
+      try {
+        loading.value = true;
+        var token = await login();
+        if (token != null) {
+          await ref.watch(tokenStateProvider.notifier).addToken(token);
+          if (context.mounted) {
+            context.go('/');
+          }
+        }
+      } catch (e, traceback) {
+        logger.d(e);
+        logger.d(traceback);
+        snackbar.alert(context,
+            kDebugMode ? e.toString() : '회원가입 중 에러가 발생했습니다. 관리자에게 문의해주세요.');
+      } finally {
+        loading.value = false;
+      }
+    }
+
+    void goNextScreen() {
+      context.push(GoRoutes.inputName.fullPath);
+      // 비회원이거나 회원인데 이름 입력 안된경우 이름 입력 화면으로 이동 이름 입력후 안전한 보관 화면
+
+      // 회원인데 이름 입력된 경우 홈 화면으로 이동
+    }
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 32, top: 25, right: 32),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Button(
+                          leftWidget: Padding(
+                            padding: const EdgeInsets.only(right: 6),
+                            child: Image(
+                              width: 20,
+                              height: 20,
+                              image: Assets.kakao,
+                            ),
+                          ),
+                          backgroundColor: const Color(0xffFEE501),
+                          text: 'Kakao로 로그인',
+                          textStyle:
+                              const TextStyle(color: AppColors.blackColor),
+                          onPress: () {
+                            handleLogin(AuthRepository.instance.kakaoLogin);
+                          },
+                        ),
+                      ),
+                      (kIsWeb || Platform.isIOS)
+                          ? Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              child: Button(
+                                leftWidget: Padding(
+                                  padding: const EdgeInsets.only(right: 6),
+                                  child: Image(
+                                    width: 20,
+                                    height: 20,
+                                    image: Assets.apple,
+                                  ),
+                                ),
+                                backgroundColor: AppColors.blackColor,
+                                text: 'Apple로 로그인',
+                                onPress: () {
+                                  handleLogin(
+                                      AuthRepository.instance.appleLogin);
+                                },
+                              ),
+                            )
+                          : const SizedBox(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Button(
+                          leftWidget: Padding(
+                            padding: const EdgeInsets.only(right: 6),
+                            child: Image(
+                              width: 20,
+                              height: 20,
+                              image: Assets.google,
+                            ),
+                          ),
+                          borderWidth: 1,
+                          backgroundColor: AppColors.whiteColor,
+                          text: 'Google로 로그인',
+                          textStyle:
+                              const TextStyle(color: AppColors.blackColor),
+                          onPress: () {
+                            handleLogin(AuthRepository.instance.googleLogin);
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Button(
+                          leftWidget: Padding(
+                            padding: const EdgeInsets.only(right: 6),
+                            child: Image(
+                              width: 20,
+                              height: 20,
+                              image: Assets.naver,
+                            ),
+                          ),
+                          backgroundColor: const Color(0xff00BF18),
+                          text: 'Naver로 로그인',
+                          textStyle:
+                              const TextStyle(color: AppColors.whiteColor),
+                          onPress: () {
+                            handleLogin(AuthRepository.instance.naverLogin);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 30),
+                GestureDetector(
+                  onTap: goNextScreen,
+                  child: Center(
+                    child: Text(
+                      '아니요, 안모아도 괜찮아요.',
+                      style: TextStyle(
+                        color: AppColors.blackColor.withOpacity(0.4),
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ),
+
+                /// 심사용 이메일 로그인
+                Container(
+                  margin: const EdgeInsets.only(left: 32, top: 60, right: 32),
+                  child: Column(
+                    children: [
+                      const Text('심시용 이메일 로그인'),
+                      Column(children: [
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxWidth: Breakpoints.sm,
+                          ),
+                          child: EditText(
+                            onChanged: (txt) {
+                              user.value = user.value.copyWith(email: txt);
+                            },
+                            keyboardType: TextInputType.emailAddress,
+                            hintText: 'Email',
+                          ),
+                        ),
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxWidth: Breakpoints.sm,
+                          ),
+                          child: EditText(
+                            onChanged: (txt) {
+                              user.value = user.value.copyWith(password: txt);
+                            },
+                            hintText: 'Password',
+                            obscureText: true,
+                            enableSuggestions: false,
+                            autocorrect: false,
+                          ),
+                        ),
+                      ]),
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxWidth: Breakpoints.sm,
+                        ),
+                        child: Button(
+                          text: '로그인 하기',
+                          disabled: user.value.email == '' ||
+                              user.value.password == '',
+                          onPress: () async {
+                            // if (context.mounted) {
+                            //   context.go(GoRoutes.home.fullPath);
+                            // }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Offstage(
+            offstage: !loading.value,
+            child: Stack(
+              children: [
+                ModalBarrier(
+                  dismissible: false,
+                  color: Colors.black.withOpacity(0.5),
+                ),
+                const LoadingIndicator()
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}

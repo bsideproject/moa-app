@@ -7,16 +7,19 @@ import 'package:moa_app/screens/home/content_view.dart';
 import 'package:moa_app/screens/home/folder_detail_view.dart';
 import 'package:moa_app/screens/home/hashtag_detail_view.dart';
 import 'package:moa_app/screens/home/home.dart';
+import 'package:moa_app/screens/on_boarding/input_name_view.dart';
+import 'package:moa_app/screens/on_boarding/notice_view.dart';
+import 'package:moa_app/screens/on_boarding/sign_in.dart';
 import 'package:moa_app/screens/setting/edit_my_type_view.dart';
-import 'package:moa_app/screens/setting/setting.dart';
-import 'package:moa_app/screens/sign_in.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 enum GoRoutes {
-  authSwitch,
+  /// on boarding
   signIn,
+  inputName,
+  notice,
   home,
   content,
   permission,
@@ -24,9 +27,6 @@ enum GoRoutes {
   userListing,
   folderDetail,
   hashtagDetail,
-  editProfile,
-  sample,
-  result,
   setting,
   editMyType
 }
@@ -88,6 +88,12 @@ extension GoRoutesName on GoRoutes {
     return '/$result';
   }
 }
+
+List<String> onBoardingScreenList = [
+  GoRoutes.signIn.fullPath,
+  GoRoutes.inputName.fullPath,
+  GoRoutes.notice.fullPath,
+];
 
 final routeProvider = Provider((ref) {
   return GoRouter(
@@ -174,7 +180,7 @@ final routeProvider = Provider((ref) {
                 buildPageWithDefaultTransition<void>(
               context: context,
               state: state,
-              child: const Setting(),
+              child: const Settine(),
             ),
           ),
           GoRoute(
@@ -202,6 +208,20 @@ final routeProvider = Provider((ref) {
         path: GoRoutes.signIn.fullPath,
         builder: (context, state) {
           return const SignIn();
+        },
+      ),
+      GoRoute(
+        name: GoRoutes.inputName.name,
+        path: GoRoutes.inputName.fullPath,
+        builder: (context, state) {
+          return const InputNameView();
+        },
+      ),
+      GoRoute(
+        name: GoRoutes.notice.name,
+        path: GoRoutes.notice.fullPath,
+        builder: (context, state) {
+          return const NoticeView();
         },
       ),
     ],
