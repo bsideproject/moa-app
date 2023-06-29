@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:moa_app/utils/colors.dart';
+import 'package:moa_app/constants/color_constants.dart';
 
 class _Snackbar {
   factory _Snackbar() {
@@ -28,7 +27,8 @@ class _Snackbar {
             Flexible(
               child: Text(
                 message,
-                style: TextStyle(color: AppColors.text.basic).merge(textStyle),
+                style: const TextStyle(color: AppColors.blackColor)
+                    .merge(textStyle),
               ),
             ),
             ClipOval(

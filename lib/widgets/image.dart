@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:moa_app/utils/colors.dart' show AppColors;
+import 'package:moa_app/constants/color_constants.dart';
 
 class ImagePlaceholder extends StatelessWidget {
   const ImagePlaceholder(
@@ -21,10 +21,10 @@ class ImagePlaceholder extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(borderRadius),
-        child: Material(
+        child: const Material(
           clipBehavior: Clip.hardEdge,
-          color: AppColors.bg.borderContrast,
-          child: const Icon(Icons.person, color: Colors.white),
+          color: AppColors.disabled,
+          child: Icon(Icons.person, color: Colors.white),
         ),
       ),
     );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
-import 'package:moa_app/utils/colors.dart';
 import 'package:moa_app/widgets/button.dart';
 
 class _AlertDialog {
@@ -44,18 +44,18 @@ class _AlertDialog {
                   Navigator.of(context).pop();
                   if (onPress != null) onPress();
                 },
-                color: confirmTextColor ?? AppColors.text.contrastBasic,
+                color: confirmTextColor ?? AppColors.textInputBackground,
                 backgroundColor: showRedButton
-                    ? AppColors.role.danger
-                    : confirmButtonBackgroundColor ?? AppColors.role.brand),
+                    ? AppColors.danger
+                    : confirmButtonBackgroundColor ?? AppColors.primaryColor),
             showCancelButton
                 ? Button(
                     width: MediaQuery.of(context).size.width,
                     margin: const EdgeInsets.only(top: 10),
                     text: cancelText,
                     onPress: onPressCancel ?? () => Navigator.of(context).pop(),
-                    backgroundColor: AppColors.button.light.bg,
-                    color: AppColors.button.light.text,
+                    backgroundColor: AppColors.blackColor,
+                    color: AppColors.whiteColor,
                   )
                 : const SizedBox()
           ],
