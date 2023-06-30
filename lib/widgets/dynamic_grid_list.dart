@@ -4,8 +4,8 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:moa_app/models/hashtag_model.dart';
 import 'package:moa_app/screens/home/widgets/hashtag_card.dart';
 
-class DynamicGridView extends HookWidget {
-  const DynamicGridView({super.key, required this.pullToRefresh});
+class DynamicGridList extends HookWidget {
+  const DynamicGridList({super.key, required this.pullToRefresh});
   final Future<void> Function() pullToRefresh;
 
   @override

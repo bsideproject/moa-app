@@ -22,6 +22,7 @@ class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: AppColors.whiteColor,
       title: title,
       leading: CircleIconButton(
         backgroundColor: AppColors.whiteColor,

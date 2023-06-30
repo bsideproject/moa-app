@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/constants/color_constants.dart';
+import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/providers/token_provider.dart';
+import 'package:moa_app/screens/setting/widgets/setting_list_tile.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/alert_dialog.dart';
 
@@ -12,46 +14,127 @@ class Setting extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    void pickImage() {}
+
+    void goEditMyType() {
+      context.pushNamed(GoRoutes.editMyType.name);
+    }
+
+    void handleContact() {}
+
+    void handleTerms() {}
+
+    void removeUser() {}
+
     return Scaffold(
-        appBar: AppBar(
-          actions: [
-            Center(
-              child: InkWell(
-                borderRadius: BorderRadius.circular(5),
-                onTap: () {
-                  alertDialog.confirm(
-                    context,
-                    onPress: () async {
-                      await ref
-                          .watch(tokenStateProvider.notifier)
-                          .removeToken();
-                      if (context.mounted) {
-                        context.go(GoRoutes.signIn.fullPath);
-                      }
+      body: SafeArea(
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  const Spacer(),
+                  InkWell(
+                    borderRadius: BorderRadius.circular(5),
+                    onTap: () {
+                      alertDialog.confirm(
+                        context,
+                        onPress: () async {
+                          await ref
+                              .watch(tokenStateProvider.notifier)
+                              .removeToken();
+                          if (context.mounted) {
+                            context.go(GoRoutes.signIn.fullPath);
+                          }
+                        },
+                        showCancelButton: true,
+                        title: '로그아웃',
+                        content: '로그아웃 하시겠습니까?',
+                      );
                     },
-                    showCancelButton: true,
-                    title: '로그아웃',
-                    content: '로그아웃 하시겠습니까?',
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  child: const Text(
-                    '로그아웃',
-                    style: TextStyle(
-                      color: AppColors.primaryColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: FontConstants.pretendard,
+                    child: Container(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: const Text(
+                        '로그아웃',
+                        style: TextStyle(
+                          color: AppColors.primaryColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: FontConstants.pretendard,
+                        ),
+                      ),
                     ),
                   ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              GestureDetector(
+                onTap: pickImage,
+                child: Stack(
+                  children: [
+                    const CircleAvatar(
+                      radius: 50,
+                      backgroundImage: NetworkImage(
+                          'https://avatars.githubusercontent.com/u/73378472?v=4'),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        width: 25,
+                        height: 25,
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: AppColors.blackColor,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Image(
+                          color: AppColors.whiteColor,
+                          image: Assets.pencil,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
-            )
-          ],
+              const SizedBox(height: 5),
+              const Text(
+                'nain',
+                style: H2TextStyle(),
+              ),
+              const SizedBox(height: 3),
+              Text(
+                'moamoa@gmail.com',
+                style: const Body1TextStyle().merge(
+                    TextStyle(color: AppColors.blackColor.withOpacity(0.45))),
+              ),
+              const SizedBox(height: 30),
+              const Divider(
+                thickness: 10,
+                color: AppColors.textInputBackground,
+              ),
+              SettingListTile(
+                title: '내 취향관리',
+                onPressed: goEditMyType,
+              ),
+              SettingListTile(
+                title: '1:1 문의하기',
+                onPressed: handleContact,
+              ),
+              SettingListTile(
+                title: '이용약관',
+                onPressed: handleTerms,
+              ),
+              SettingListTile(
+                title: '탈퇴하기',
+                onPressed: removeUser,
+              )
+            ],
+          ),
         ),
-        body: const Center(
-          child: Text('setting'),
-        ));
+      ),
+    );
   }
 }

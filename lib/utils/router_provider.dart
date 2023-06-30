@@ -7,6 +7,7 @@ import 'package:moa_app/screens/file_sharing/file_sharing.dart';
 import 'package:moa_app/screens/home/folder_detail_view.dart';
 import 'package:moa_app/screens/home/hashtag_detail_view.dart';
 import 'package:moa_app/screens/home/home.dart';
+import 'package:moa_app/screens/setting/edit_my_type_view.dart';
 import 'package:moa_app/screens/setting/setting.dart';
 import 'package:moa_app/screens/sign_in.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -25,7 +26,8 @@ enum GoRoutes {
   editProfile,
   sample,
   result,
-  setting
+  setting,
+  editMyType
 }
 
 CustomTransitionPage buildPageWithDefaultTransition<T>({
@@ -111,7 +113,6 @@ final routeProvider = Provider((ref) {
           //   FcmService.instance.foregroundClickHandler(context);
           //   FcmService.instance.setupInteractedMessage(context);
           // }
-
           return MainBottomTab(child: child);
         },
         routes: [
@@ -164,14 +165,23 @@ final routeProvider = Provider((ref) {
           GoRoute(
             name: GoRoutes.fileSharing.name,
             path: GoRoutes.fileSharing.fullPath,
-            pageBuilder: (context, state) =>
-                buildPageWithDefaultTransition<void>(
+            pageBuilder: (context, state) => buildIosPageTransitions<void>(
               context: context,
               state: state,
               child: const FileSharing(),
             ),
           ),
         ],
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        name: GoRoutes.editMyType.name,
+        path: GoRoutes.editMyType.fullPath,
+        pageBuilder: (context, state) => buildIosPageTransitions<void>(
+          context: context,
+          state: state,
+          child: const EditMyTypeView(),
+        ),
       ),
       GoRoute(
         name: GoRoutes.signIn.name,

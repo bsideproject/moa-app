@@ -28,7 +28,7 @@ class EditText extends StatefulWidget {
     this.suffixIcon,
     this.backgroundColor = AppColors.textInputBackground,
     this.controller,
-    this.maxLines,
+    this.maxLines = 1,
   });
 
   final void Function(String) onChanged;
