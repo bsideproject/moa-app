@@ -8,12 +8,12 @@ import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/folder_model.dart';
 import 'package:moa_app/screens/home/folder_detail_view.dart';
 import 'package:moa_app/screens/home/home.dart';
-import 'package:moa_app/screens/home/widgets/add_folder_bottom_sheet.dart';
 import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/app_bar.dart';
 import 'package:moa_app/widgets/dynamic_grid_list.dart';
 import 'package:moa_app/widgets/folder_list.dart';
+import 'package:moa_app/widgets/moa_widgets/add_folder.dart';
 
 class EditMyTypeView extends HookWidget {
   const EditMyTypeView({super.key});
@@ -48,7 +48,7 @@ class EditMyTypeView extends HookWidget {
     void showAddFolderModal() {
       General.instance.showBottomSheet(
         context: context,
-        child: const AddFolderBottomSheet(),
+        child: const AddFolder(),
         isContainer: false,
       );
     }

@@ -9,6 +9,9 @@ import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/widgets/app_bar.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/dynamic_grid_list.dart';
+import 'package:moa_app/widgets/moa_widgets/bottom_modal_item.dart';
+import 'package:moa_app/widgets/moa_widgets/delete_content.dart';
+import 'package:moa_app/widgets/moa_widgets/edit_content.dart';
 
 class FolderDetailView extends HookWidget {
   const FolderDetailView({super.key, required this.folderName});
