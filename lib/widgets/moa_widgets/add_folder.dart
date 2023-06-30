@@ -9,8 +9,8 @@ import 'package:moa_app/widgets/edit_text.dart';
 
 final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-class AddFolderBottomSheet extends HookWidget {
-  const AddFolderBottomSheet({super.key});
+class AddFolder extends HookWidget {
+  const AddFolder({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class AddFolderBottomSheet extends HookWidget {
 
     return Container(
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppColors.whiteColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
@@ -64,7 +64,7 @@ class AddFolderBottomSheet extends HookWidget {
                   controller: folderNameController,
                   onChanged: folderOnChangedValue,
                   hintText: '폴더명을 입력하세요.',
-                  backgroundColor: const Color(0xffFFF8F4),
+                  backgroundColor: AppColors.textInputBackground,
                   suffixIcon: CircleIconButton(
                     icon: Image(
                       fit: BoxFit.contain,
@@ -109,7 +109,7 @@ class AddFolderBottomSheet extends HookWidget {
             onPressed: closeBottomSheet,
             icon: const Icon(
               Icons.close,
-              color: Colors.black,
+              color: AppColors.blackColor,
               size: 30,
             ),
           ),

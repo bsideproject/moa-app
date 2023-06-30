@@ -19,6 +19,7 @@ class Assets {
   static AssetImage share = const AssetImage('$_icPath/share.png');
   static AssetImage pencil = const AssetImage('$_icPath/pencil.png');
   static AssetImage trash = const AssetImage('$_icPath/trash.png');
+  static AssetImage alert = const AssetImage('$_icPath/alert.png');
 
   static AssetImage kakao = const AssetImage('$_imgPath/kakao.png');
   static AssetImage naver = const AssetImage('$_imgPath/naver.png');
