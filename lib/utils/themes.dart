@@ -1,46 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'package:moa_app/utils/colors.dart';
+import 'package:moa_app/constants/color_constants.dart';
 
 class Themes {
   Themes._();
 
   static final light = ThemeData.light().copyWith(
     // useMaterial3: true,
-    primaryColor: AppColors.role.primary,
+    primaryColor: AppColors.primaryColor,
     scaffoldBackgroundColor: Colors.white,
     // bottomNavigationBarTheme: const BottomNavigationBarThemeData(),
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
       elevation: 0,
       iconTheme: IconThemeData(
-        color: AppColors.role.basic,
+        color: AppColors.blackColor,
       ),
       actionsIconTheme: IconThemeData(
-        color: AppColors.role.basic,
+        color: AppColors.blackColor,
       ),
       centerTitle: true,
       titleTextStyle: TextStyle(
-        color: AppColors.role.basic,
+        color: AppColors.blackColor,
         fontSize: 18,
         fontWeight: FontWeight.bold,
       ),
       systemOverlayStyle: lightModeStatusBarColor,
-      toolbarTextStyle: const TextStyle(
+      toolbarTextStyle: TextStyle(
         fontWeight: FontWeight.bold,
       ),
     ),
-    textSelectionTheme: TextSelectionThemeData(
-      cursorColor: AppColors.text.basic,
+    textSelectionTheme: const TextSelectionThemeData(
+      cursorColor: AppColors.blackColor,
     ),
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: AppColors.role.basic,
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: AppColors.primaryColor,
     ),
     colorScheme: ColorScheme.fromSwatch().copyWith(
-      secondary: AppColors.bg.borderContrast,
+      secondary: AppColors.disabled,
       background: Colors.white,
-      primary: AppColors.role.primary,
+      primary: AppColors.primaryColor,
       surfaceTint: Colors.white,
     ),
     inputDecorationTheme: const InputDecorationTheme(
