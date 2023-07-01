@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:moa_app/navigations/main_bottom_tab.dart';
 import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/screens/file_sharing/file_sharing.dart';
+import 'package:moa_app/screens/home/content_view.dart';
 import 'package:moa_app/screens/home/folder_detail_view.dart';
 import 'package:moa_app/screens/home/hashtag_detail_view.dart';
 import 'package:moa_app/screens/home/home.dart';
@@ -18,6 +19,7 @@ enum GoRoutes {
   authSwitch,
   signIn,
   home,
+  content,
   permission,
   fileSharing,
   userListing,
@@ -126,6 +128,20 @@ final routeProvider = Provider((ref) {
               child: const Home(),
             ),
             routes: [
+              GoRoute(
+                name: GoRoutes.content.name,
+                path: '${GoRoutes.content.path}/:id',
+                pageBuilder: (context, state) {
+                  var contentView = state.extra as ContentView;
+                  return buildIosPageTransitions<void>(
+                    context: context,
+                    state: state,
+                    child: ContentView(
+                      contentId: contentView.contentId,
+                    ),
+                  );
+                },
+              ),
               GoRoute(
                 name: GoRoutes.folderDetail.name,
                 path: '${GoRoutes.folderDetail.path}/:id',
