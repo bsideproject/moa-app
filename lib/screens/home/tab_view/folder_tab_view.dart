@@ -71,7 +71,7 @@ class FolderTabView extends HookWidget {
               return const LoadingIndicator();
             },
             itemBuilder: (c, item, index) {
-              return index == source.length - 1
+              return index == 0
                   ? InkWell(
                       splashColor: Colors.transparent,
                       borderRadius: BorderRadius.circular(15),
