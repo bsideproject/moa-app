@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
@@ -8,6 +9,9 @@ import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/widgets/app_bar.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/dynamic_grid_list.dart';
+import 'package:moa_app/widgets/moa_widgets/bottom_modal_item.dart';
+import 'package:moa_app/widgets/moa_widgets/delete_content.dart';
+import 'package:moa_app/widgets/moa_widgets/edit_content.dart';
 
 class FolderDetailView extends HookWidget {
   const FolderDetailView({super.key, required this.folderName});
@@ -15,6 +19,10 @@ class FolderDetailView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    var updatedContentName = useState('');
+
+    // var args = ModalRoute.of(context)!.settings.arguments;
+
     Future<void> pullToRefresh() async {
       return Future.delayed(
         const Duration(seconds: 2),
@@ -26,34 +34,32 @@ class FolderDetailView extends HookWidget {
     //   context.pop();
     // }
 
-    Widget bottomModalItem({
-      required AssetImage icon,
-      required String title,
-      required Function() onPressed,
-    }) {
-      return Material(
-        child: Ink(
-          color: AppColors.whiteColor,
-          child: ListTile(
-            onTap: onPressed,
-            minLeadingWidth: 0,
-            leading: SizedBox(
-              height: double.infinity,
-              child: Image(
-                width: 16,
-                height: 16,
-                image: icon,
-              ),
-            ),
-            title: Text(
-              title,
-              style: const H3TextStyle().merge(
-                const TextStyle(
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ),
+    void showEditFolderModal() {
+      General.instance.showBottomSheet(
+        context: context,
+        child: EditContent(
+          title: '폴더명 수정',
+          onPressed: () {
+            // todo 폴더 수정 api 연동후 성공하면 아래 코드 실행 실패시 snackbar 경고
+          },
+          updatedContentName: updatedContentName,
+          contentName: folderName,
+        ),
+        isContainer: false,
+      );
+    }
+
+    void showDeleteFolderModal() {
+      General.instance.showBottomSheet(
+        height: 350,
+        context: context,
+        isCloseButton: true,
+        child: DeleteContent(
+          contentName: folderName,
+          type: ContentType.folder,
+          onPressed: () {
+            // todo 폴더 삭제 api 연동후 성공하면 아래 코드 실행 실패시 snackbar 경고
+          },
         ),
       );
     }
@@ -66,20 +72,28 @@ class FolderDetailView extends HookWidget {
         height: 225,
         child: Column(
           children: [
-            bottomModalItem(
+            BottomModalItem(
               icon: Assets.share,
               title: '공유하기',
-              onPressed: () {},
+              onPressed: () {
+                // Todo url링크복사후 snackbar 알림
+              },
             ),
-            bottomModalItem(
+            BottomModalItem(
               icon: Assets.pencil,
               title: '폴더명 수정',
-              onPressed: () {},
+              onPressed: () {
+                context.pop();
+                showEditFolderModal();
+              },
             ),
-            bottomModalItem(
+            BottomModalItem(
               icon: Assets.trash,
               title: '폴더 삭제',
-              onPressed: () {},
+              onPressed: () {
+                context.pop();
+                showDeleteFolderModal();
+              },
             ),
           ],
         ),

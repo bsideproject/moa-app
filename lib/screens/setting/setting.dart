@@ -17,7 +17,7 @@ class Setting extends HookConsumerWidget {
     void pickImage() {}
 
     void goEditMyType() {
-      context.pushNamed(GoRoutes.editMyType.name);
+      context.push(GoRoutes.editMyType.fullPath);
     }
 
     void handleContact() {}

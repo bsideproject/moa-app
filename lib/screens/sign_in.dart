@@ -11,7 +11,6 @@ import 'package:moa_app/models/user_model.dart';
 import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/repositories/auth_repository.dart';
 import 'package:moa_app/utils/logger.dart';
-import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
@@ -33,7 +32,7 @@ class SignIn extends HookConsumerWidget {
         if (token != null) {
           await ref.watch(tokenStateProvider.notifier).addToken(token);
           if (context.mounted) {
-            context.go(GoRoutes.home.fullPath);
+            context.go('/');
           }
         }
       } catch (e, traceback) {

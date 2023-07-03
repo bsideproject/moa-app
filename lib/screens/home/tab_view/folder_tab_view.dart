@@ -8,11 +8,11 @@ import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/folder_model.dart';
 import 'package:moa_app/screens/home/folder_detail_view.dart';
 import 'package:moa_app/screens/home/home.dart';
-import 'package:moa_app/screens/home/widgets/add_folder_bottom_sheet.dart';
 import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/folder_list.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
+import 'package:moa_app/widgets/moa_widgets/add_folder.dart';
 
 class FolderTabView extends HookWidget {
   const FolderTabView(
@@ -27,14 +27,19 @@ class FolderTabView extends HookWidget {
     void showAddFolderModal() {
       General.instance.showBottomSheet(
         context: context,
-        child: const AddFolderBottomSheet(),
+        child: const AddFolder(),
         isContainer: false,
       );
     }
 
     void goFolderDetailView(String title) {
+      // context.namedLocation(
+      //   GoRoutes.home.name + GoRoutes.folderDetail.name,
+      //   queryParameters: {'id': title},
+      // );
+
       context.push(
-        '${GoRoutes.home.fullPath}/${GoRoutes.folderDetail.path}/$title',
+        '${GoRoutes.folderDetail.fullPath}/$title',
         extra: FolderDetailView(folderName: title),
       );
     }
@@ -71,7 +76,7 @@ class FolderTabView extends HookWidget {
               return const LoadingIndicator();
             },
             itemBuilder: (c, item, index) {
-              return index == source.length - 1
+              return index == 0
                   ? InkWell(
                       splashColor: Colors.transparent,
                       borderRadius: BorderRadius.circular(15),

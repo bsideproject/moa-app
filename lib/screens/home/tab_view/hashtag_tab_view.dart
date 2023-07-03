@@ -6,6 +6,7 @@ import 'package:loading_more_list/loading_more_list.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/hashtag_model.dart';
+import 'package:moa_app/screens/home/content_view.dart';
 import 'package:moa_app/screens/home/hashtag_detail_view.dart';
 import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/screens/home/widgets/hashtag_card.dart';
@@ -25,9 +26,18 @@ class HashtagTabView extends HookWidget {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
+    void goContentView(int contentId) {
+      context.push(
+        '${GoRoutes.content.fullPath}/$contentId',
+        extra: ContentView(
+          contentId: contentId,
+        ),
+      );
+    }
+
     void goHashtagDetailView(String tag) {
       context.push(
-        '${GoRoutes.home.fullPath}/${GoRoutes.hashtagDetail.path}/$tag',
+        '${GoRoutes.hashtagDetail.fullPath}/$tag',
         extra: HashtagDetailView(filterName: tag),
       );
     }
@@ -82,9 +92,9 @@ class HashtagTabView extends HookWidget {
                     top: 15,
                     bottom: kBottomNavigationBarHeight,
                   ),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  extendedListDelegate:
+                      SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
                     crossAxisCount: width > Breakpoints.md ? 4 : 2,
-                    childAspectRatio: 0.7,
                     mainAxisSpacing: 20.0,
                     crossAxisSpacing: 12.0,
                   ),
@@ -93,9 +103,14 @@ class HashtagTabView extends HookWidget {
                     return const LoadingIndicator();
                   },
                   itemBuilder: (c, item, index) {
-                    return HashtagCard(
-                      hashtag: item,
-                      onPressHashtag: (tag) => goHashtagDetailView(tag),
+                    // todo image width, height 계선해서 aspectRatio 주기
+                    return AspectRatio(
+                      aspectRatio: 0.7,
+                      child: HashtagCard(
+                        onPressContent: () => goContentView(5),
+                        hashtag: item,
+                        onPressHashtag: (tag) => goHashtagDetailView(tag),
+                      ),
                     );
                   },
                 ),

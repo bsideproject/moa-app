@@ -14,7 +14,10 @@ class AppColors {
   static const Color textInputBackground = Color(0xFFF9F9F9);
   static const Color blackColor = Colors.black;
   static const Color whiteColor = Colors.white;
+
+  // 피그마에 디자인 가이드에 없는데 디자인에 표시된 색상 직접 만듬
   static const Color danger = Color(0xffFF0000);
+  static const Color linkButton = Color(0xFF232323);
 
   ///font color
   static const Color fontTitleColor = Color(0xff000000);

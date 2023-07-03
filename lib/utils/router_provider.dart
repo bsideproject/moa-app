@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moa_app/navigations/main_bottom_tab.dart';
-import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/screens/file_sharing/file_sharing.dart';
+import 'package:moa_app/screens/home/content_view.dart';
 import 'package:moa_app/screens/home/folder_detail_view.dart';
 import 'package:moa_app/screens/home/hashtag_detail_view.dart';
 import 'package:moa_app/screens/home/home.dart';
@@ -18,6 +18,7 @@ enum GoRoutes {
   authSwitch,
   signIn,
   home,
+  content,
   permission,
   fileSharing,
   userListing,
@@ -91,16 +92,16 @@ extension GoRoutesName on GoRoutes {
 final routeProvider = Provider((ref) {
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: GoRoutes.home.fullPath,
-    redirect: (context, state) {
-      var token = ref.read(tokenStateProvider);
-      if (token.value == null) {
-        if (state.matchedLocation != GoRoutes.signIn.fullPath) {
-          return GoRoutes.signIn.fullPath;
-        }
-      }
-      return null;
-    },
+    initialLocation: '/',
+    // redirect: (context, state) {
+    //   var token = ref.read(tokenStateProvider);
+    //   if (token.value == null) {
+    //     if (state.matchedLocation != GoRoutes.signIn.fullPath) {
+    //       return GoRoutes.signIn.fullPath;
+    //     }
+    //   }
+    //   return null;
+    // },
     routes: <RouteBase>[
       ShellRoute(
         builder: (context, state, child) {
@@ -118,7 +119,7 @@ final routeProvider = Provider((ref) {
         routes: [
           GoRoute(
             name: GoRoutes.home.name,
-            path: GoRoutes.home.fullPath,
+            path: '/',
             pageBuilder: (context, state) =>
                 buildPageWithDefaultTransition<void>(
               context: context,
@@ -126,6 +127,20 @@ final routeProvider = Provider((ref) {
               child: const Home(),
             ),
             routes: [
+              GoRoute(
+                name: GoRoutes.content.name,
+                path: '${GoRoutes.content.path}/:id',
+                pageBuilder: (context, state) {
+                  var contentView = state.extra as ContentView;
+                  return buildIosPageTransitions<void>(
+                    context: context,
+                    state: state,
+                    child: ContentView(
+                      contentId: contentView.contentId,
+                    ),
+                  );
+                },
+              ),
               GoRoute(
                 name: GoRoutes.folderDetail.name,
                 path: '${GoRoutes.folderDetail.path}/:id',
@@ -171,17 +186,16 @@ final routeProvider = Provider((ref) {
               child: const FileSharing(),
             ),
           ),
+          GoRoute(
+            name: GoRoutes.editMyType.name,
+            path: GoRoutes.editMyType.fullPath,
+            pageBuilder: (context, state) => buildIosPageTransitions<void>(
+              context: context,
+              state: state,
+              child: const EditMyTypeView(),
+            ),
+          ),
         ],
-      ),
-      GoRoute(
-        parentNavigatorKey: _rootNavigatorKey,
-        name: GoRoutes.editMyType.name,
-        path: GoRoutes.editMyType.fullPath,
-        pageBuilder: (context, state) => buildIosPageTransitions<void>(
-          context: context,
-          state: state,
-          child: const EditMyTypeView(),
-        ),
       ),
       GoRoute(
         name: GoRoutes.signIn.name,
