@@ -15,7 +15,7 @@ class DynamicGridList extends HookWidget {
   Widget build(BuildContext context) {
     void goContentView(int contentId) {
       context.push(
-        '${GoRoutes.home.fullPath}/${GoRoutes.content.path}/$contentId',
+        '${GoRoutes.content.fullPath}/$contentId',
         extra: ContentView(
           contentId: contentId,
         ),

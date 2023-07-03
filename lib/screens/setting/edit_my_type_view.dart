@@ -55,7 +55,7 @@ class EditMyTypeView extends HookWidget {
 
     void goFolderDetailView(String title) {
       context.push(
-        '${GoRoutes.home.fullPath}/${GoRoutes.folderDetail.path}/$title',
+        '${GoRoutes.folderDetail.fullPath}/$title',
         extra: FolderDetailView(folderName: title),
       );
     }

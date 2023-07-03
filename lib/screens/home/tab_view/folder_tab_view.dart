@@ -33,8 +33,13 @@ class FolderTabView extends HookWidget {
     }
 
     void goFolderDetailView(String title) {
+      // context.namedLocation(
+      //   GoRoutes.home.name + GoRoutes.folderDetail.name,
+      //   queryParameters: {'id': title},
+      // );
+
       context.push(
-        '${GoRoutes.home.fullPath}/${GoRoutes.folderDetail.path}/$title',
+        '${GoRoutes.folderDetail.fullPath}/$title',
         extra: FolderDetailView(folderName: title),
       );
     }

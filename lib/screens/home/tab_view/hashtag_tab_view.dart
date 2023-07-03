@@ -28,7 +28,7 @@ class HashtagTabView extends HookWidget {
 
     void goContentView(int contentId) {
       context.push(
-        '${GoRoutes.home.fullPath}/${GoRoutes.content.path}/$contentId',
+        '${GoRoutes.content.fullPath}/$contentId',
         extra: ContentView(
           contentId: contentId,
         ),
@@ -37,7 +37,7 @@ class HashtagTabView extends HookWidget {
 
     void goHashtagDetailView(String tag) {
       context.push(
-        '${GoRoutes.home.fullPath}/${GoRoutes.hashtagDetail.path}/$tag',
+        '${GoRoutes.hashtagDetail.fullPath}/$tag',
         extra: HashtagDetailView(filterName: tag),
       );
     }

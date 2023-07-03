@@ -21,6 +21,8 @@ class FolderDetailView extends HookWidget {
   Widget build(BuildContext context) {
     var updatedContentName = useState('');
 
+    // var args = ModalRoute.of(context)!.settings.arguments;
+
     Future<void> pullToRefresh() async {
       return Future.delayed(
         const Duration(seconds: 2),
