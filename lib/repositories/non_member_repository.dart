@@ -1,14 +1,20 @@
-import 'package:moa_app/models/user_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 // todo : 비회원의 취향 아이템들을 저장하는 레포지토리로 쓸 예정
 
+class NonUserModel {
+  NonUserModel({
+    this.nickname,
+  });
+  String? nickname;
+}
+
 abstract class INonMemberRepository {
-  Future<void> login(UserModel user);
-  Future<void> logout();
+  Future<void> removeUser();
   Future<Database> initDB();
-  Future<List<UserModel>>? getMe();
+  Future<NonUserModel>? getNickname();
+  Future<void> setUserNickname({required String nickname});
 }
 
 class NonMemberRepository implements INonMemberRepository {
@@ -25,7 +31,7 @@ class NonMemberRepository implements INonMemberRepository {
       onCreate: (db, version) {
         // 데이터베이스에 CREATE TABLE 수행
         return db.execute(
-          'CREATE TABLE user(id TEXT PRIMARY KEY ,email TEXT, password TEXT)',
+          'CREATE TABLE user(nickname TEXT)',
         );
       },
       version: 1,
@@ -36,30 +42,29 @@ class NonMemberRepository implements INonMemberRepository {
   }
 
   @override
-  Future<void> login(UserModel user) async {
-    var db = await initDB();
-
-    await db.insert('user', user.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
-  }
-
-  @override
-  Future<void> logout() async {
+  Future<void> removeUser() async {
     var db = await initDB();
     await db.delete('user');
   }
 
   @override
-  Future<List<UserModel>>? getMe() async {
+  Future<NonUserModel>? getNickname() async {
     var db = await initDB();
     List<Map<String, dynamic>> maps = await db.query('user');
 
-    return List.generate(maps.length, (i) {
-      return UserModel(
-        id: maps[i]['id'],
-        email: maps[i]['email'],
-        password: maps[i]['password'],
-      );
-    });
+    return maps
+        .map((e) => NonUserModel(nickname: e['nickname']))
+        .toList()
+        .first;
+  }
+
+  @override
+  Future<void> setUserNickname({required String nickname}) async {
+    var db = await initDB();
+    await db.insert(
+      'user',
+      {'nickname': nickname},
+    );
+    // conflictAlgorithm: ConflictAlgorithm.replace
   }
 }

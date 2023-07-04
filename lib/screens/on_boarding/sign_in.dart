@@ -12,6 +12,7 @@ import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/user_model.dart';
 import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/repositories/auth_repository.dart';
+import 'package:moa_app/repositories/non_member_repository.dart';
 import 'package:moa_app/screens/on_boarding/input_name_view.dart';
 import 'package:moa_app/utils/logger.dart';
 import 'package:moa_app/utils/router_provider.dart';
@@ -29,12 +30,23 @@ class SignIn extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var loading = useState(false);
     var user =
-        useState<UserModel>(const UserModel(id: '0', email: '', password: ''));
+        useState<UserModel>(const UserModel(id: '0', email: '', nickname: ''));
 
-    var nickname = '';
+    //todo api 에서 nickname 가져와서 넣어주기
+    var nickname = useState('');
 
-    void hasNicknameCheck({required bool isMember}) {
-      if (nickname.isEmpty) {
+    void hasNicknameCheck({required bool isMember}) async {
+      /// 비회원
+      if (!isMember) {
+        var nonMember = await NonMemberRepository.instance.getNickname();
+        nickname.value = nonMember?.nickname ?? '';
+      }
+
+      /// 회원
+      // todo api 개발후 nickname 받아와서 넣어주기
+      nickname.value = '';
+
+      if (nickname.value.isEmpty) {
         if (context.mounted) {
           context.go(GoRoutes.inputName.fullPath,
               extra: InputNameView(isMember: isMember));
@@ -56,9 +68,7 @@ class SignIn extends HookConsumerWidget {
 
           // await UserRepository.instance.getUser();
 
-          if (isInitRunApp == null || !isInitRunApp!) {
-            hasNicknameCheck(isMember: true);
-          }
+          hasNicknameCheck(isMember: true);
         }
       } catch (e, traceback) {
         logger.d(e);
@@ -78,11 +88,9 @@ class SignIn extends HookConsumerWidget {
         title: 'SNS 연동을 취소하시겠어요?',
         content: '모든 취향이 안전하게\n저장되지 않을 수 있어요!',
         cancelText: '네 안할래요.',
-        onPressCancel: () {
+        onPressCancel: () async {
           /// 비회원으로 시작
-          if (isInitRunApp == null || !isInitRunApp!) {
-            hasNicknameCheck(isMember: false);
-          }
+          hasNicknameCheck(isMember: false);
         },
         confirmText: '아니요, 연동할래요!',
       );
@@ -255,7 +263,7 @@ class SignIn extends HookConsumerWidget {
                           ),
                           child: EditText(
                             onChanged: (txt) {
-                              user.value = user.value.copyWith(password: txt);
+                              // user.value = user.value.copyWith(password: txt);
                             },
                             hintText: 'Password',
                             obscureText: true,
@@ -270,8 +278,7 @@ class SignIn extends HookConsumerWidget {
                         ),
                         child: Button(
                           text: '로그인 하기',
-                          disabled: user.value.email == '' ||
-                              user.value.password == '',
+                          disabled: user.value.email == '',
                           onPress: () async {
                             // if (context.mounted) {
                             //   context.go(GoRoutes.home.fullPath);

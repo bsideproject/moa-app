@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
+import 'package:moa_app/repositories/non_member_repository.dart';
 import 'package:moa_app/screens/on_boarding/notice_view.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/button.dart';
@@ -34,11 +35,16 @@ class InputNameView extends HookWidget {
       return regex.hasMatch(value);
     }
 
-    void handleNext() {
+    void handleNext() async {
       switch (step.value) {
         case StepType.inputName:
           {
-            // todo 유저 로그인 정보에 이름 추가
+            if (!isMember) {
+              await NonMemberRepository.instance
+                  .setUserNickname(nickname: name.value);
+            } else {
+              // todo api 개발 후 유저 로그인 정보에 이름 추가
+            }
             step.value = StepType.greeting;
           }
         case StepType.greeting:
@@ -53,7 +59,7 @@ class InputNameView extends HookWidget {
                 extra: NoticeView(nickname: name.value),
               );
             }
-            pageController.nextPage(
+            await pageController.nextPage(
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.ease);
           }
