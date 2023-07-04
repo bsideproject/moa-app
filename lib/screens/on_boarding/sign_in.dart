@@ -21,16 +21,31 @@ import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
 import 'package:moa_app/widgets/snackbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignIn extends HookConsumerWidget {
-  const SignIn({super.key, this.isInitRunApp = false});
-  final bool? isInitRunApp;
-
+  const SignIn({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var loading = useState(false);
     var user =
         useState<UserModel>(const UserModel(id: '0', email: '', nickname: ''));
+    Future<SharedPreferences> prefs0 = SharedPreferences.getInstance();
+
+    Future<bool> getInitRunApp() async {
+      SharedPreferences prefs = await prefs0;
+      return prefs.getBool('isInitRunApp') ?? true;
+    }
+
+    /// 비회원 유저 데이터 초기화
+    useEffect(() {
+      getInitRunApp().then((value) {
+        if (value) {
+          NonMemberRepository.instance.build();
+        }
+      });
+      return;
+    }, []);
 
     //todo api 에서 nickname 가져와서 넣어주기
     var nickname = useState('');
@@ -39,12 +54,14 @@ class SignIn extends HookConsumerWidget {
       /// 비회원
       if (!isMember) {
         var nonMember = await NonMemberRepository.instance.getNickname();
-        nickname.value = nonMember?.nickname ?? '';
+        if (nonMember != null) {
+          nickname.value = nonMember.nickname ?? '';
+        }
       }
 
       /// 회원
       // todo api 개발후 nickname 받아와서 넣어주기
-      nickname.value = '';
+      // nickname.value = '';
 
       if (nickname.value.isEmpty) {
         if (context.mounted) {
