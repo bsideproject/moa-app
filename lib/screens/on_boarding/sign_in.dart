@@ -58,10 +58,21 @@ class SignIn extends HookConsumerWidget {
       }
     }
 
-    var nickname = '';
+    //todo api 에서 nickname 가져와서 넣어주기
+    var nickname = useState('');
 
-    void hasNicknameCheck({required bool isMember}) {
-      if (nickname.isEmpty) {
+    void hasNicknameCheck({required bool isMember}) async {
+      /// 비회원
+      if (!isMember) {
+        var nonMember = await NonMemberRepository.instance.getNickname();
+        nickname.value = nonMember?.nickname ?? '';
+      }
+
+      /// 회원
+      // todo api 개발후 nickname 받아와서 넣어주기
+      nickname.value = '';
+
+      if (nickname.value.isEmpty) {
         if (context.mounted) {
           context.go(GoRoutes.inputName.fullPath,
               extra: InputNameView(isMember: isMember));
