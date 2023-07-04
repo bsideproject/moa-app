@@ -60,8 +60,7 @@ class SignIn extends HookConsumerWidget {
 
     var nickname = '';
 
-    void hasNicknameCheck(
-        {required Function() onPressed, required bool isMember}) {
+    void hasNicknameCheck({required bool isMember}) {
       if (nickname.isEmpty) {
         if (context.mounted) {
           context.go(GoRoutes.inputName.fullPath,
@@ -69,7 +68,7 @@ class SignIn extends HookConsumerWidget {
         }
       } else {
         if (context.mounted) {
-          onPressed();
+          context.go('/');
         }
       }
     }
