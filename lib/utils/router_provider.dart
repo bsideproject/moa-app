@@ -7,19 +7,25 @@ import 'package:moa_app/screens/home/content_view.dart';
 import 'package:moa_app/screens/home/folder_detail_view.dart';
 import 'package:moa_app/screens/home/hashtag_detail_view.dart';
 import 'package:moa_app/screens/home/home.dart';
+import 'package:moa_app/screens/on_boarding/greeting_view.dart';
 import 'package:moa_app/screens/on_boarding/input_name_view.dart';
 import 'package:moa_app/screens/on_boarding/notice_view.dart';
 import 'package:moa_app/screens/on_boarding/sign_in.dart';
 import 'package:moa_app/screens/setting/edit_my_type_view.dart';
+import 'package:moa_app/screens/setting/setting.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 enum GoRoutes {
   /// on boarding
+  greeting,
   signIn,
   inputName,
   notice,
+
+  /// main
   home,
   content,
   permission,
@@ -95,19 +101,28 @@ List<String> onBoardingScreenList = [
   GoRoutes.notice.fullPath,
 ];
 
+Future<SharedPreferences> prefs0 = SharedPreferences.getInstance();
+
 final routeProvider = Provider((ref) {
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: '/',
-    // redirect: (context, state) {
-    //   var token = ref.read(tokenStateProvider);
-    //   if (token.value == null) {
-    //     if (state.matchedLocation != GoRoutes.signIn.fullPath) {
-    //       return GoRoutes.signIn.fullPath;
-    //     }
-    //   }
-    //   return null;
-    // },
+    redirect: (context, state) async {
+      SharedPreferences prefs = await prefs0;
+      var isInitRunApp = prefs.getBool('isInitRunApp');
+      if (isInitRunApp ?? true) {
+        // 앱 최초 실행시 인사말 페이지로 이동
+        return GoRoutes.greeting.fullPath;
+      }
+      return null;
+      // var token = ref.read(tokenStateProvider);
+      // if (token.value == null) {
+      //   if (state.matchedLocation != GoRoutes.signIn.fullPath) {
+      //     return GoRoutes.signIn.fullPath;
+      //   }
+      // }
+      // return null;
+    },
     routes: <RouteBase>[
       ShellRoute(
         builder: (context, state, child) {
@@ -134,20 +149,6 @@ final routeProvider = Provider((ref) {
             ),
             routes: [
               GoRoute(
-                name: GoRoutes.content.name,
-                path: '${GoRoutes.content.path}/:id',
-                pageBuilder: (context, state) {
-                  var contentView = state.extra as ContentView;
-                  return buildIosPageTransitions<void>(
-                    context: context,
-                    state: state,
-                    child: ContentView(
-                      contentId: contentView.contentId,
-                    ),
-                  );
-                },
-              ),
-              GoRoute(
                 name: GoRoutes.folderDetail.name,
                 path: '${GoRoutes.folderDetail.path}/:id',
                 pageBuilder: (context, state) {
@@ -171,6 +172,20 @@ final routeProvider = Provider((ref) {
                   );
                 },
               ),
+              GoRoute(
+                name: GoRoutes.content.name,
+                path: '${GoRoutes.content.path}/:id',
+                pageBuilder: (context, state) {
+                  var contentView = state.extra as ContentView;
+                  return buildIosPageTransitions<void>(
+                    context: context,
+                    state: state,
+                    child: ContentView(
+                      contentId: contentView.contentId,
+                    ),
+                  );
+                },
+              ),
             ],
           ),
           GoRoute(
@@ -180,7 +195,7 @@ final routeProvider = Provider((ref) {
                 buildPageWithDefaultTransition<void>(
               context: context,
               state: state,
-              child: const Settine(),
+              child: const Setting(),
             ),
           ),
           GoRoute(
@@ -204,24 +219,39 @@ final routeProvider = Provider((ref) {
         ],
       ),
       GoRoute(
+        name: GoRoutes.greeting.name,
+        path: GoRoutes.greeting.fullPath,
+        builder: (context, state) {
+          return const GreetingView();
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         name: GoRoutes.signIn.name,
         path: GoRoutes.signIn.fullPath,
         builder: (context, state) {
-          return const SignIn();
+          var signIn = state.extra as SignIn?;
+          return SignIn(
+            isInitRunApp: signIn?.isInitRunApp,
+          );
         },
       ),
       GoRoute(
         name: GoRoutes.inputName.name,
         path: GoRoutes.inputName.fullPath,
         builder: (context, state) {
-          return const InputNameView();
+          var inputName = state.extra as InputNameView;
+          return InputNameView(isMember: inputName.isMember);
         },
       ),
       GoRoute(
         name: GoRoutes.notice.name,
         path: GoRoutes.notice.fullPath,
         builder: (context, state) {
-          return const NoticeView();
+          var notice = state.extra as NoticeView;
+          return NoticeView(
+            nickname: notice.nickname,
+          );
         },
       ),
     ],

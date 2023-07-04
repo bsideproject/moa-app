@@ -22,6 +22,7 @@ class AddFolder extends HookWidget {
     }
 
     void emptyFolderName() {
+      folderName.value = '';
       folderNameController.text = '';
     }
 

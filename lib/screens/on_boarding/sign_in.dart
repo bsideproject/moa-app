@@ -8,17 +8,22 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
+import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/user_model.dart';
 import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/repositories/auth_repository.dart';
+import 'package:moa_app/screens/on_boarding/input_name_view.dart';
 import 'package:moa_app/utils/logger.dart';
+import 'package:moa_app/utils/router_provider.dart';
+import 'package:moa_app/widgets/alert_dialog.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
 import 'package:moa_app/widgets/snackbar.dart';
 
 class SignIn extends HookConsumerWidget {
-  const SignIn({Key? key}) : super(key: key);
+  const SignIn({super.key, this.isInitRunApp = false});
+  final bool? isInitRunApp;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,14 +31,44 @@ class SignIn extends HookConsumerWidget {
     var user =
         useState<UserModel>(const UserModel(id: '0', email: '', password: ''));
 
+    var nickname = '';
+
+    void hasNicknameCheck(
+        {required Function() onPressed, required bool isMember}) {
+      if (nickname.isEmpty) {
+        if (context.mounted) {
+          context.go(GoRoutes.inputName.fullPath,
+              extra: InputNameView(isMember: isMember));
+        }
+      } else {
+        if (context.mounted) {
+          onPressed();
+        }
+      }
+    }
+
     void handleLogin(Function login) async {
+      /// 회원으로 시작
       try {
         loading.value = true;
         var token = await login();
         if (token != null) {
           await ref.watch(tokenStateProvider.notifier).addToken(token);
-          if (context.mounted) {
-            context.go('/');
+
+          // await UserRepository.instance.getUser();
+
+          if (isInitRunApp == null || !isInitRunApp!) {
+            hasNicknameCheck(
+                onPressed: () {
+                  context.go('/');
+                },
+                isMember: true);
+          } else {
+            hasNicknameCheck(
+                onPressed: () {
+                  // !!  앱 설명 화면으로
+                },
+                isMember: true);
           }
         }
       } catch (e, traceback) {
@@ -47,19 +82,72 @@ class SignIn extends HookConsumerWidget {
     }
 
     void goNextScreen() {
-      context.push(GoRoutes.inputName.fullPath);
-      // 비회원이거나 회원인데 이름 입력 안된경우 이름 입력 화면으로 이동 이름 입력후 안전한 보관 화면
-
-      // 회원인데 이름 입력된 경우 홈 화면으로 이동
+      alertDialog.confirm(
+        context,
+        onPress: () {},
+        showCancelButton: true,
+        title: 'SNS 연동을 취소하시겠어요?',
+        content: '모든 취향이 안전하게\n저장되지 않을 수 있어요!',
+        cancelText: '네 안할래요.',
+        onPressCancel: () {
+          /// 비회원으로 시작
+          if (isInitRunApp == null || !isInitRunApp!) {
+            hasNicknameCheck(
+                onPressed: () {
+                  context.go('/');
+                },
+                isMember: false);
+          } else {
+            hasNicknameCheck(
+                onPressed: () {
+                  // !!  앱 설명 화면으로
+                },
+                isMember: false);
+          }
+        },
+        confirmText: '아니요, 연동할래요!',
+      );
     }
 
     return Scaffold(
+      appBar: AppBar(),
       body: Stack(
         children: [
-          SafeArea(
+          SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.symmetric(horizontal: 30),
+                  width: 64,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: AppColors.textInputBackground,
+                  ),
+                  child: Text(
+                    '1/3',
+                    style: const Hash1TextStyle().merge(
+                      TextStyle(
+                        fontSize: 12,
+                        color: AppColors.blackColor.withOpacity(0.3),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Text(
+                    '앞으로 모아나갈 취향을\n안전하게 보관하기 위해\n계정을 연동해 주세요.',
+                    style: const H1TextStyle()
+                        .merge(const TextStyle(fontSize: 28, height: 1.4)),
+                  ),
+                ),
+                const SizedBox(height: 80),
                 Container(
                   margin: const EdgeInsets.only(left: 32, top: 25, right: 32),
                   child: Column(
@@ -154,7 +242,7 @@ class SignIn extends HookConsumerWidget {
                   onTap: goNextScreen,
                   child: Center(
                     child: Text(
-                      '아니요, 안모아도 괜찮아요.',
+                      '아니요, 연동 안할게요.',
                       style: TextStyle(
                         color: AppColors.blackColor.withOpacity(0.4),
                         decoration: TextDecoration.underline,

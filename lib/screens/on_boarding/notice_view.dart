@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
-import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/button.dart';
 
 class NoticeView extends StatelessWidget {
-  const NoticeView({super.key});
+  const NoticeView({super.key, required this.nickname});
+  final String nickname;
 
   @override
   Widget build(BuildContext context) {
     void handleNext() {
-      context.go(GoRoutes.home.fullPath);
+      context.go('/');
     }
 
     return Scaffold(
@@ -25,28 +25,40 @@ class NoticeView extends StatelessWidget {
           children: [
             RichText(
               text: TextSpan(
-                style: const TextStyle(),
+                style: const H1TextStyle().merge(
+                  const TextStyle(
+                    fontSize: 28,
+                  ),
+                ),
                 children: [
-                  TextSpan(
-                    text: '안전한 보관',
-                    style: const H1TextStyle().merge(
-                      const TextStyle(
-                        color: AppColors.primaryColor,
-                        fontSize: 28,
-                      ),
-                    ),
+                  const TextSpan(
+                    text: '그럼 지금부터\n',
                   ),
                   TextSpan(
-                    text: '이\n시작되었습니다 :)\n지금 바로 취향을 모아보세요!',
-                    style: const H1TextStyle()
-                        .merge(const TextStyle(fontSize: 28)),
+                    text: nickname,
+                    style: const H1TextStyle().merge(const TextStyle(
+                      fontSize: 28,
+                      color: AppColors.primaryColor,
+                    )),
+                  ),
+                  TextSpan(
+                    text: '님의\n',
+                    style: const H1TextStyle().merge(const TextStyle(
+                      fontSize: 28,
+                    )),
+                  ),
+                  TextSpan(
+                    text: '취향을 바로 모아보세요!',
+                    style: const H1TextStyle().merge(const TextStyle(
+                      fontSize: 28,
+                    )),
                   ),
                 ],
               ),
             ),
             const Spacer(),
             Button(
-              text: '시작하기',
+              text: '바로 이용하기',
               onPress: handleNext,
             )
           ],

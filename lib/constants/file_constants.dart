@@ -28,6 +28,9 @@ class Assets {
   static AssetImage folder = const AssetImage('$_imgPath/folder.png');
   static AssetImage smallFolder = const AssetImage('$_imgPath/smallFolder.png');
   static AssetImage emptyFolder = const AssetImage('$_imgPath/emptyFolder.png');
+  static AssetImage greeting = const AssetImage('$_imgPath/greeting.png');
+  static AssetImage onboarding1 = const AssetImage('$_imgPath/onboarding1.png');
+  static AssetImage onboarding2 = const AssetImage('$_imgPath/onboarding2.png');
   static AssetImage moaBannerImg =
       const AssetImage('$_imgPath/moaBannerImg.png');
   static AssetImage moaSwitchImg =
