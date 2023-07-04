@@ -29,6 +29,7 @@ class EditText extends StatefulWidget {
     this.backgroundColor = AppColors.textInputBackground,
     this.controller,
     this.maxLines = 1,
+    this.maxLength,
   });
 
   final void Function(String) onChanged;
@@ -46,6 +47,7 @@ class EditText extends StatefulWidget {
   final Color backgroundColor;
   final TextEditingController? controller;
   final int? maxLines;
+  final int? maxLength;
 
   @override
   State<EditText> createState() => _EditTextState();
@@ -61,6 +63,7 @@ class _EditTextState extends State<EditText> {
       ),
       height: widget.height,
       child: TextField(
+        maxLength: widget.maxLength,
         maxLines: widget.maxLines,
         controller: widget.controller,
         obscureText: widget.obscureText,

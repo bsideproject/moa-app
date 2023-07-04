@@ -2,10 +2,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:go_router/go_router.dart';
 
 import 'package:moa_app/utils/config.dart';
-import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/utils/tools.dart';
 
 class FcmService {
@@ -113,14 +111,14 @@ class FcmService {
     // navigate to a chat screen
     // Terminated
     if (initialMessage != null && context.mounted) {
-      context.go(GoRoutes.editProfile.fullPath);
+      // context.go(GoRoutes.editProfile.fullPath);
     }
 
     // Also handle any interaction when the app is in the background via a
     // Stream listener
     // Background
     FirebaseMessaging.onMessageOpenedApp.listen((notification) {
-      context.go(GoRoutes.editProfile.fullPath);
+      // context.go(GoRoutes.editProfile.fullPath);
     });
   }
 
@@ -139,7 +137,7 @@ class FcmService {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse: (payload) {
       // todo 해당화면으로 이동
-      context.go(GoRoutes.editProfile.fullPath);
+      // context.go(GoRoutes.editProfile.fullPath);
     });
   }
 

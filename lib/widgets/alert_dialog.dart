@@ -30,16 +30,55 @@ class _AlertDialog {
       barrierDismissible: barrierDismissible,
       builder: (context) {
         return AlertDialog(
-          titlePadding: const EdgeInsets.all(24),
-          contentPadding:
-              const EdgeInsets.only(left: 24, right: 24, bottom: 24),
-          actionsPadding: const EdgeInsets.all(24),
-          title: Text(title, style: const H1TextStyle()),
-          content: Text(content, style: const H2TextStyle()),
+          actionsPadding: const EdgeInsets.all(20),
+          title: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 15),
+                    Text(
+                      title,
+                      style: const H3TextStyle(),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                right: -25,
+                top: -15,
+                child: CircleIconButton(
+                  backgroundColor: Colors.white,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(
+                    Icons.close,
+                    color: AppColors.blackColor,
+                    size: 30,
+                  ),
+                ),
+              )
+            ],
+          ),
+          content: Text(
+            content,
+            style: const H5TextStyle().merge(
+              const TextStyle(
+                color: Color(0xFF818181),
+              ),
+            ),
+            textAlign: TextAlign.center,
+          ),
           actions: <Widget>[
             Button(
                 width: MediaQuery.of(context).size.width,
                 text: confirmText,
+                textStyle: const H3TextStyle(),
                 onPress: () {
                   Navigator.of(context).pop();
                   if (onPress != null) onPress();
@@ -49,13 +88,26 @@ class _AlertDialog {
                     ? AppColors.danger
                     : confirmButtonBackgroundColor ?? AppColors.primaryColor),
             showCancelButton
-                ? Button(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.only(top: 10),
-                    text: cancelText,
-                    onPress: onPressCancel ?? () => Navigator.of(context).pop(),
-                    backgroundColor: AppColors.blackColor,
-                    color: AppColors.whiteColor,
+                ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          if (onPressCancel != null) onPressCancel();
+                        },
+                        child: Text(
+                          cancelText ?? '',
+                          style: const InputLabelTextStyle().merge(
+                            TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.blackColor.withOpacity(0.4),
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   )
                 : const SizedBox()
           ],

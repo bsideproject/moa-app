@@ -26,6 +26,21 @@ class Setting extends HookConsumerWidget {
 
     void removeUser() {}
 
+    void handleLogout() {
+      alertDialog.confirm(
+        context,
+        onPress: () async {
+          await ref.watch(tokenStateProvider.notifier).removeToken();
+          if (context.mounted) {
+            context.go(GoRoutes.signIn.fullPath);
+          }
+        },
+        showCancelButton: true,
+        title: '로그아웃',
+        content: '로그아웃 하시겠습니까?',
+      );
+    }
+
     return Scaffold(
       body: SafeArea(
         child: SizedBox(
@@ -38,22 +53,7 @@ class Setting extends HookConsumerWidget {
                   const Spacer(),
                   InkWell(
                     borderRadius: BorderRadius.circular(5),
-                    onTap: () {
-                      alertDialog.confirm(
-                        context,
-                        onPress: () async {
-                          await ref
-                              .watch(tokenStateProvider.notifier)
-                              .removeToken();
-                          if (context.mounted) {
-                            context.go(GoRoutes.signIn.fullPath);
-                          }
-                        },
-                        showCancelButton: true,
-                        title: '로그아웃',
-                        content: '로그아웃 하시겠습니까?',
-                      );
-                    },
+                    onTap: handleLogout,
                     child: Container(
                       padding: const EdgeInsets.only(right: 20),
                       child: const Text(
