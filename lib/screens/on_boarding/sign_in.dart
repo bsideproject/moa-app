@@ -58,6 +58,22 @@ class SignIn extends HookConsumerWidget {
       }
     }
 
+    var nickname = '';
+
+    void hasNicknameCheck(
+        {required Function() onPressed, required bool isMember}) {
+      if (nickname.isEmpty) {
+        if (context.mounted) {
+          context.go(GoRoutes.inputName.fullPath,
+              extra: InputNameView(isMember: isMember));
+        }
+      } else {
+        if (context.mounted) {
+          onPressed();
+        }
+      }
+    }
+
     void handleLogin(Function login) async {
       /// 회원으로 시작
       try {
