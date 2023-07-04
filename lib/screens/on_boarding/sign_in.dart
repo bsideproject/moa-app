@@ -33,8 +33,7 @@ class SignIn extends HookConsumerWidget {
 
     var nickname = '';
 
-    void hasNicknameCheck(
-        {required Function() onPressed, required bool isMember}) {
+    void hasNicknameCheck({required bool isMember}) {
       if (nickname.isEmpty) {
         if (context.mounted) {
           context.go(GoRoutes.inputName.fullPath,
@@ -42,7 +41,7 @@ class SignIn extends HookConsumerWidget {
         }
       } else {
         if (context.mounted) {
-          onPressed();
+          context.go('/');
         }
       }
     }
@@ -58,17 +57,7 @@ class SignIn extends HookConsumerWidget {
           // await UserRepository.instance.getUser();
 
           if (isInitRunApp == null || !isInitRunApp!) {
-            hasNicknameCheck(
-                onPressed: () {
-                  context.go('/');
-                },
-                isMember: true);
-          } else {
-            hasNicknameCheck(
-                onPressed: () {
-                  // !!  앱 설명 화면으로
-                },
-                isMember: true);
+            hasNicknameCheck(isMember: true);
           }
         }
       } catch (e, traceback) {
@@ -92,17 +81,7 @@ class SignIn extends HookConsumerWidget {
         onPressCancel: () {
           /// 비회원으로 시작
           if (isInitRunApp == null || !isInitRunApp!) {
-            hasNicknameCheck(
-                onPressed: () {
-                  context.go('/');
-                },
-                isMember: false);
-          } else {
-            hasNicknameCheck(
-                onPressed: () {
-                  // !!  앱 설명 화면으로
-                },
-                isMember: false);
+            hasNicknameCheck(isMember: false);
           }
         },
         confirmText: '아니요, 연동할래요!',
