@@ -13,7 +13,7 @@ class NonUserModel {
 }
 
 abstract class INonMemberRepository {
-  Future<void> build();
+  Future<Map<String, dynamic>> build();
   Future<void> removeUser();
   Future<Database> initDB();
   Future<NonUserModel>? getNickname();
@@ -45,7 +45,7 @@ class NonMemberRepository implements INonMemberRepository {
   }
 
   @override
-  Future<void> build() async {
+  Future<Map<String, dynamic>> build() async {
     var db = await initDB();
     Map<String, dynamic> user = {
       'id': '0',
@@ -53,6 +53,7 @@ class NonMemberRepository implements INonMemberRepository {
     };
 
     await db.insert('user', user, conflictAlgorithm: ConflictAlgorithm.replace);
+    return user;
   }
 
   @override
@@ -65,6 +66,11 @@ class NonMemberRepository implements INonMemberRepository {
   Future<NonUserModel>? getNickname() async {
     var db = await initDB();
     List<Map<String, dynamic>> maps = await db.query('user');
+    if (maps.isEmpty) {
+      await NonMemberRepository.instance.build();
+      return NonUserModel(id: '0', nickname: '');
+    }
+
     return maps
         .map((e) => NonUserModel(id: e['id'], nickname: e['nickname']))
         .toList()
