@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
-import 'package:moa_app/screens/on_boarding/sign_in.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,8 +23,7 @@ class GreetingView extends HookWidget {
     void goNextStep() {
       if (isNextStep.value) {
         setInitRunApp();
-        context.go(GoRoutes.signIn.fullPath,
-            extra: const SignIn(isInitRunApp: true));
+        context.go(GoRoutes.signIn.fullPath);
         return;
       }
       isNextStep.value = true;

@@ -5,12 +5,15 @@ import 'package:sqflite/sqflite.dart';
 
 class NonUserModel {
   NonUserModel({
+    required this.id,
     this.nickname,
   });
+  String id;
   String? nickname;
 }
 
 abstract class INonMemberRepository {
+  Future<Map<String, dynamic>> build();
   Future<void> removeUser();
   Future<Database> initDB();
   Future<NonUserModel>? getNickname();
@@ -31,7 +34,7 @@ class NonMemberRepository implements INonMemberRepository {
       onCreate: (db, version) {
         // 데이터베이스에 CREATE TABLE 수행
         return db.execute(
-          'CREATE TABLE user(nickname TEXT)',
+          'CREATE TABLE user(id TEXT PRIMARY KEY, nickname TEXT)',
         );
       },
       version: 1,
@@ -39,6 +42,18 @@ class NonMemberRepository implements INonMemberRepository {
 
     var db = await database;
     return db;
+  }
+
+  @override
+  Future<Map<String, dynamic>> build() async {
+    var db = await initDB();
+    Map<String, dynamic> user = {
+      'id': '0',
+      'nickname': '',
+    };
+
+    await db.insert('user', user, conflictAlgorithm: ConflictAlgorithm.replace);
+    return user;
   }
 
   @override
@@ -51,9 +66,13 @@ class NonMemberRepository implements INonMemberRepository {
   Future<NonUserModel>? getNickname() async {
     var db = await initDB();
     List<Map<String, dynamic>> maps = await db.query('user');
+    if (maps.isEmpty) {
+      await NonMemberRepository.instance.build();
+      return NonUserModel(id: '0', nickname: '');
+    }
 
     return maps
-        .map((e) => NonUserModel(nickname: e['nickname']))
+        .map((e) => NonUserModel(id: e['id'], nickname: e['nickname']))
         .toList()
         .first;
   }
@@ -61,10 +80,11 @@ class NonMemberRepository implements INonMemberRepository {
   @override
   Future<void> setUserNickname({required String nickname}) async {
     var db = await initDB();
-    await db.insert(
-      'user',
-      {'nickname': nickname},
-    );
-    // conflictAlgorithm: ConflictAlgorithm.replace
+    Map<String, dynamic> user = {
+      'id': '0',
+      'nickname': nickname,
+    };
+
+    await db.insert('user', user, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 }

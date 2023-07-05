@@ -230,10 +230,7 @@ final routeProvider = Provider((ref) {
         name: GoRoutes.signIn.name,
         path: GoRoutes.signIn.fullPath,
         builder: (context, state) {
-          var signIn = state.extra as SignIn?;
-          return SignIn(
-            isInitRunApp: signIn?.isInitRunApp,
-          );
+          return const SignIn();
         },
       ),
       GoRoute(

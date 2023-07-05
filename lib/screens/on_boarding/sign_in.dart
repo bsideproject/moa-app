@@ -23,9 +23,7 @@ import 'package:moa_app/widgets/loading_indicator.dart';
 import 'package:moa_app/widgets/snackbar.dart';
 
 class SignIn extends HookConsumerWidget {
-  const SignIn({super.key, this.isInitRunApp = false});
-  final bool? isInitRunApp;
-
+  const SignIn({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var loading = useState(false);
@@ -39,12 +37,14 @@ class SignIn extends HookConsumerWidget {
       /// 비회원
       if (!isMember) {
         var nonMember = await NonMemberRepository.instance.getNickname();
-        nickname.value = nonMember?.nickname ?? '';
+        if (nonMember != null) {
+          nickname.value = nonMember.nickname ?? '';
+        }
       }
 
       /// 회원
       // todo api 개발후 nickname 받아와서 넣어주기
-      nickname.value = '';
+      // nickname.value = '';
 
       if (nickname.value.isEmpty) {
         if (context.mounted) {
