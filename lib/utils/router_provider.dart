@@ -115,6 +115,7 @@ final routeProvider = Provider((ref) {
         return GoRoutes.greeting.fullPath;
       }
       return null;
+      // todo 토큰있으면 signin 페이지로 이동 못하게 해야됨
       // var token = ref.read(tokenStateProvider);
       // if (token.value == null) {
       //   if (state.matchedLocation != GoRoutes.signIn.fullPath) {

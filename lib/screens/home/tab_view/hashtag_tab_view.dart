@@ -94,7 +94,7 @@ class HashtagTabView extends HookWidget {
                   ),
                   extendedListDelegate:
                       SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: width > Breakpoints.md ? 4 : 2,
+                    crossAxisCount: width > Breakpoints.md ? 3 : 2,
                     mainAxisSpacing: 20.0,
                     crossAxisSpacing: 12.0,
                   ),
