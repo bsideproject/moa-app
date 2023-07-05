@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/widgets/button.dart';
@@ -25,11 +26,16 @@ class _AlertDialog {
     bool showCancelButton = false,
     bool showRedButton = false,
   }) {
+    var width = MediaQuery.of(context).size.width;
+
     showDialog<void>(
       context: context,
       barrierDismissible: barrierDismissible,
       builder: (context) {
         return AlertDialog(
+          insetPadding: EdgeInsets.symmetric(
+            horizontal: width > Breakpoints.md ? 200 : 40,
+          ),
           actionsPadding: const EdgeInsets.all(20),
           title: Stack(
             clipBehavior: Clip.none,

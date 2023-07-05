@@ -105,7 +105,7 @@ class EditMyTypeView extends HookWidget {
                   padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
                   itemCount: folderList.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: width > Breakpoints.md ? 4 : 2,
+                    crossAxisCount: width > Breakpoints.md ? 3 : 2,
                     childAspectRatio: 1.3,
                     mainAxisSpacing: 20.0,
                     crossAxisSpacing: 12.0,

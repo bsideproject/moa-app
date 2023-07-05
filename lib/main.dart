@@ -9,9 +9,11 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/firebase_options.dart';
 import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/utils/config.dart';
+import 'package:moa_app/utils/custom_scaffold.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/utils/themes.dart';
 import 'package:moa_app/utils/tools.dart';
@@ -85,10 +87,21 @@ class MyApp extends HookConsumerWidget {
         debugShowCheckedModeBanner: false,
         theme: Themes.light,
         darkTheme: Themes.dark,
-        // themeMode: themeNotifier.isDark ? ThemeMode.dark : ThemeMode.light,
-        // themeMode: ThemeMode.system,
         themeMode: ThemeMode.light,
         routerConfig: ref.watch(routeProvider),
+        builder: (context, child) {
+          return CustomScaffold.responsive(
+            builder: (context, x, y) {
+              return Center(
+                child: Container(
+                  constraints: BoxConstraints(
+                      maxWidth: x > Breakpoints.md ? Breakpoints.md : x),
+                  child: child,
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }

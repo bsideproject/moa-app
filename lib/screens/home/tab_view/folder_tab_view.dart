@@ -66,7 +66,7 @@ class FolderTabView extends HookWidget {
               bottom: kBottomNavigationBarHeight,
             ),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: width > Breakpoints.md ? 4 : 2,
+              crossAxisCount: width > Breakpoints.md ? 3 : 2,
               childAspectRatio: 1.3,
               mainAxisSpacing: 20.0,
               crossAxisSpacing: 12.0,

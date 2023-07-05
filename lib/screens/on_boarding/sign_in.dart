@@ -240,8 +240,10 @@ class SignIn extends HookConsumerWidget {
 
                 /// 심사용 이메일 로그인
                 Container(
+                  width: double.infinity,
                   margin: const EdgeInsets.only(left: 32, top: 60, right: 32),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Text('심시용 이메일 로그인'),
                       Column(children: [
