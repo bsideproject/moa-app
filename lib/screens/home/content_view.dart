@@ -10,8 +10,8 @@ import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/moa_widgets/bottom_modal_item.dart';
 
 class ContentView extends HookWidget {
-  const ContentView({super.key, required this.contentId});
-  final int contentId;
+  const ContentView({super.key, required this.id});
+  final String id;
 
   @override
   Widget build(BuildContext context) {

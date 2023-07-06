@@ -286,12 +286,12 @@ class FolderSource extends LoadingMoreBase<FolderModel> {
         clear();
       }
       for (int i = 0; i < 4; i++) {
-        add(const FolderModel(id: 0, title: 'title', content: 'content'));
+        add(const FolderModel(id: '0', title: 'title', content: 'content'));
       }
 
       add(
         const FolderModel(
-          id: 0,
+          id: '0',
           title: 'title',
           content: 'content',
         ),

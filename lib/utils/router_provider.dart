@@ -17,6 +17,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 enum GoRoutes {
   /// on boarding
@@ -31,10 +32,10 @@ enum GoRoutes {
   permission,
   fileSharing,
   userListing,
-  folderDetail,
-  hashtagDetail,
+  folder,
+  hashtag,
   setting,
-  editMyType
+  editContent
 }
 
 CustomTransitionPage buildPageWithDefaultTransition<T>({
@@ -103,155 +104,165 @@ List<String> onBoardingScreenList = [
 
 Future<SharedPreferences> prefs0 = SharedPreferences.getInstance();
 
-final routeProvider = Provider((ref) {
-  return GoRouter(
-    navigatorKey: _rootNavigatorKey,
-    initialLocation: '/',
-    redirect: (context, state) async {
-      SharedPreferences prefs = await prefs0;
-      var isInitRunApp = prefs.getBool('isInitRunApp');
-      if (isInitRunApp ?? true) {
-        // 앱 최초 실행시 인사말 페이지로 이동
-        return GoRoutes.greeting.fullPath;
-      }
-      return null;
-      // todo 토큰있으면 signin 페이지로 이동 못하게 해야됨
-      // var token = ref.read(tokenStateProvider);
-      // if (token.value == null) {
-      //   if (state.matchedLocation != GoRoutes.signIn.fullPath) {
-      //     return GoRoutes.signIn.fullPath;
-      //   }
-      // }
-      // return null;
-    },
-    routes: <RouteBase>[
-      ShellRoute(
-        builder: (context, state, child) {
-          //  알람 초기화
-          /// 알람 권한 요청
-          // * 알람기능 추가후 주석 해제
-          // if (!kIsWeb && context.mounted) {
-          //   FcmService.instance.requestIosFirebaseMessaging();
-          //   FcmService.instance.foregroundMessageHandler();
-          //   FcmService.instance.foregroundClickHandler(context);
-          //   FcmService.instance.setupInteractedMessage(context);
-          // }
-          return MainBottomTab(child: child);
-        },
-        routes: [
-          GoRoute(
-            name: GoRoutes.home.name,
-            path: '/',
-            pageBuilder: (context, state) =>
-                buildPageWithDefaultTransition<void>(
-              context: context,
-              state: state,
-              child: const Home(),
+final routeProvider = Provider(
+  (ref) {
+    return GoRouter(
+      navigatorKey: _rootNavigatorKey,
+      initialLocation: '/',
+      redirect: (context, state) async {
+        SharedPreferences prefs = await prefs0;
+        var isInitRunApp = prefs.getBool('isInitRunApp');
+        if (isInitRunApp ?? true) {
+          // 앱 최초 실행시 인사말 페이지로 이동
+          return GoRoutes.greeting.fullPath;
+        }
+        return null;
+        // todo 토큰있으면 signin 페이지로 이동 못하게 해야됨
+        // var token = ref.read(tokenStateProvider);
+        // if (token.value == null) {
+        //   if (state.matchedLocation != GoRoutes.signIn.fullPath) {
+        //     return GoRoutes.signIn.fullPath;
+        //   }
+        // }
+        // return null;
+      },
+      routes: <RouteBase>[
+        ShellRoute(
+          navigatorKey: _shellNavigatorKey,
+          builder: (context, state, child) {
+            //  알람 초기화
+            /// 알람 권한 요청
+            // * 알람기능 추가후 주석 해제
+            // if (!kIsWeb && context.mounted) {
+            //   FcmService.instance.requestIosFirebaseMessaging();
+            //   FcmService.instance.foregroundMessageHandler();
+            //   FcmService.instance.foregroundClickHandler(context);
+            //   FcmService.instance.setupInteractedMessage(context);
+            // }
+            return MainBottomTab(child: child);
+          },
+          routes: [
+            GoRoute(
+              name: GoRoutes.home.name,
+              path: '/',
+              pageBuilder: (context, state) =>
+                  buildPageWithDefaultTransition<void>(
+                context: context,
+                state: state,
+                child: const Home(),
+              ),
+              routes: [
+                GoRoute(
+                  parentNavigatorKey: _rootNavigatorKey,
+                  name: GoRoutes.folder.name,
+                  path: '${GoRoutes.folder.path}/:id',
+                  pageBuilder: (context, state) {
+                    return buildIosPageTransitions<void>(
+                      context: context,
+                      state: state,
+                      child: FolderDetailView(
+                        folderId: state.pathParameters['id']!,
+                      ),
+                    );
+                  },
+                ),
+                GoRoute(
+                  parentNavigatorKey: _rootNavigatorKey,
+                  name: GoRoutes.hashtag.name,
+                  path: '${GoRoutes.hashtag.path}/:hashtag',
+                  pageBuilder: (context, state) {
+                    return buildIosPageTransitions<void>(
+                      context: context,
+                      state: state,
+                      child: HashtagDetailView(
+                          filterName: state.pathParameters['hashtag']!),
+                    );
+                  },
+                ),
+                GoRoute(
+                  parentNavigatorKey: _rootNavigatorKey,
+                  name: GoRoutes.content.name,
+                  path: '${GoRoutes.content.path}/:id',
+                  pageBuilder: (context, state) {
+                    return buildIosPageTransitions<void>(
+                      context: context,
+                      state: state,
+                      child: ContentView(
+                        id: state.pathParameters['id']!,
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-            routes: [
-              GoRoute(
-                name: GoRoutes.folderDetail.name,
-                path: '${GoRoutes.folderDetail.path}/:id',
-                pageBuilder: (context, state) {
-                  var detailView = state.extra as FolderDetailView;
-                  return buildIosPageTransitions<void>(
+            GoRoute(
+              name: GoRoutes.setting.name,
+              path: GoRoutes.setting.fullPath,
+              pageBuilder: (context, state) =>
+                  buildPageWithDefaultTransition<void>(
+                context: context,
+                state: state,
+                child: const Setting(),
+              ),
+              routes: [
+                GoRoute(
+                  parentNavigatorKey: _rootNavigatorKey,
+                  name: GoRoutes.editContent.name,
+                  path: GoRoutes.editContent.path,
+                  pageBuilder: (context, state) =>
+                      buildIosPageTransitions<void>(
                     context: context,
                     state: state,
-                    child: FolderDetailView(folderName: detailView.folderName),
-                  );
-                },
-              ),
-              GoRoute(
-                name: GoRoutes.hashtagDetail.name,
-                path: '${GoRoutes.hashtagDetail.path}/:id',
-                pageBuilder: (context, state) {
-                  var detailView = state.extra as HashtagDetailView;
-                  return buildIosPageTransitions<void>(
-                    context: context,
-                    state: state,
-                    child: HashtagDetailView(filterName: detailView.filterName),
-                  );
-                },
-              ),
-              GoRoute(
-                name: GoRoutes.content.name,
-                path: '${GoRoutes.content.path}/:id',
-                pageBuilder: (context, state) {
-                  var contentView = state.extra as ContentView;
-                  return buildIosPageTransitions<void>(
-                    context: context,
-                    state: state,
-                    child: ContentView(
-                      contentId: contentView.contentId,
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-          GoRoute(
-            name: GoRoutes.setting.name,
-            path: GoRoutes.setting.fullPath,
-            pageBuilder: (context, state) =>
-                buildPageWithDefaultTransition<void>(
-              context: context,
-              state: state,
-              child: const Setting(),
+                    child: const EditMyTypeView(),
+                  ),
+                ),
+              ],
             ),
-          ),
-          GoRoute(
-            name: GoRoutes.fileSharing.name,
-            path: GoRoutes.fileSharing.fullPath,
-            pageBuilder: (context, state) => buildIosPageTransitions<void>(
-              context: context,
-              state: state,
-              child: const FileSharing(),
+            GoRoute(
+              name: GoRoutes.fileSharing.name,
+              path: GoRoutes.fileSharing.fullPath,
+              pageBuilder: (context, state) => buildIosPageTransitions<void>(
+                context: context,
+                state: state,
+                child: const FileSharing(),
+              ),
             ),
-          ),
-          GoRoute(
-            name: GoRoutes.editMyType.name,
-            path: GoRoutes.editMyType.fullPath,
-            pageBuilder: (context, state) => buildIosPageTransitions<void>(
-              context: context,
-              state: state,
-              child: const EditMyTypeView(),
-            ),
-          ),
-        ],
-      ),
-      GoRoute(
-        name: GoRoutes.greeting.name,
-        path: GoRoutes.greeting.fullPath,
-        builder: (context, state) {
-          return const GreetingView();
-        },
-      ),
-      GoRoute(
-        parentNavigatorKey: _rootNavigatorKey,
-        name: GoRoutes.signIn.name,
-        path: GoRoutes.signIn.fullPath,
-        builder: (context, state) {
-          return const SignIn();
-        },
-      ),
-      GoRoute(
-        name: GoRoutes.inputName.name,
-        path: GoRoutes.inputName.fullPath,
-        builder: (context, state) {
-          var inputName = state.extra as InputNameView;
-          return InputNameView(isMember: inputName.isMember);
-        },
-      ),
-      GoRoute(
-        name: GoRoutes.notice.name,
-        path: GoRoutes.notice.fullPath,
-        builder: (context, state) {
-          var notice = state.extra as NoticeView;
-          return NoticeView(
-            nickname: notice.nickname,
-          );
-        },
-      ),
-    ],
-  );
-});
+          ],
+        ),
+        GoRoute(
+          name: GoRoutes.greeting.name,
+          path: GoRoutes.greeting.fullPath,
+          builder: (context, state) {
+            return const GreetingView();
+          },
+        ),
+        GoRoute(
+          parentNavigatorKey: _rootNavigatorKey,
+          name: GoRoutes.signIn.name,
+          path: GoRoutes.signIn.fullPath,
+          builder: (context, state) {
+            return const SignIn();
+          },
+        ),
+        GoRoute(
+          name: GoRoutes.inputName.name,
+          path: GoRoutes.inputName.fullPath,
+          builder: (context, state) {
+            var inputName = state.extra as InputNameView;
+            return InputNameView(isMember: inputName.isMember);
+          },
+        ),
+        GoRoute(
+          name: GoRoutes.notice.name,
+          path: GoRoutes.notice.fullPath,
+          builder: (context, state) {
+            var notice = state.extra as NoticeView;
+            return NoticeView(
+              nickname: notice.nickname,
+            );
+          },
+        ),
+      ],
+    );
+  },
+);
