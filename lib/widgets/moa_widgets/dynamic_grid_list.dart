@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moa_app/constants/app_constants.dart';
+import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/models/hashtag_model.dart';
 import 'package:moa_app/screens/home/widgets/hashtag_card.dart';
 import 'package:moa_app/utils/router_provider.dart';
@@ -33,65 +34,90 @@ class DynamicGridList extends HookWidget {
             StaggeredGridTile.count(
               crossAxisCellCount: 1,
               mainAxisCellCount: 1.4,
-              child: HashtagCard(
+              child: ContentCard(
                 onPressContent: () => goContentView('0'),
                 onPressHashtag: (tag) {},
-                hashtag: HashtagModel(
-                  title: 'title',
-                  description: 'description',
-                  tags: ['#자취레시피', '#꿀팁'],
+                content: ContentModel(
+                  contentId: '1',
+                  imageUrl: 'https://picsum.photos/200/300',
+                  name: 'title',
+                  memo: 'description',
+                  hashTags: [
+                    HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
+                    HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
+                  ],
                 ),
               ),
             ),
             StaggeredGridTile.count(
               crossAxisCellCount: 1,
               mainAxisCellCount: 1.9,
-              child: HashtagCard(
+              child: ContentCard(
                 onPressContent: () => goContentView('1'),
                 onPressHashtag: (tag) {},
-                hashtag: HashtagModel(
-                  title: 'title',
-                  description: 'description',
-                  tags: ['#자취레시피', '#꿀팁'],
+                content: ContentModel(
+                  contentId: '1',
+                  imageUrl: 'https://picsum.photos/200/300',
+                  name: 'title',
+                  memo: 'description',
+                  hashTags: [
+                    HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
+                    HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
+                  ],
                 ),
               ),
             ),
             StaggeredGridTile.count(
               crossAxisCellCount: 1,
               mainAxisCellCount: 1.9,
-              child: HashtagCard(
+              child: ContentCard(
                 onPressContent: () => goContentView('2'),
                 onPressHashtag: (tag) {},
-                hashtag: HashtagModel(
-                  title: 'title',
-                  description: 'description',
-                  tags: ['#자취레시피', '#꿀팁'],
+                content: ContentModel(
+                  contentId: '1',
+                  imageUrl: 'https://picsum.photos/200/300',
+                  name: 'title',
+                  memo: 'description',
+                  hashTags: [
+                    HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
+                    HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
+                  ],
                 ),
               ),
             ),
             StaggeredGridTile.count(
               crossAxisCellCount: 1,
               mainAxisCellCount: 1,
-              child: HashtagCard(
+              child: ContentCard(
                 onPressContent: () => goContentView('3'),
                 onPressHashtag: (tag) {},
-                hashtag: HashtagModel(
-                  title: 'title',
-                  description: 'description',
-                  tags: ['#자취레시피', '#꿀팁'],
+                content: ContentModel(
+                  contentId: '1',
+                  imageUrl: 'https://picsum.photos/200/300',
+                  name: 'title',
+                  memo: 'description',
+                  hashTags: [
+                    HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
+                    HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
+                  ],
                 ),
               ),
             ),
             StaggeredGridTile.count(
               crossAxisCellCount: 1,
               mainAxisCellCount: 1.4,
-              child: HashtagCard(
+              child: ContentCard(
                 onPressContent: () => goContentView('4'),
                 onPressHashtag: (tag) {},
-                hashtag: HashtagModel(
-                  title: 'title',
-                  description: 'description',
-                  tags: ['#자취레시피', '#꿀팁'],
+                content: ContentModel(
+                  contentId: '1',
+                  imageUrl: 'https://picsum.photos/200/300',
+                  name: 'title',
+                  memo: 'description',
+                  hashTags: [
+                    HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
+                    HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
+                  ],
                 ),
               ),
             ),

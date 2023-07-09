@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:loading_more_list/loading_more_list.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
-import 'package:moa_app/models/hashtag_model.dart';
+import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/screens/home/widgets/hashtag_card.dart';
 import 'package:moa_app/screens/home/widgets/type_header.dart';
@@ -77,8 +77,8 @@ class HashtagTabView extends HookWidget {
                   },
                 );
               },
-              child: LoadingMoreList<HashtagModel>(
-                ListConfig<HashtagModel>(
+              child: LoadingMoreList<ContentModel>(
+                ListConfig<ContentModel>(
                   addRepaintBoundaries: true,
                   padding: const EdgeInsets.only(
                     left: 15,
@@ -95,15 +95,18 @@ class HashtagTabView extends HookWidget {
                   ),
                   sourceList: source,
                   indicatorBuilder: (context, status) {
-                    return const LoadingIndicator();
+                    if (status == IndicatorStatus.loadingMoreBusying) {
+                      return const LoadingIndicator();
+                    }
+                    return const SizedBox();
                   },
                   itemBuilder: (c, item, index) {
                     // todo image width, height 계선해서 aspectRatio 주기
                     return AspectRatio(
                       aspectRatio: 0.7,
-                      child: HashtagCard(
+                      child: ContentCard(
                         onPressContent: () => goContentView('5'),
-                        hashtag: item,
+                        content: item,
                         onPressHashtag: (tag) => goHashtagDetailView(tag),
                       ),
                     );

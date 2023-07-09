@@ -17,10 +17,11 @@ class UserListingScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var content = useState(ContentModel(
-      title: '',
-      image: '',
-      url: '',
-      description: '',
+      contentId: '1',
+      name: '',
+      memo: '',
+      imageUrl: '',
+      hashTags: [],
     ));
 
     void getCrawlUrl(String text) async {
@@ -36,15 +37,15 @@ class UserListingScreen extends HookWidget {
         var image = document.head
             ?.querySelector("meta[property='og:image']")
             ?.attributes['content'];
-        var url = document.head
-            ?.querySelector("meta[property='og:url']")
-            ?.attributes['content'];
+        // var url = document.head
+        //     ?.querySelector("meta[property='og:url']")
+        //     ?.attributes['content'];
 
         content.value = content.value.copyWith(
-          title: title ?? '',
-          description: description ?? '',
-          image: image ?? '',
-          url: url ?? '',
+          name: title ?? '',
+          memo: description ?? '',
+          imageUrl: image ?? '',
+          hashTags: [],
         );
       });
     }
@@ -70,27 +71,28 @@ class UserListingScreen extends HookWidget {
             },
           ),
           const SizedBox(height: 20),
-          content.value.image.isEmpty
+          content.value.imageUrl.isEmpty
               ? const SizedBox()
               : ImageOnNetwork(
                   width: double.infinity,
                   height: 200,
-                  imageURL: content.value.image),
+                  imageURL: content.value.imageUrl,
+                ),
           const SizedBox(height: 20),
           Text(
-            content.value.title,
+            content.value.name,
             style: const H1TextStyle(),
           ),
           const SizedBox(height: 5),
           Text(
-            content.value.description,
+            content.value.memo,
             style: const H2TextStyle(),
           ),
           const SizedBox(height: 5),
-          Text(
-            content.value.url,
-            style: const H2TextStyle(),
-          ),
+          // Text(
+          //   content.value.url,
+          //   style: const H2TextStyle(),
+          // ),
         ],
       ),
     );

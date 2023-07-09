@@ -77,7 +77,7 @@ class FolderList extends HookWidget {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    folder.title,
+                    folder.folderName,
                     style: const Hash1TextStyle(),
                   ),
                   const SizedBox(height: 3),
