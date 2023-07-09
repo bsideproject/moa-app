@@ -34,7 +34,6 @@ class FolderTabView extends HookWidget {
     void goFolderDetailView(String folderId) {
       context.go(
         '${GoRoutes.folder.fullPath}/$folderId',
-        // '/folder/$folderId',
       );
     }
 
@@ -67,7 +66,10 @@ class FolderTabView extends HookWidget {
             ),
             sourceList: source,
             indicatorBuilder: (context, status) {
-              return const LoadingIndicator();
+              if (status == IndicatorStatus.loadingMoreBusying) {
+                return const LoadingIndicator();
+              }
+              return const SizedBox();
             },
             itemBuilder: (c, item, index) {
               return index == 0
@@ -80,7 +82,7 @@ class FolderTabView extends HookWidget {
                   : FolderList(
                       folder: item,
                       folderColor: folderColors[index % 4],
-                      onPress: () => goFolderDetailView(item.id),
+                      onPress: () => goFolderDetailView(item.folderId),
                     );
             },
           ),

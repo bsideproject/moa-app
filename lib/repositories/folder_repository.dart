@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:moa_app/models/folder_model.dart';
 import 'package:moa_app/repositories/token_repository.dart';
 import 'package:moa_app/utils/api.dart';
-import 'package:moa_app/utils/logger.dart';
 
 abstract class IFolderRepository {
-  Future<String?> getFolderList();
+  Future<List<FolderModel>> getFolderList();
 }
 
 class FolderRepository implements IFolderRepository {
@@ -12,17 +12,19 @@ class FolderRepository implements IFolderRepository {
   static FolderRepository instance = const FolderRepository._();
 
   @override
-  Future<String?> getFolderList() async {
+  Future<List<FolderModel>> getFolderList() async {
     var token = await TokenRepository.instance.getToken();
-
     var res = await dio.get(
-      '/api/v1/folder/view/',
+      '/api/v1/folder/view',
       options: Options(
-        headers: {'oauth-token': token},
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
       ),
     );
 
-    logger.d('res:$res');
-    return 'string';
+    return res.data['data']
+        .map<FolderModel>((e) => FolderModel.fromJson(e))
+        .toList();
   }
 }

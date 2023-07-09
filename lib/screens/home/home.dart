@@ -6,12 +6,15 @@ import 'package:loading_more_list/loading_more_list.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
+import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/models/folder_model.dart';
-import 'package:moa_app/models/hashtag_model.dart';
 import 'package:moa_app/providers/button_click_provider.dart';
+import 'package:moa_app/repositories/folder_repository.dart';
+import 'package:moa_app/repositories/hashtag_repository.dart';
 import 'package:moa_app/screens/home/tab_view/folder_tab_view.dart';
 import 'package:moa_app/screens/home/tab_view/hashtag_tab_view.dart';
 import 'package:moa_app/screens/home/widgets/moa_comment_img.dart';
+import 'package:moa_app/utils/logger.dart';
 
 class Home extends HookConsumerWidget {
   const Home({super.key});
@@ -21,10 +24,6 @@ class Home extends HookConsumerWidget {
     var isClick = ref.watch(buttonClickStateProvider);
     var tabIdx = useState(0);
     TabController tabController = useTabController(initialLength: 2);
-
-    // Future<void> getFolderList() async {
-    //   await FolderRepository.instance.getFolderList();
-    // }
 
     useEffect(() {
       /// SliverPersistentHeader의 tab icon 색깔 리렌더를 위해서 addListener 사용
@@ -261,16 +260,18 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
 }
 
 class FolderSource extends LoadingMoreBase<FolderModel> {
+  var count = 0;
   int pageIndex = 1;
-  bool _hasMore = true;
+  bool _hasMore = false;
   bool forceRefresh = false;
   @override
-  bool get hasMore => (_hasMore && length < 30) || forceRefresh;
+  bool get hasMore => (_hasMore && length < 20) || forceRefresh;
 
   @override
   Future<bool> refresh([bool notifyStateChanged = false]) async {
     _hasMore = true;
     pageIndex = 1;
+
     //force to refresh list when you don't want clear list before request
     //for the case, if your list already has 20 items.
     forceRefresh = !notifyStateChanged;
@@ -280,29 +281,35 @@ class FolderSource extends LoadingMoreBase<FolderModel> {
   }
 
   @override
-  Future<bool> loadData([bool isloadMoreAction = false]) {
-    return Future<bool>.delayed(const Duration(seconds: 1), () {
+  Future<bool> loadData([bool isloadMoreAction = false]) async {
+    bool isSuccess = false;
+
+    try {
+      var list = await FolderRepository.instance.getFolderList();
       if (pageIndex == 1) {
-        clear();
-      }
-      for (int i = 0; i < 4; i++) {
-        add(const FolderModel(id: '0', title: 'title', content: 'content'));
+        add(
+          const FolderModel(folderId: 'add', folderName: '폴더 추가', count: 0),
+        );
       }
 
-      add(
-        const FolderModel(
-          id: '0',
-          title: 'title',
-          content: 'content',
-        ),
-      );
+      for (FolderModel folder in list) {
+        if (!contains(folder) && _hasMore) {
+          add(folder);
+        }
+      }
+      _hasMore = false;
+      pageIndex++;
+      isSuccess = true;
+    } catch (e) {
+      isSuccess = false;
 
-      return true;
-    });
+      logger.d(e);
+    }
+    return isSuccess;
   }
 }
 
-class HashtagSource extends LoadingMoreBase<HashtagModel> {
+class HashtagSource extends LoadingMoreBase<ContentModel> {
   int pageIndex = 1;
   bool _hasMore = true;
   bool forceRefresh = false;
@@ -322,21 +329,25 @@ class HashtagSource extends LoadingMoreBase<HashtagModel> {
   }
 
   @override
-  Future<bool> loadData([bool isloadMoreAction = false]) {
-    return Future<bool>.delayed(const Duration(seconds: 1), () {
-      // if (pageIndex == 1) {
-      //   clear();
-      // }
-      for (int i = 0; i < 4; i++) {
-        add(HashtagModel(
-          title: 'title',
-          description: 'description',
-          tags: ['tag1', 'tag2'],
-        ));
-      }
+  Future<bool> loadData([bool isloadMoreAction = false]) async {
+    bool isSuccess = false;
 
-      return true;
-    });
+    try {
+      var list = await HashtagRepository.instance.getHashtagList();
+      for (ContentModel content in list) {
+        if (!contains(content) && _hasMore) {
+          add(content);
+        }
+      }
+      _hasMore = false;
+      pageIndex++;
+      isSuccess = true;
+    } catch (e) {
+      isSuccess = false;
+
+      logger.d(e);
+    }
+    return isSuccess;
   }
 }
 

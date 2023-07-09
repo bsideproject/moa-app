@@ -24,10 +24,10 @@ class EditMyTypeView extends HookWidget {
     var tabIdx = useState(0);
 
     List<FolderModel> folderList = [
-      const FolderModel(id: '0', title: 'title', content: 'content'),
-      const FolderModel(id: '0', title: 'title2', content: 'content2'),
-      const FolderModel(id: '0', title: 'title3', content: 'content3'),
-      const FolderModel(id: '0', title: 'title4', content: 'content4'),
+      const FolderModel(folderId: '0', folderName: '책', count: 2),
+      const FolderModel(folderId: '1', folderName: '모바일', count: 32),
+      const FolderModel(folderId: '2', folderName: '공부', count: 1),
+      const FolderModel(folderId: '3', folderName: '컴퓨터', count: 5),
     ];
 
     Future<void> folderPullToRefresh() async {
@@ -73,6 +73,7 @@ class EditMyTypeView extends HookWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const AppBarBack(
+        title: Text('내 취향 관리'),
         isBottomBorderDisplayed: false,
       ),
       body: DefaultTabController(
@@ -120,7 +121,7 @@ class EditMyTypeView extends HookWidget {
                         : FolderList(
                             folder: item,
                             folderColor: folderColors[index % 4],
-                            onPress: () => goFolderDetailView(item.id),
+                            onPress: () => goFolderDetailView(item.folderId),
                           );
                   },
                 ),
