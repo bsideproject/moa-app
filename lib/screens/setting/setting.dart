@@ -51,11 +51,11 @@ class Setting extends HookConsumerWidget {
               Row(
                 children: [
                   const Spacer(),
-                  InkWell(
-                    borderRadius: BorderRadius.circular(5),
-                    onTap: handleLogout,
-                    child: Container(
-                      padding: const EdgeInsets.only(right: 20),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(5),
+                      onTap: handleLogout,
                       child: const Text(
                         '로그아웃',
                         style: TextStyle(
