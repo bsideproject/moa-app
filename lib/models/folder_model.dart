@@ -6,9 +6,10 @@ part 'folder_model.g.dart';
 @freezed
 class FolderModel with _$FolderModel {
   const factory FolderModel({
-    required String id,
-    required String title,
-    required String content,
+    required String folderId,
+    required String folderName,
+    required int count,
+    String? updatedDate,
   }) = _FolderModel;
 
   factory FolderModel.fromJson(Map<String, dynamic> json) =>

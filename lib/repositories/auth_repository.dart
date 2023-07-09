@@ -132,7 +132,7 @@ class AuthRepository implements IAuthRepository {
       return AuthDto.fail();
     }
 
-    return await _kakaoRequestUserInfo(token: respToken.data['access_token']);
+    return await _kakaoRequestUserInfo(token: respToken.data['refresh_token']);
   }
 
   Future<AuthDto> _kakaoLoginMobile() async {
@@ -205,7 +205,7 @@ class AuthRepository implements IAuthRepository {
     return AuthDto.success(
       id: resToken.data['id'],
       email: resToken.data['email'],
-      token: resToken.data['access_token'],
+      token: resToken.data['refresh_token'],
       platform: 'naver',
     );
   }
@@ -278,7 +278,7 @@ class AuthRepository implements IAuthRepository {
       throw 'Login failed with moa-spring with ${res.statusCode} code';
     }
 
-    await TokenRepository.instance.setToken(token: res.data['access_token']);
+    await TokenRepository.instance.setToken(token: res.data['refresh_token']);
 
     // 로그인 성공
     logger.d('login success\n'
@@ -286,6 +286,6 @@ class AuthRepository implements IAuthRepository {
         'id      : ${authDto.id}\n'
         'email   : ${authDto.email}\n'
         'token   : ${authDto.token}\n');
-    return res.data['access_token'];
+    return res.data['refresh_token'];
   }
 }
