@@ -6,14 +6,13 @@ import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/folder_model.dart';
-import 'package:moa_app/screens/home/folder_detail_view.dart';
 import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/app_bar.dart';
-import 'package:moa_app/widgets/dynamic_grid_list.dart';
 import 'package:moa_app/widgets/folder_list.dart';
 import 'package:moa_app/widgets/moa_widgets/add_folder.dart';
+import 'package:moa_app/widgets/moa_widgets/dynamic_grid_list.dart';
 
 class EditMyTypeView extends HookWidget {
   const EditMyTypeView({super.key});
@@ -25,10 +24,10 @@ class EditMyTypeView extends HookWidget {
     var tabIdx = useState(0);
 
     List<FolderModel> folderList = [
-      const FolderModel(id: 0, title: 'title', content: 'content'),
-      const FolderModel(id: 0, title: 'title2', content: 'content2'),
-      const FolderModel(id: 0, title: 'title3', content: 'content3'),
-      const FolderModel(id: 0, title: 'title4', content: 'content4'),
+      const FolderModel(id: '0', title: 'title', content: 'content'),
+      const FolderModel(id: '0', title: 'title2', content: 'content2'),
+      const FolderModel(id: '0', title: 'title3', content: 'content3'),
+      const FolderModel(id: '0', title: 'title4', content: 'content4'),
     ];
 
     Future<void> folderPullToRefresh() async {
@@ -53,10 +52,9 @@ class EditMyTypeView extends HookWidget {
       );
     }
 
-    void goFolderDetailView(String title) {
+    void goFolderDetailView(String id) {
       context.push(
-        '${GoRoutes.folderDetail.fullPath}/$title',
-        extra: FolderDetailView(folderName: title),
+        '${GoRoutes.folder.fullPath}/$id',
       );
     }
 
@@ -122,7 +120,7 @@ class EditMyTypeView extends HookWidget {
                         : FolderList(
                             folder: item,
                             folderColor: folderColors[index % 4],
-                            onPress: () => goFolderDetailView(item.title),
+                            onPress: () => goFolderDetailView(item.id),
                           );
                   },
                 ),

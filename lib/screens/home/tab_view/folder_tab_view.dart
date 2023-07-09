@@ -6,7 +6,6 @@ import 'package:loading_more_list/loading_more_list.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/folder_model.dart';
-import 'package:moa_app/screens/home/folder_detail_view.dart';
 import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/utils/router_provider.dart';
@@ -32,15 +31,10 @@ class FolderTabView extends HookWidget {
       );
     }
 
-    void goFolderDetailView(String title) {
-      // context.namedLocation(
-      //   GoRoutes.home.name + GoRoutes.folderDetail.name,
-      //   queryParameters: {'id': title},
-      // );
-
-      context.push(
-        '${GoRoutes.folderDetail.fullPath}/$title',
-        extra: FolderDetailView(folderName: title),
+    void goFolderDetailView(String folderId) {
+      context.go(
+        '${GoRoutes.folder.fullPath}/$folderId',
+        // '/folder/$folderId',
       );
     }
 
@@ -86,7 +80,7 @@ class FolderTabView extends HookWidget {
                   : FolderList(
                       folder: item,
                       folderColor: folderColors[index % 4],
-                      onPress: () => goFolderDetailView(item.title),
+                      onPress: () => goFolderDetailView(item.id),
                     );
             },
           ),

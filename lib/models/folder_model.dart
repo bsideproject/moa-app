@@ -6,7 +6,7 @@ part 'folder_model.g.dart';
 @freezed
 class FolderModel with _$FolderModel {
   const factory FolderModel({
-    required int id,
+    required String id,
     required String title,
     required String content,
   }) = _FolderModel;

@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:moa_app/constants/app_constants.dart';
@@ -43,7 +43,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 void main() async {
-  usePathUrlStrategy();
   var widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -58,6 +57,7 @@ void main() async {
   KakaoSdk.init(
       nativeAppKey: Config().nativeAppKey,
       javaScriptAppKey: Config().javaScriptAppKey);
+  usePathUrlStrategy();
   runApp(ProviderScope(observers: [Logger()], child: const MyApp()));
 }
 
@@ -75,7 +75,7 @@ class MyApp extends HookConsumerWidget {
       return null;
     }, [token.isLoading]);
 
-    if (token.isLoading) {
+    if (token.isLoading && !kIsWeb) {
       return const MaterialApp(
         home: Scaffold(body: SizedBox()),
       );

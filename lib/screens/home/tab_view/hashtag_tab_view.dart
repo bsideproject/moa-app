@@ -6,8 +6,6 @@ import 'package:loading_more_list/loading_more_list.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/hashtag_model.dart';
-import 'package:moa_app/screens/home/content_view.dart';
-import 'package:moa_app/screens/home/hashtag_detail_view.dart';
 import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/screens/home/widgets/hashtag_card.dart';
 import 'package:moa_app/screens/home/widgets/type_header.dart';
@@ -26,19 +24,15 @@ class HashtagTabView extends HookWidget {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
-    void goContentView(int contentId) {
-      context.push(
+    void goContentView(String contentId) {
+      context.go(
         '${GoRoutes.content.fullPath}/$contentId',
-        extra: ContentView(
-          contentId: contentId,
-        ),
       );
     }
 
     void goHashtagDetailView(String tag) {
-      context.push(
-        '${GoRoutes.hashtagDetail.fullPath}/$tag',
-        extra: HashtagDetailView(filterName: tag),
+      context.go(
+        '${GoRoutes.hashtag.fullPath}/$tag',
       );
     }
 
@@ -95,6 +89,7 @@ class HashtagTabView extends HookWidget {
                   extendedListDelegate:
                       SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
                     crossAxisCount: width > Breakpoints.md ? 3 : 2,
+                    // crossAxisCount: 2,
                     mainAxisSpacing: 20.0,
                     crossAxisSpacing: 12.0,
                   ),
@@ -107,7 +102,7 @@ class HashtagTabView extends HookWidget {
                     return AspectRatio(
                       aspectRatio: 0.7,
                       child: HashtagCard(
-                        onPressContent: () => goContentView(5),
+                        onPressContent: () => goContentView('5'),
                         hashtag: item,
                         onPressHashtag: (tag) => goHashtagDetailView(tag),
                       ),

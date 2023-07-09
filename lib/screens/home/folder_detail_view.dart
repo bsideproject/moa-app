@@ -8,14 +8,14 @@ import 'package:moa_app/screens/home/widgets/type_header.dart';
 import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/widgets/app_bar.dart';
 import 'package:moa_app/widgets/button.dart';
-import 'package:moa_app/widgets/dynamic_grid_list.dart';
 import 'package:moa_app/widgets/moa_widgets/bottom_modal_item.dart';
 import 'package:moa_app/widgets/moa_widgets/delete_content.dart';
+import 'package:moa_app/widgets/moa_widgets/dynamic_grid_list.dart';
 import 'package:moa_app/widgets/moa_widgets/edit_content.dart';
 
 class FolderDetailView extends HookWidget {
-  const FolderDetailView({super.key, required this.folderName});
-  final String folderName;
+  const FolderDetailView({super.key, required this.folderId});
+  final String folderId;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class FolderDetailView extends HookWidget {
             // todo 폴더 수정 api 연동후 성공하면 아래 코드 실행 실패시 snackbar 경고
           },
           updatedContentName: updatedContentName,
-          contentName: folderName,
+          contentName: 'folderName',
         ),
         isContainer: false,
       );
@@ -55,7 +55,7 @@ class FolderDetailView extends HookWidget {
         context: context,
         isCloseButton: true,
         child: DeleteContent(
-          contentName: folderName,
+          contentName: 'folderName',
           type: ContentType.folder,
           onPressed: () {
             // todo 폴더 삭제 api 연동후 성공하면 아래 코드 실행 실패시 snackbar 경고
@@ -103,9 +103,9 @@ class FolderDetailView extends HookWidget {
     return Scaffold(
       appBar: AppBarBack(
         isBottomBorderDisplayed: false,
-        title: Text(
-          folderName,
-          style: const H2TextStyle(),
+        title: const Text(
+          'folderName',
+          style: H2TextStyle(),
         ),
         actions: [
           CircleIconButton(
@@ -128,6 +128,7 @@ class FolderDetailView extends HookWidget {
             const SizedBox(height: 5),
             Expanded(
               child: DynamicGridList(
+                // todo folder id 내려줘야함
                 pullToRefresh: pullToRefresh,
               ),
             ),

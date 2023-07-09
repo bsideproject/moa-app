@@ -4,7 +4,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/models/hashtag_model.dart';
-import 'package:moa_app/screens/home/content_view.dart';
 import 'package:moa_app/screens/home/widgets/hashtag_card.dart';
 import 'package:moa_app/utils/router_provider.dart';
 
@@ -15,12 +14,9 @@ class DynamicGridList extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    void goContentView(int contentId) {
+    void goContentView(String contentId) {
       context.push(
         '${GoRoutes.content.fullPath}/$contentId',
-        extra: ContentView(
-          contentId: contentId,
-        ),
       );
     }
 
@@ -38,7 +34,7 @@ class DynamicGridList extends HookWidget {
               crossAxisCellCount: 1,
               mainAxisCellCount: 1.4,
               child: HashtagCard(
-                onPressContent: () => goContentView(0),
+                onPressContent: () => goContentView('0'),
                 onPressHashtag: (tag) {},
                 hashtag: HashtagModel(
                   title: 'title',
@@ -51,7 +47,7 @@ class DynamicGridList extends HookWidget {
               crossAxisCellCount: 1,
               mainAxisCellCount: 1.9,
               child: HashtagCard(
-                onPressContent: () => goContentView(1),
+                onPressContent: () => goContentView('1'),
                 onPressHashtag: (tag) {},
                 hashtag: HashtagModel(
                   title: 'title',
@@ -64,7 +60,7 @@ class DynamicGridList extends HookWidget {
               crossAxisCellCount: 1,
               mainAxisCellCount: 1.9,
               child: HashtagCard(
-                onPressContent: () => goContentView(2),
+                onPressContent: () => goContentView('2'),
                 onPressHashtag: (tag) {},
                 hashtag: HashtagModel(
                   title: 'title',
@@ -77,7 +73,7 @@ class DynamicGridList extends HookWidget {
               crossAxisCellCount: 1,
               mainAxisCellCount: 1,
               child: HashtagCard(
-                onPressContent: () => goContentView(3),
+                onPressContent: () => goContentView('3'),
                 onPressHashtag: (tag) {},
                 hashtag: HashtagModel(
                   title: 'title',
@@ -90,7 +86,7 @@ class DynamicGridList extends HookWidget {
               crossAxisCellCount: 1,
               mainAxisCellCount: 1.4,
               child: HashtagCard(
-                onPressContent: () => goContentView(4),
+                onPressContent: () => goContentView('4'),
                 onPressHashtag: (tag) {},
                 hashtag: HashtagModel(
                   title: 'title',
