@@ -73,7 +73,7 @@ class EditMyTypeView extends HookWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const AppBarBack(
-        title: Text('내 취향 관리'),
+        title: '내 취향 관리',
         isBottomBorderDisplayed: false,
       ),
       body: DefaultTabController(

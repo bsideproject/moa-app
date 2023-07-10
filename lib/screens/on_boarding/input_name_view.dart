@@ -9,6 +9,7 @@ import 'package:moa_app/screens/on_boarding/notice_view.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
+import 'package:moa_app/widgets/moa_widgets/error_text.dart';
 
 enum StepType {
   inputName,
@@ -140,31 +141,10 @@ class InputNameView extends HookWidget {
                   onPressed: emptyInputName,
                 ),
               ),
-              const SizedBox(height: 5),
-              AnimatedSwitcher(
-                transitionBuilder: (child, animation) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-                duration: const Duration(milliseconds: 100),
-                child: (name.value.isNotEmpty && !validateNickname(name.value))
-                    ? Row(
-                        children: [
-                          Image(
-                            image: Assets.alert,
-                            width: 13,
-                            height: 13,
-                          ),
-                          const SizedBox(width: 5),
-                          Text(
-                            '이름은 한글 2~8자로 입력할 수 있어요.',
-                            style: const Body1TextStyle().merge(
-                              const TextStyle(color: AppColors.primaryColor),
-                            ),
-                          )
-                        ],
-                      )
-                    : const SizedBox(),
-              ),
+              ErrorText(
+                  errorText: '이름은 한글 2~8자로 입력할 수 있어요.',
+                  errorValidate:
+                      name.value.isNotEmpty && !validateNickname(name.value)),
             ],
           );
         case StepType.greeting:
@@ -321,7 +301,7 @@ class InputNameView extends HookWidget {
             ),
           );
         default:
-          return const Text('Hello');
+          return const SizedBox();
       }
     }
 

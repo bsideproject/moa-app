@@ -20,6 +20,8 @@ class Assets {
   static AssetImage pencil = const AssetImage('$_icPath/pencil.png');
   static AssetImage trash = const AssetImage('$_icPath/trash.png');
   static AssetImage alert = const AssetImage('$_icPath/alert.png');
+  static AssetImage check = const AssetImage('$_icPath/check.png');
+  static AssetImage circlePlus = const AssetImage('$_icPath/circlePlus.png');
 
   static AssetImage kakao = const AssetImage('$_imgPath/kakao.png');
   static AssetImage naver = const AssetImage('$_imgPath/naver.png');
@@ -31,6 +33,7 @@ class Assets {
   static AssetImage greeting = const AssetImage('$_imgPath/greeting.png');
   static AssetImage onboarding1 = const AssetImage('$_imgPath/onboarding1.png');
   static AssetImage onboarding2 = const AssetImage('$_imgPath/onboarding2.png');
+
   static AssetImage moaBannerImg =
       const AssetImage('$_imgPath/moaBannerImg.png');
   static AssetImage moaSwitchImg =

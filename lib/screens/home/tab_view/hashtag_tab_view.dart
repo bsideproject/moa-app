@@ -47,7 +47,7 @@ class HashtagTabView extends HookWidget {
                 height: 50,
                 onChanged: (value) {},
                 hintText: '나의 해시태그 검색',
-                borderRadius: 50,
+                borderRadius: BorderRadius.circular(50),
                 suffixIcon: CircleIconButton(
                   icon: Image(
                     fit: BoxFit.contain,

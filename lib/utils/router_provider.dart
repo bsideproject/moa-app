@@ -2,6 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moa_app/navigations/main_bottom_tab.dart';
+import 'package:moa_app/screens/add_content/add_image_content.dart';
+import 'package:moa_app/screens/add_content/add_link_content.dart';
+import 'package:moa_app/screens/add_content/folder_select.dart';
 import 'package:moa_app/screens/file_sharing/file_sharing.dart';
 import 'package:moa_app/screens/home/content_view.dart';
 import 'package:moa_app/screens/home/folder_detail_view.dart';
@@ -35,7 +38,12 @@ enum GoRoutes {
   folder,
   hashtag,
   setting,
-  editContent
+  editContent,
+
+  /// add folder
+  folderSelect,
+  addImageContent,
+  addLinkContent
 }
 
 CustomTransitionPage buildPageWithDefaultTransition<T>({
@@ -229,6 +237,37 @@ final routeProvider = Provider(
             ),
           ],
         ),
+        GoRoute(
+            parentNavigatorKey: _rootNavigatorKey,
+            name: GoRoutes.folderSelect.name,
+            path: GoRoutes.folderSelect.fullPath,
+            pageBuilder: (context, state) => buildIosPageTransitions<void>(
+                  context: context,
+                  state: state,
+                  child: const FolderSelect(),
+                ),
+            routes: [
+              GoRoute(
+                parentNavigatorKey: _rootNavigatorKey,
+                name: GoRoutes.addImageContent.name,
+                path: GoRoutes.addImageContent.path,
+                pageBuilder: (context, state) => buildIosPageTransitions<void>(
+                  context: context,
+                  state: state,
+                  child: const AddImageContent(),
+                ),
+              ),
+              GoRoute(
+                parentNavigatorKey: _rootNavigatorKey,
+                name: GoRoutes.addLinkContent.name,
+                path: GoRoutes.addLinkContent.path,
+                pageBuilder: (context, state) => buildIosPageTransitions<void>(
+                  context: context,
+                  state: state,
+                  child: const AddLinkContent(),
+                ),
+              ),
+            ]),
         GoRoute(
           name: GoRoutes.greeting.name,
           path: GoRoutes.greeting.fullPath,
