@@ -51,3 +51,6 @@ coverage
 *.g.dart 
 *.freezed.dart
 .fvm
+
+sqflite_sw.js
+sqlite3.wasm
