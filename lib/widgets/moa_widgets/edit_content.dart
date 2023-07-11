@@ -6,6 +6,7 @@ import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
+import 'package:moa_app/widgets/moa_widgets/error_text.dart';
 
 final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -16,20 +17,26 @@ class EditContent extends HookWidget {
     required this.updatedContentName,
     required this.contentName,
     required this.onPressed,
+    this.buttonText,
+    this.maxLength,
+    this.validator,
   });
   final String title;
   final ValueNotifier<String> updatedContentName;
   final String contentName;
   final Function() onPressed;
+  final String? buttonText;
+  final int? maxLength;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
     var controller = useTextEditingController();
     var forRender = useState('');
+    var errorText = useState('');
 
     void onChangedContentValue(String value) {
       forRender.value = value;
-
       updatedContentName.value = value;
     }
 
@@ -41,7 +48,9 @@ class EditContent extends HookWidget {
     }
 
     void editContent() {
-      if (controller.text.isEmpty) {
+      var error = onPressed();
+      errorText.value = error;
+      if (controller.text.isEmpty || error != '') {
         return;
       }
 
@@ -75,7 +84,7 @@ class EditContent extends HookWidget {
                 ),
                 const SizedBox(height: 30),
                 EditFormText(
-                  maxLength: 7,
+                  maxLength: maxLength ?? 7,
                   controller: controller,
                   onChanged: onChangedContentValue,
                   hintText: contentName,
@@ -90,11 +99,28 @@ class EditContent extends HookWidget {
                     onPressed: emptyContentName,
                   ),
                 ),
+                ErrorText(
+                    errorText: errorText.value,
+                    errorValidate: errorText.value != ''),
+                Row(
+                  children: [
+                    const Spacer(),
+                    Text(
+                      '${controller.text.length}/${maxLength ?? 7}',
+                      style: TextStyle(
+                          color: controller.text.length >= (maxLength ?? 7)
+                              ? AppColors.danger
+                              : AppColors.blackColor.withOpacity(0.3),
+                          fontSize: 12,
+                          fontFamily: FontConstants.pretendard),
+                    ),
+                  ],
+                ),
                 const Spacer(),
                 Button(
                   disabled: controller.text.isEmpty,
                   margin: const EdgeInsets.only(bottom: 30),
-                  text: '수정하기',
+                  text: buttonText ?? '수정하기',
                   onPress: editContent,
                 )
               ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
+import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/widgets/button.dart';
 
 class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
@@ -13,7 +14,7 @@ class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
     this.isBottomBorderDisplayed = true,
     this.bottomBorderStyle = const BottomBorderStyle(),
   }) : super(key: key);
-  final Widget? title;
+  final String? title;
   final Widget? leading;
   final List<Widget>? actions;
   final bool isBottomBorderDisplayed;
@@ -23,7 +24,10 @@ class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: AppColors.whiteColor,
-      title: title,
+      title: Text(
+        title ?? '',
+        style: const H2TextStyle(),
+      ),
       leading: CircleIconButton(
         backgroundColor: AppColors.whiteColor,
         icon: Image(

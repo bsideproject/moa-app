@@ -49,9 +49,8 @@ class MainBottomTab extends HookWidget {
               elevation: 0,
               backgroundColor: AppColors.primaryColor,
               shape: const CircleBorder(),
-              //Floating action button on Scaffold
               onPressed: () {
-                //code to execute on button press
+                context.push(GoRoutes.folderSelect.fullPath);
               },
               child: const Icon(
                 size: 40,

@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
-import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/screens/home/widgets/type_header.dart';
 import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/widgets/app_bar.dart';
@@ -103,10 +102,7 @@ class FolderDetailView extends HookWidget {
     return Scaffold(
       appBar: AppBarBack(
         isBottomBorderDisplayed: false,
-        title: const Text(
-          'folderName',
-          style: H2TextStyle(),
-        ),
+        title: 'folderName',
         actions: [
           CircleIconButton(
             backgroundColor: AppColors.whiteColor,

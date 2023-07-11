@@ -31,7 +31,7 @@ class FolderList extends HookWidget {
       ),
       child: InkWell(
         splashColor: Colors.transparent,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(12),
         onTap: onPress,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

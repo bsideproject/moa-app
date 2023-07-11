@@ -24,7 +24,7 @@ class EditText extends StatefulWidget {
     this.enableSuggestions = true,
     this.autocorrect = true,
     this.height,
-    this.borderRadius = 50,
+    this.borderRadius,
     this.suffixIcon,
     this.backgroundColor = AppColors.textInputBackground,
     this.controller,
@@ -42,7 +42,7 @@ class EditText extends StatefulWidget {
   final InputDecoration? decoration;
   final TextInputType? keyboardType;
   final double? height;
-  final double borderRadius;
+  final BorderRadius? borderRadius;
   final Widget? suffixIcon;
   final Color backgroundColor;
   final TextEditingController? controller;
@@ -58,7 +58,7 @@ class _EditTextState extends State<EditText> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(100),
+        borderRadius: widget.borderRadius ?? BorderRadius.circular(100),
         color: widget.backgroundColor,
       ),
       height: widget.height,
@@ -81,13 +81,13 @@ class _EditTextState extends State<EditText> {
               .merge(TextStyle(color: AppColors.moaOpacity30))
               .merge(widget.style),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(100),
+            borderRadius: widget.borderRadius ?? BorderRadius.circular(100),
             borderSide: const BorderSide(
               color: AppColors.whiteColor,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(100),
+            borderRadius: widget.borderRadius ?? BorderRadius.circular(100),
             borderSide: const BorderSide(
               width: 0,
               color: AppColors.whiteColor,

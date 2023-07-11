@@ -18,6 +18,11 @@ flutter run
 ```sh
 flutter run -d chrome --web-port=8080
 ```
+### sqflite 웹 실행
+
+```sh
+dart run sqflite_common_ffi_web:setup
+```
 ## freezed 모델 빌드
 
 ```sh

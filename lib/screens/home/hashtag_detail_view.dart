@@ -128,8 +128,6 @@ class HashtagDetailView extends HookWidget {
           children: [
             Wrap(
               children: [
-                // Text(updatedHashtagName.value),
-                Text(updatedHashtagName.value),
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
