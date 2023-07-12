@@ -11,10 +11,12 @@ class FolderList extends HookWidget {
     required this.folder,
     required this.folderColor,
     required this.onPress,
+    required this.onPressMore,
   });
   final FolderModel folder;
   final Color folderColor;
   final Function() onPress;
+  final Function() onPressMore;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,8 @@ class FolderList extends HookWidget {
                         margin: const EdgeInsets.only(top: 30),
                         width: 32,
                         height: 32,
+
+                        // todo 폴더 첫이미지 url
                         child: const CircleAvatar(
                           radius: 30,
                           backgroundColor: AppColors.blackColor,
@@ -66,7 +70,7 @@ class FolderList extends HookWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
-                            '+56',
+                            folder.count.toString(),
                             style: const Hash2TextStyle().merge(const TextStyle(
                               fontWeight: FontWeight.bold,
                             )),
@@ -81,14 +85,16 @@ class FolderList extends HookWidget {
                     style: const Hash1TextStyle(),
                   ),
                   const SizedBox(height: 3),
-                  Text(
-                    '최근 저장 23.05.30',
-                    style: const Hash2TextStyle().merge(
-                      const TextStyle(
-                        color: AppColors.placeholder,
-                      ),
-                    ),
-                  ),
+                  folder.updatedDate != null
+                      ? Text(
+                          '최근 저장 ${folder.updatedDate}',
+                          style: const Hash2TextStyle().merge(
+                            const TextStyle(
+                              color: AppColors.placeholder,
+                            ),
+                          ),
+                        )
+                      : const SizedBox(),
                 ],
               ),
             ),
@@ -100,7 +106,7 @@ class FolderList extends HookWidget {
                 color: Colors.transparent,
                 child: IconButton(
                   iconSize: 24,
-                  onPressed: () {},
+                  onPressed: onPressMore,
                   icon: const Icon(
                     Icons.more_vert,
                     color: AppColors.blackColor,

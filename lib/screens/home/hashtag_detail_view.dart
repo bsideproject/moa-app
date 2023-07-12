@@ -148,7 +148,7 @@ class HashtagDetailView extends HookWidget {
               ],
             ),
             const SizedBox(height: 15),
-            TypeHeader(typeCount: 146, onPressFilter: () {}),
+            TypeHeader(count: 146, onPressFilter: () {}),
             const SizedBox(height: 5),
             Expanded(
                 child: DynamicGridList(

@@ -6,12 +6,15 @@ import 'package:loading_more_list/loading_more_list.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/folder_model.dart';
+import 'package:moa_app/repositories/folder_repository.dart';
 import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/utils/general.dart';
+import 'package:moa_app/utils/logger.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/folder_list.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
 import 'package:moa_app/widgets/moa_widgets/add_folder.dart';
+import 'package:moa_app/widgets/moa_widgets/edit_content.dart';
 
 class FolderTabView extends HookWidget {
   const FolderTabView(
@@ -22,11 +25,16 @@ class FolderTabView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
+    var updatedContentName = useState('');
 
     void showAddFolderModal() {
       General.instance.showBottomSheet(
         context: context,
-        child: const AddFolder(),
+        child: AddFolder(
+          onRefresh: () {
+            source.refresh(true);
+          },
+        ),
         isContainer: false,
       );
     }
@@ -34,6 +42,34 @@ class FolderTabView extends HookWidget {
     void goFolderDetailView(String folderId) {
       context.go(
         '${GoRoutes.folder.fullPath}/$folderId',
+      );
+    }
+
+    void showEditFolderModal({required String folderName}) {
+      General.instance.showBottomSheet(
+        context: context,
+        child: EditContent(
+          title: '폴더명 수정',
+          updatedContentName: updatedContentName,
+          contentName: folderName,
+          onPressed: () async {
+            try {
+              await FolderRepository.instance.editFolderName(
+                currentFolderName: folderName,
+                editFolderName: updatedContentName.value,
+              );
+
+              // todo 폴더명 중복 체크후 중복이면 에러메세지
+              // if 중복이면
+              // return '이미 가지고 있는 폴더이름이에요!';
+              // 중복 아니면
+              return '';
+            } catch (error) {
+              logger.d(error);
+            }
+          },
+        ),
+        isContainer: false,
       );
     }
 
@@ -45,7 +81,7 @@ class FolderTabView extends HookWidget {
           return Future.delayed(
             const Duration(seconds: 2),
             () {
-              source.refresh(false);
+              source.refresh(true);
             },
           );
         },
@@ -82,6 +118,8 @@ class FolderTabView extends HookWidget {
                   : FolderList(
                       folder: item,
                       folderColor: folderColors[index % 4],
+                      onPressMore: () =>
+                          showEditFolderModal(folderName: item.folderName),
                       onPress: () => goFolderDetailView(item.folderId),
                     );
             },

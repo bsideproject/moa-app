@@ -30,10 +30,8 @@ class Setting extends HookConsumerWidget {
       alertDialog.confirm(
         context,
         onPress: () async {
-          await ref.watch(tokenStateProvider.notifier).removeToken();
-          if (context.mounted) {
-            context.go(GoRoutes.signIn.fullPath);
-          }
+          context.go(GoRoutes.signIn.fullPath);
+          await ref.read(tokenStateProvider.notifier).removeToken();
         },
         showCancelButton: true,
         title: '로그아웃',

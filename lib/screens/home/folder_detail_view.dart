@@ -120,7 +120,7 @@ class FolderDetailView extends HookWidget {
         child: Column(
           children: [
             const SizedBox(height: 30),
-            TypeHeader(typeCount: 56, onPressFilter: () {}),
+            TypeHeader(count: 56, onPressFilter: () {}),
             const SizedBox(height: 5),
             Expanded(
               child: DynamicGridList(

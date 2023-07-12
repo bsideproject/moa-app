@@ -25,6 +25,9 @@ class Home extends HookConsumerWidget {
     var tabIdx = useState(0);
     TabController tabController = useTabController(initialLength: 2);
 
+    var folderCount = useState(0);
+    var contentCount = useState(0);
+
     useEffect(() {
       /// SliverPersistentHeader의 tab icon 색깔 리렌더를 위해서 addListener 사용
       tabController.addListener(() {
@@ -107,6 +110,8 @@ class Home extends HookConsumerWidget {
                     delegate: PersistentTabBar(
                       tabController: tabController,
                       isClick: isClick,
+                      folderCount: folderCount.value,
+                      contentCount: contentCount.value,
                     ),
                     pinned: true,
                     // floating: true,
@@ -116,9 +121,17 @@ class Home extends HookConsumerWidget {
               body: TabBarView(
                 // physics: const NeverScrollableScrollPhysics(),
                 controller: tabController,
-                children: const <Widget>[
-                  TabViewItem(Key('folderTab')),
-                  TabViewItem(Key('hashtagTab')),
+                children: <Widget>[
+                  TabViewItem(
+                    uniqueKey: const Key('folderTab'),
+                    folderCount: folderCount,
+                    contentCount: contentCount,
+                  ),
+                  TabViewItem(
+                    uniqueKey: const Key('hashtagTab'),
+                    folderCount: folderCount,
+                    contentCount: contentCount,
+                  ),
                 ],
               ),
             ),
@@ -133,11 +146,15 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
   const PersistentTabBar({
     required this.isClick,
     required this.tabController,
+    required this.folderCount,
+    required this.contentCount,
     this.backgroundColor,
     this.isEditScreen = false,
   });
   final bool isClick;
   final TabController tabController;
+  final int folderCount;
+  final int contentCount;
   final Color? backgroundColor;
   final bool isEditScreen;
 
@@ -181,8 +198,8 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
                           ),
                           TextSpan(
                             text: tabController.index == 0
-                                ? '146개의 폴더'
-                                : '146개의 취향',
+                                ? '$folderCount개의 폴더'
+                                : '$contentCount개의 취향',
                             style: const H1TextStyle().merge(
                               const TextStyle(
                                 height: 1.4,
@@ -260,6 +277,8 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
 }
 
 class FolderSource extends LoadingMoreBase<FolderModel> {
+  FolderSource({required this.folderCount});
+  final ValueNotifier<int> folderCount;
   var count = 0;
   int pageIndex = 1;
   bool _hasMore = false;
@@ -286,6 +305,7 @@ class FolderSource extends LoadingMoreBase<FolderModel> {
 
     try {
       var list = await FolderRepository.instance.getFolderList();
+      folderCount.value = list.length;
       if (pageIndex == 1) {
         add(
           const FolderModel(folderId: 'add', folderName: '폴더 추가', count: 0),
@@ -310,6 +330,8 @@ class FolderSource extends LoadingMoreBase<FolderModel> {
 }
 
 class HashtagSource extends LoadingMoreBase<ContentModel> {
+  HashtagSource({required this.contentCount});
+  final ValueNotifier<int> contentCount;
   int pageIndex = 1;
   bool _hasMore = true;
   bool forceRefresh = false;
@@ -333,7 +355,8 @@ class HashtagSource extends LoadingMoreBase<ContentModel> {
     bool isSuccess = false;
 
     try {
-      var list = await HashtagRepository.instance.getHashtagList();
+      var (list, count) = await HashtagRepository.instance.getHashtagList();
+      contentCount.value = count;
       for (ContentModel content in list) {
         if (!contains(content) && _hasMore) {
           add(content);
@@ -352,8 +375,15 @@ class HashtagSource extends LoadingMoreBase<ContentModel> {
 }
 
 class TabViewItem extends StatefulWidget {
-  const TabViewItem(this.uniqueKey, {super.key});
+  const TabViewItem({
+    super.key,
+    required this.uniqueKey,
+    required this.folderCount,
+    required this.contentCount,
+  });
   final Key uniqueKey;
+  final ValueNotifier<int> folderCount;
+  final ValueNotifier<int> contentCount;
 
   @override
   TabViewItemState createState() => TabViewItemState();
@@ -361,8 +391,12 @@ class TabViewItem extends StatefulWidget {
 
 class TabViewItemState extends State<TabViewItem>
     with AutomaticKeepAliveClientMixin {
-  late final FolderSource folderSource = FolderSource();
-  late final HashtagSource hashtagSource = HashtagSource();
+  late final FolderSource folderSource = FolderSource(
+    folderCount: widget.folderCount,
+  );
+  late final HashtagSource hashtagSource = HashtagSource(
+    contentCount: widget.contentCount,
+  );
 
   @override
   void dispose() {
@@ -381,6 +415,10 @@ class TabViewItemState extends State<TabViewItem>
     if (widget.uniqueKey == const Key('folderTab')) {
       return FolderTabView(uniqueKey: widget.uniqueKey, source: folderSource);
     }
-    return HashtagTabView(uniqueKey: widget.uniqueKey, source: hashtagSource);
+    return HashtagTabView(
+      uniqueKey: widget.uniqueKey,
+      source: hashtagSource,
+      count: widget.contentCount.value,
+    );
   }
 }

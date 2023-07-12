@@ -140,7 +140,7 @@ flutter:
 flutter_native_splash:
   android_12:
     icon_background_color: "#F26849"
-    image: assets/icons/logo.png
+    image: assets/icons/android12Logo.png
   # Modify the float_native_splash attribute and enter the command below.
   # dart run flutter_native_splash:create
   # Note: https://pub.dev/packages/flutter_native_splash

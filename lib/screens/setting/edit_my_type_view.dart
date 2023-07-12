@@ -47,7 +47,11 @@ class EditMyTypeView extends HookWidget {
     void showAddFolderModal() {
       General.instance.showBottomSheet(
         context: context,
-        child: const AddFolder(),
+        child: AddFolder(
+          onRefresh: () {
+            // source.refresh(true);
+          },
+        ),
         isContainer: false,
       );
     }
@@ -56,6 +60,19 @@ class EditMyTypeView extends HookWidget {
       context.push(
         '${GoRoutes.folder.fullPath}/$id',
       );
+    }
+
+    void editFolderName(String id) {
+      // General.instance.showBottomSheet(
+      //   context: context,
+      //   child: AddFolder(
+      //     folderId: folderId,
+      //     onRefresh: () {
+      //       source.refresh(true);
+      //     },
+      //   ),
+      //   isContainer: false,
+      // );
     }
 
     useEffect(() {
@@ -87,6 +104,8 @@ class EditMyTypeView extends HookWidget {
                 delegate: PersistentTabBar(
                   backgroundColor: AppColors.whiteColor,
                   tabController: tabController,
+                  folderCount: 0,
+                  contentCount: 0,
                   isClick: true,
                   isEditScreen: true,
                 ),
@@ -121,6 +140,7 @@ class EditMyTypeView extends HookWidget {
                         : FolderList(
                             folder: item,
                             folderColor: folderColors[index % 4],
+                            onPressMore: () => editFolderName(item.folderId),
                             onPress: () => goFolderDetailView(item.folderId),
                           );
                   },

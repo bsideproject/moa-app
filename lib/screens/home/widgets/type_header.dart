@@ -5,8 +5,8 @@ import 'package:moa_app/constants/font_constants.dart';
 
 class TypeHeader extends StatelessWidget {
   const TypeHeader(
-      {super.key, required this.typeCount, required this.onPressFilter});
-  final int typeCount;
+      {super.key, required this.count, required this.onPressFilter});
+  final int count;
   final Function() onPressFilter;
 
   @override
@@ -23,7 +23,7 @@ class TypeHeader extends StatelessWidget {
             ),
             children: [
               TextSpan(
-                  text: '$typeCount개',
+                  text: '$count개',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   )),

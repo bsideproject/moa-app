@@ -1,4 +1,3 @@
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/repositories/token_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -30,7 +29,6 @@ class TokenState extends _$TokenState {
   }
 }
 
-final searchProvider = StateProvider((ref) => '');
 
 
 /// NotifierProvider

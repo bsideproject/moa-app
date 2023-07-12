@@ -97,7 +97,6 @@ class SignIn extends HookConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -127,7 +126,8 @@ class SignIn extends HookConsumerWidget {
                 const SizedBox(height: 10),
 
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  padding: const EdgeInsets.only(
+                      left: 30, right: 30, top: kBottomNavigationBarHeight),
                   child: Text(
                     '앞으로 모아나갈 취향을\n안전하게 보관하기 위해\n계정을 연동해 주세요.',
                     style: const H1TextStyle()

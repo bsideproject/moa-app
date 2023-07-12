@@ -15,10 +15,15 @@ import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
 
 class HashtagTabView extends HookWidget {
-  const HashtagTabView(
-      {super.key, required this.uniqueKey, required this.source});
+  const HashtagTabView({
+    super.key,
+    required this.uniqueKey,
+    required this.source,
+    required this.count,
+  });
   final Key uniqueKey;
   final HashtagSource source;
+  final int count;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +64,7 @@ class HashtagTabView extends HookWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              TypeHeader(typeCount: 146, onPressFilter: () {}),
+              TypeHeader(count: count, onPressFilter: () {}),
               const SizedBox(height: 5),
             ],
           ),
