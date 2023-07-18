@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moa_app/navigations/main_bottom_tab.dart';
+import 'package:moa_app/providers/token_provider.dart';
+import 'package:moa_app/repositories/user_repository.dart';
 import 'package:moa_app/screens/add_content/add_image_content.dart';
 import 'package:moa_app/screens/add_content/add_link_content.dart';
 import 'package:moa_app/screens/add_content/folder_select.dart';
@@ -120,12 +122,23 @@ final routeProvider = Provider(
       redirect: (context, state) async {
         SharedPreferences prefs = await prefs0;
         var isInitRunApp = prefs.getBool('isInitRunApp');
+
         if (isInitRunApp ?? true) {
           // 앱 최초 실행시 인사말 페이지로 이동
           return GoRoutes.greeting.fullPath;
         }
+        var token = ref.read(tokenStateProvider);
+        if (token.value != null) {
+          var user = await UserRepository.instance.getUser();
+
+          /// 닉네임 설정 안했으면 닉네임 설정 페이지로
+          if (user?.nickname == null) {
+            return GoRoutes.inputName.fullPath;
+          }
+        }
         return null;
         // todo 토큰있으면 signin 페이지로 이동 못하게 해야됨
+        // ! 비회원 닉네임 설정 안했으면 로그인 페이지로
         // var token = ref.read(tokenStateProvider);
         // if (token.value == null) {
         //   if (state.matchedLocation != GoRoutes.signIn.fullPath) {
@@ -163,13 +176,13 @@ final routeProvider = Provider(
                 GoRoute(
                   parentNavigatorKey: _rootNavigatorKey,
                   name: GoRoutes.folder.name,
-                  path: '${GoRoutes.folder.path}/:id',
+                  path: '${GoRoutes.folder.path}/:folderName',
                   pageBuilder: (context, state) {
                     return buildIosPageTransitions<void>(
                       context: context,
                       state: state,
                       child: FolderDetailView(
-                        folderId: state.pathParameters['id']!,
+                        folderName: state.pathParameters['folderName']!,
                       ),
                     );
                   },

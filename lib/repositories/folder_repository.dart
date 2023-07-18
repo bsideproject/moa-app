@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/models/folder_model.dart';
 import 'package:moa_app/repositories/token_repository.dart';
 import 'package:moa_app/utils/api.dart';
@@ -6,8 +7,10 @@ import 'package:moa_app/utils/api.dart';
 abstract class IFolderRepository {
   Future<List<FolderModel>> getFolderList();
   Future<void> addFolder({required String folderName});
+  Future<void> deleteFolder({required String folderName});
   Future<void> editFolderName(
       {required String currentFolderName, required String editFolderName});
+  Future<List<ContentModel>> getFolderDetailList({required String folderName});
 }
 
 class FolderRepository implements IFolderRepository {
@@ -48,12 +51,28 @@ class FolderRepository implements IFolderRepository {
   }
 
   @override
+  Future<void> deleteFolder({required String folderName}) async {
+    var token = await TokenRepository.instance.getToken();
+    await dio.put(
+      '/api/v1/folder/delete',
+      data: {
+        'folderName': folderName,
+      },
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+  }
+
+  @override
   Future<void> editFolderName({
     required String currentFolderName,
     required String editFolderName,
   }) async {
     var token = await TokenRepository.instance.getToken();
-    await dio.post(
+    await dio.put(
       '/api/v1/folder/edit',
       data: {
         'currentFolderName': currentFolderName,
@@ -65,5 +84,22 @@ class FolderRepository implements IFolderRepository {
         },
       ),
     );
+  }
+
+  @override
+  Future<List<ContentModel>> getFolderDetailList(
+      {required String folderName}) async {
+    var token = await TokenRepository.instance.getToken();
+    var res = await dio.get(
+      '/api/v1/folder/detail/view?folderName=$folderName',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+    return res.data['data']
+        .map<ContentModel>((e) => ContentModel.fromJson(e))
+        .toList();
   }
 }

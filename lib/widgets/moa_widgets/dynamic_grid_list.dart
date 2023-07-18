@@ -9,7 +9,12 @@ import 'package:moa_app/screens/home/widgets/hashtag_card.dart';
 import 'package:moa_app/utils/router_provider.dart';
 
 class DynamicGridList extends HookWidget {
-  const DynamicGridList({super.key, required this.pullToRefresh});
+  const DynamicGridList({
+    super.key,
+    required this.contentList,
+    required this.pullToRefresh,
+  });
+  final List<ContentModel> contentList;
   final Future<void> Function() pullToRefresh;
 
   @override
@@ -31,96 +36,116 @@ class DynamicGridList extends HookWidget {
           crossAxisSpacing: 10,
           mainAxisSpacing: 20,
           children: [
-            StaggeredGridTile.count(
-              crossAxisCellCount: 1,
-              mainAxisCellCount: 1.4,
-              child: ContentCard(
-                onPressContent: () => goContentView('0'),
-                onPressHashtag: (tag) {},
-                content: ContentModel(
-                  contentId: '1',
-                  imageUrl: 'https://picsum.photos/200/300',
-                  name: 'title',
-                  memo: 'description',
-                  hashTags: [
-                    HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
-                    HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
-                  ],
+            ...contentList.map((e) {
+              return StaggeredGridTile.count(
+                crossAxisCellCount: 1,
+                mainAxisCellCount: 1.4,
+                child: ContentCard(
+                  onPressContent: () => goContentView('0'),
+                  onPressHashtag: (tag) {},
+                  content: ContentModel(
+                    contentId: '1',
+                    imageUrl: 'https://picsum.photos/200/300',
+                    name: 'title',
+                    memo: 'description',
+                    hashTags: [
+                      HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
+                      HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
+                    ],
+                  ),
                 ),
-              ),
-            ),
-            StaggeredGridTile.count(
-              crossAxisCellCount: 1,
-              mainAxisCellCount: 1.9,
-              child: ContentCard(
-                onPressContent: () => goContentView('1'),
-                onPressHashtag: (tag) {},
-                content: ContentModel(
-                  contentId: '1',
-                  imageUrl: 'https://picsum.photos/200/300',
-                  name: 'title',
-                  memo: 'description',
-                  hashTags: [
-                    HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
-                    HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
-                  ],
-                ),
-              ),
-            ),
-            StaggeredGridTile.count(
-              crossAxisCellCount: 1,
-              mainAxisCellCount: 1.9,
-              child: ContentCard(
-                onPressContent: () => goContentView('2'),
-                onPressHashtag: (tag) {},
-                content: ContentModel(
-                  contentId: '1',
-                  imageUrl: 'https://picsum.photos/200/300',
-                  name: 'title',
-                  memo: 'description',
-                  hashTags: [
-                    HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
-                    HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
-                  ],
-                ),
-              ),
-            ),
-            StaggeredGridTile.count(
-              crossAxisCellCount: 1,
-              mainAxisCellCount: 1,
-              child: ContentCard(
-                onPressContent: () => goContentView('3'),
-                onPressHashtag: (tag) {},
-                content: ContentModel(
-                  contentId: '1',
-                  imageUrl: 'https://picsum.photos/200/300',
-                  name: 'title',
-                  memo: 'description',
-                  hashTags: [
-                    HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
-                    HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
-                  ],
-                ),
-              ),
-            ),
-            StaggeredGridTile.count(
-              crossAxisCellCount: 1,
-              mainAxisCellCount: 1.4,
-              child: ContentCard(
-                onPressContent: () => goContentView('4'),
-                onPressHashtag: (tag) {},
-                content: ContentModel(
-                  contentId: '1',
-                  imageUrl: 'https://picsum.photos/200/300',
-                  name: 'title',
-                  memo: 'description',
-                  hashTags: [
-                    HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
-                    HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
-                  ],
-                ),
-              ),
-            ),
+              );
+            }).toList(),
+            // StaggeredGridTile.count(
+            //   crossAxisCellCount: 1,
+            //   mainAxisCellCount: 1.4,
+            //   child: ContentCard(
+            //     onPressContent: () => goContentView('0'),
+            //     onPressHashtag: (tag) {},
+            //     content: ContentModel(
+            //       contentId: '1',
+            //       imageUrl: 'https://picsum.photos/200/300',
+            //       name: 'title',
+            //       memo: 'description',
+            //       hashTags: [
+            //         HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
+            //         HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            // StaggeredGridTile.count(
+            //   crossAxisCellCount: 1,
+            //   mainAxisCellCount: 1.9,
+            //   child: ContentCard(
+            //     onPressContent: () => goContentView('1'),
+            //     onPressHashtag: (tag) {},
+            //     content: ContentModel(
+            //       contentId: '1',
+            //       imageUrl: 'https://picsum.photos/200/300',
+            //       name: 'title',
+            //       memo: 'description',
+            //       hashTags: [
+            //         HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
+            //         HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            // StaggeredGridTile.count(
+            //   crossAxisCellCount: 1,
+            //   mainAxisCellCount: 1.9,
+            //   child: ContentCard(
+            //     onPressContent: () => goContentView('2'),
+            //     onPressHashtag: (tag) {},
+            //     content: ContentModel(
+            //       contentId: '1',
+            //       imageUrl: 'https://picsum.photos/200/300',
+            //       name: 'title',
+            //       memo: 'description',
+            //       hashTags: [
+            //         HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
+            //         HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            // StaggeredGridTile.count(
+            //   crossAxisCellCount: 1,
+            //   mainAxisCellCount: 1,
+            //   child: ContentCard(
+            //     onPressContent: () => goContentView('3'),
+            //     onPressHashtag: (tag) {},
+            //     content: ContentModel(
+            //       contentId: '1',
+            //       imageUrl: 'https://picsum.photos/200/300',
+            //       name: 'title',
+            //       memo: 'description',
+            //       hashTags: [
+            //         HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
+            //         HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            // StaggeredGridTile.count(
+            //   crossAxisCellCount: 1,
+            //   mainAxisCellCount: 1.4,
+            //   child: ContentCard(
+            //     onPressContent: () => goContentView('4'),
+            //     onPressHashtag: (tag) {},
+            //     content: ContentModel(
+            //       contentId: '1',
+            //       imageUrl: 'https://picsum.photos/200/300',
+            //       name: 'title',
+            //       memo: 'description',
+            //       hashTags: [
+            //         HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
+            //         HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

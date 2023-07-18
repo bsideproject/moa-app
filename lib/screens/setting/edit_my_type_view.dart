@@ -56,9 +56,9 @@ class EditMyTypeView extends HookWidget {
       );
     }
 
-    void goFolderDetailView(String id) {
+    void goFolderDetailView({required String folderName}) {
       context.push(
-        '${GoRoutes.folder.fullPath}/$id',
+        '${GoRoutes.folder.fullPath}/$folderName',
       );
     }
 
@@ -141,7 +141,8 @@ class EditMyTypeView extends HookWidget {
                             folder: item,
                             folderColor: folderColors[index % 4],
                             onPressMore: () => editFolderName(item.folderId),
-                            onPress: () => goFolderDetailView(item.folderId),
+                            onPress: () =>
+                                goFolderDetailView(folderName: item.folderName),
                           );
                   },
                 ),
@@ -149,6 +150,7 @@ class EditMyTypeView extends HookWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
                 child: DynamicGridList(
+                  contentList: const [],
                   pullToRefresh: hashtagPullToRefresh,
                 ),
               ),

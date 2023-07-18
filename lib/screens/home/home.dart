@@ -8,9 +8,11 @@ import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/models/folder_model.dart';
+import 'package:moa_app/models/user_model.dart';
 import 'package:moa_app/providers/button_click_provider.dart';
 import 'package:moa_app/repositories/folder_repository.dart';
 import 'package:moa_app/repositories/hashtag_repository.dart';
+import 'package:moa_app/repositories/user_repository.dart';
 import 'package:moa_app/screens/home/tab_view/folder_tab_view.dart';
 import 'package:moa_app/screens/home/tab_view/hashtag_tab_view.dart';
 import 'package:moa_app/screens/home/widgets/moa_comment_img.dart';
@@ -70,41 +72,53 @@ class Home extends HookConsumerWidget {
                         ],
                       ),
                     ),
-                    title: Row(children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            '안녕하세요 Moa님!',
-                            style: H1TextStyle(),
-                          ),
-                          const SizedBox(height: 5),
-                          Row(
-                            children: [
-                              Text(
-                                '#카페러버',
-                                style: const Body1TextStyle().merge(
-                                  TextStyle(
-                                    color:
-                                        AppColors.blackColor.withOpacity(0.3),
+                    title: FutureBuilder<UserModel?>(
+                        future: UserRepository.instance.getUser(),
+                        builder: (context, snapshot) {
+                          var userInfo = snapshot.data;
+
+                          if (snapshot.hasData) {
+                            return Container(
+                              margin: const EdgeInsets.only(right: 150),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      text: '안녕하세요 ${userInfo?.nickname}님!',
+                                      style: const H1TextStyle(),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              const SizedBox(width: 5),
-                              Text(
-                                '#취미부자',
-                                style: const Body1TextStyle().merge(
-                                  TextStyle(
-                                    color:
-                                        AppColors.blackColor.withOpacity(0.3),
+                                  const SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '#카페러버',
+                                        style: const Body1TextStyle().merge(
+                                          TextStyle(
+                                            color: AppColors.blackColor
+                                                .withOpacity(0.3),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Text(
+                                        '#취미부자',
+                                        style: const Body1TextStyle().merge(
+                                          TextStyle(
+                                            color: AppColors.blackColor
+                                                .withOpacity(0.3),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ]),
+                            );
+                          }
+                          return const SizedBox();
+                        }),
                   ),
                   SliverPersistentHeader(
                     delegate: PersistentTabBar(
@@ -306,17 +320,15 @@ class FolderSource extends LoadingMoreBase<FolderModel> {
     try {
       var list = await FolderRepository.instance.getFolderList();
       folderCount.value = list.length;
-      if (pageIndex == 1) {
-        add(
-          const FolderModel(folderId: 'add', folderName: '폴더 추가', count: 0),
-        );
-      }
 
       for (FolderModel folder in list) {
         if (!contains(folder) && _hasMore) {
           add(folder);
         }
       }
+      add(
+        const FolderModel(folderId: 'add', folderName: '폴더 추가', count: 0),
+      );
       _hasMore = false;
       pageIndex++;
       isSuccess = true;

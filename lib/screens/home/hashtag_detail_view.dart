@@ -56,6 +56,7 @@ class HashtagDetailView extends HookWidget {
         context: context,
         isCloseButton: true,
         child: DeleteContent(
+          folderColor: AppColors.folderColorECD8F3,
           contentName: filterName,
           type: ContentType.hashtag,
           onPressed: () {
@@ -152,6 +153,7 @@ class HashtagDetailView extends HookWidget {
             const SizedBox(height: 5),
             Expanded(
                 child: DynamicGridList(
+              contentList: const [],
               pullToRefresh: pullToRefresh,
             )),
           ],

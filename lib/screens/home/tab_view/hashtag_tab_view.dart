@@ -100,7 +100,8 @@ class HashtagTabView extends HookWidget {
                   ),
                   sourceList: source,
                   indicatorBuilder: (context, status) {
-                    if (status == IndicatorStatus.loadingMoreBusying) {
+                    if ((status == IndicatorStatus.loadingMoreBusying) ||
+                        (status == IndicatorStatus.fullScreenBusying)) {
                       return const LoadingIndicator();
                     }
                     return const SizedBox();
