@@ -4,7 +4,9 @@ import 'package:moa_app/repositories/token_repository.dart';
 import 'package:moa_app/utils/api.dart';
 
 abstract class IUserRepository {
-  Future<UserModel?> getUser({required String userId});
+  Future<UserModel?> getUser();
+  Future<void> removeUser();
+  Future<void> editUserNickname({required String nickname});
 }
 
 class UserRepository implements IUserRepository {
@@ -12,19 +14,44 @@ class UserRepository implements IUserRepository {
   static UserRepository instance = const UserRepository._();
 
   @override
-  Future<UserModel?> getUser({required String userId}) async {
+  Future<UserModel?> getUser() async {
     var token = await TokenRepository.instance.getToken();
-
     var res = await dio.get(
-      '/api/v1/profile',
-      data: {
-        'userId': userId,
-      },
+      '/api/v1/user/info',
       options: Options(
-        headers: {'oauth-token': token},
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
       ),
     );
 
-    return res.data;
+    return UserModel(
+        userId: res.data['userId'], email: '', nickname: res.data['nickName']);
+  }
+
+  @override
+  Future<void> editUserNickname({required String nickname}) async {
+    var token = await TokenRepository.instance.getToken();
+    await dio.put(
+      '/api/v1/user/edit/nickName?nickName=$nickname',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+  }
+
+  @override
+  Future<void> removeUser() async {
+    var token = await TokenRepository.instance.getToken();
+    await dio.post(
+      '/api/v1/user/withdrawal',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
   }
 }

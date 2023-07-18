@@ -6,12 +6,17 @@ import 'package:loading_more_list/loading_more_list.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/folder_model.dart';
+import 'package:moa_app/repositories/folder_repository.dart';
 import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/utils/general.dart';
+import 'package:moa_app/utils/logger.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/folder_list.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
 import 'package:moa_app/widgets/moa_widgets/add_folder.dart';
+import 'package:moa_app/widgets/moa_widgets/bottom_modal_item.dart';
+import 'package:moa_app/widgets/moa_widgets/delete_content.dart';
+import 'package:moa_app/widgets/moa_widgets/edit_content.dart';
 
 class FolderTabView extends HookWidget {
   const FolderTabView(
@@ -22,18 +27,105 @@ class FolderTabView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
+    var updatedContentName = useState('');
 
     void showAddFolderModal() {
       General.instance.showBottomSheet(
         context: context,
-        child: const AddFolder(),
+        child: AddFolder(
+          onRefresh: () {
+            source.refresh(true);
+          },
+        ),
         isContainer: false,
       );
     }
 
-    void goFolderDetailView(String folderId) {
+    void goFolderDetailView({required String folderName}) {
       context.go(
-        '${GoRoutes.folder.fullPath}/$folderId',
+        '${GoRoutes.folder.fullPath}/$folderName',
+      );
+    }
+
+    void showEditFolderModal({required String folderName}) {
+      General.instance.showBottomSheet(
+        context: context,
+        child: EditContent(
+          title: '폴더명 수정',
+          updatedContentName: updatedContentName,
+          contentName: folderName,
+          onPressed: () async {
+            try {
+              await FolderRepository.instance.editFolderName(
+                currentFolderName: folderName,
+                editFolderName: updatedContentName.value,
+              );
+              await source.refresh(true);
+              // todo 폴더명 중복 체크후 중복이면 에러메세지
+              // if 중복이면
+              // return '이미 가지고 있는 폴더이름이에요!';
+              // 중복 아니면
+              return '';
+            } catch (error) {
+              logger.d(error);
+            }
+          },
+        ),
+        isContainer: false,
+      );
+    }
+
+    void showDeleteFolderModal(
+        {required String folderName, required Color folderColor}) {
+      General.instance.showBottomSheet(
+        height: 350,
+        context: context,
+        isCloseButton: true,
+        child: DeleteContent(
+          folderColor: folderColor,
+          contentName: folderName,
+          type: ContentType.folder,
+          onPressed: () async {
+            // todo 폴더 삭제 api 연동후 성공하면 아래 코드 실행 실패시 snackbar 경고
+
+            await FolderRepository.instance
+                .deleteFolder(folderName: folderName);
+            await source.refresh(true);
+          },
+        ),
+      );
+    }
+
+    void showFolderDetailModal(
+        {required String folderName, required Color folderColor}) {
+      General.instance.showBottomSheet(
+        context: context,
+        padding:
+            const EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 30),
+        height: 225,
+        child: Column(
+          children: [
+            BottomModalItem(
+              icon: Assets.pencil,
+              title: '폴더명 수정',
+              onPressed: () {
+                context.pop();
+                showEditFolderModal(folderName: folderName);
+              },
+            ),
+            BottomModalItem(
+              icon: Assets.trash,
+              title: '폴더 삭제',
+              onPressed: () {
+                context.pop();
+                showDeleteFolderModal(
+                  folderName: folderName,
+                  folderColor: folderColor,
+                );
+              },
+            ),
+          ],
+        ),
       );
     }
 
@@ -45,7 +137,7 @@ class FolderTabView extends HookWidget {
           return Future.delayed(
             const Duration(seconds: 2),
             () {
-              source.refresh(false);
+              source.refresh(true);
             },
           );
         },
@@ -66,13 +158,14 @@ class FolderTabView extends HookWidget {
             ),
             sourceList: source,
             indicatorBuilder: (context, status) {
-              if (status == IndicatorStatus.loadingMoreBusying) {
+              if ((status == IndicatorStatus.loadingMoreBusying) ||
+                  (status == IndicatorStatus.fullScreenBusying)) {
                 return const LoadingIndicator();
               }
               return const SizedBox();
             },
             itemBuilder: (c, item, index) {
-              return index == 0
+              return index == source.length - 1
                   ? InkWell(
                       splashColor: Colors.transparent,
                       borderRadius: BorderRadius.circular(15),
@@ -82,7 +175,12 @@ class FolderTabView extends HookWidget {
                   : FolderList(
                       folder: item,
                       folderColor: folderColors[index % 4],
-                      onPress: () => goFolderDetailView(item.folderId),
+                      onPressMore: () => showFolderDetailModal(
+                        folderName: item.folderName,
+                        folderColor: folderColors[index % 4],
+                      ),
+                      onPress: () =>
+                          goFolderDetailView(folderName: item.folderName),
                     );
             },
           ),

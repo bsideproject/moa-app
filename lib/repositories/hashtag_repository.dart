@@ -4,7 +4,7 @@ import 'package:moa_app/repositories/token_repository.dart';
 import 'package:moa_app/utils/api.dart';
 
 abstract class IHashtagRepository {
-  Future<List<ContentModel>> getHashtagList();
+  Future<(List<ContentModel>, int)> getHashtagList();
 }
 
 class HashtagRepository implements IHashtagRepository {
@@ -12,7 +12,7 @@ class HashtagRepository implements IHashtagRepository {
   static HashtagRepository instance = const HashtagRepository._();
 
   @override
-  Future<List<ContentModel>> getHashtagList() async {
+  Future<(List<ContentModel>, int)> getHashtagList() async {
     var token = await TokenRepository.instance.getToken();
 
     var res = await dio.get(
@@ -24,8 +24,11 @@ class HashtagRepository implements IHashtagRepository {
       ),
     );
 
-    return res.data['data']
-        .map<ContentModel>((e) => ContentModel.fromJson(e))
-        .toList();
+    return (
+      res.data['data']
+          .map<ContentModel>((e) => ContentModel.fromJson(e))
+          .toList() as List<ContentModel>,
+      res.data['count'] as int
+    );
   }
 }

@@ -47,15 +47,16 @@ class EditContent extends HookWidget {
       controller.text = '';
     }
 
-    void editContent() {
-      var error = onPressed();
-      errorText.value = error;
+    void editContent() async {
+      var error = await onPressed();
+      errorText.value = error ?? '';
       if (controller.text.isEmpty || error != '') {
         return;
       }
 
-      onPressed();
-      context.pop();
+      if (context.mounted) {
+        context.pop();
+      }
       emptyContentName();
     }
 

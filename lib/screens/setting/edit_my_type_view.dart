@@ -47,15 +47,32 @@ class EditMyTypeView extends HookWidget {
     void showAddFolderModal() {
       General.instance.showBottomSheet(
         context: context,
-        child: const AddFolder(),
+        child: AddFolder(
+          onRefresh: () {
+            // source.refresh(true);
+          },
+        ),
         isContainer: false,
       );
     }
 
-    void goFolderDetailView(String id) {
+    void goFolderDetailView({required String folderName}) {
       context.push(
-        '${GoRoutes.folder.fullPath}/$id',
+        '${GoRoutes.folder.fullPath}/$folderName',
       );
+    }
+
+    void editFolderName(String id) {
+      // General.instance.showBottomSheet(
+      //   context: context,
+      //   child: AddFolder(
+      //     folderId: folderId,
+      //     onRefresh: () {
+      //       source.refresh(true);
+      //     },
+      //   ),
+      //   isContainer: false,
+      // );
     }
 
     useEffect(() {
@@ -87,6 +104,8 @@ class EditMyTypeView extends HookWidget {
                 delegate: PersistentTabBar(
                   backgroundColor: AppColors.whiteColor,
                   tabController: tabController,
+                  folderCount: 0,
+                  contentCount: 0,
                   isClick: true,
                   isEditScreen: true,
                 ),
@@ -121,7 +140,9 @@ class EditMyTypeView extends HookWidget {
                         : FolderList(
                             folder: item,
                             folderColor: folderColors[index % 4],
-                            onPress: () => goFolderDetailView(item.folderId),
+                            onPressMore: () => editFolderName(item.folderId),
+                            onPress: () =>
+                                goFolderDetailView(folderName: item.folderName),
                           );
                   },
                 ),
@@ -129,6 +150,7 @@ class EditMyTypeView extends HookWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
                 child: DynamicGridList(
+                  contentList: const [],
                   pullToRefresh: hashtagPullToRefresh,
                 ),
               ),

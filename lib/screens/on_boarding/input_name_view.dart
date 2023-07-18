@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -5,11 +6,13 @@ import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/repositories/non_member_repository.dart';
+import 'package:moa_app/repositories/user_repository.dart';
 import 'package:moa_app/screens/on_boarding/notice_view.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/moa_widgets/error_text.dart';
+import 'package:moa_app/widgets/snackbar.dart';
 
 enum StepType {
   inputName,
@@ -36,17 +39,26 @@ class InputNameView extends HookWidget {
       return regex.hasMatch(value);
     }
 
+    void inputUserName() async {
+      if (!isMember) {
+        await NonMemberRepository.instance
+            .setUserNickname(nickname: name.value);
+      } else {
+        try {
+          await UserRepository.instance.editUserNickname(nickname: name.value);
+          step.value = StepType.greeting;
+        } catch (e) {
+          snackbar.alert(context,
+              kDebugMode ? e.toString() : '닉네임 변경에 실패했습니다. 다시 시도해주세요.');
+        }
+      }
+    }
+
     void handleNext() async {
       switch (step.value) {
         case StepType.inputName:
           {
-            if (!isMember) {
-              await NonMemberRepository.instance
-                  .setUserNickname(nickname: name.value);
-            } else {
-              // todo api 개발 후 유저 로그인 정보에 이름 추가
-            }
-            step.value = StepType.greeting;
+            inputUserName();
           }
         case StepType.greeting:
           {

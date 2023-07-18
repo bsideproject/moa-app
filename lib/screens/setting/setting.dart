@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -5,9 +6,11 @@ import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/providers/token_provider.dart';
+import 'package:moa_app/repositories/user_repository.dart';
 import 'package:moa_app/screens/setting/widgets/setting_list_tile.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/alert_dialog.dart';
+import 'package:moa_app/widgets/snackbar.dart';
 
 class Setting extends HookConsumerWidget {
   const Setting({super.key});
@@ -24,15 +27,39 @@ class Setting extends HookConsumerWidget {
 
     void handleTerms() {}
 
-    void removeUser() {}
-
-    void handleLogout() {
+    void showRemoveUserPopup() async {
       alertDialog.confirm(
         context,
         onPress: () async {
-          await ref.watch(tokenStateProvider.notifier).removeToken();
-          if (context.mounted) {
-            context.go(GoRoutes.signIn.fullPath);
+          try {
+            await UserRepository.instance.removeUser();
+            await ref.read(tokenStateProvider.notifier).removeToken();
+            if (context.mounted) {
+              context.go(GoRoutes.signIn.fullPath);
+            }
+          } catch (e) {
+            snackbar.alert(
+                context, kDebugMode ? e.toString() : '회원탈퇴에 실패했습니다 다시 시도해주세요.');
+          }
+        },
+        showCancelButton: true,
+        title: '회원탈퇴',
+        content: '회원탈퇴 하시겠습니까?',
+      );
+    }
+
+    void showLogoutPopup() {
+      alertDialog.confirm(
+        context,
+        onPress: () async {
+          try {
+            await ref.read(tokenStateProvider.notifier).removeToken();
+            if (context.mounted) {
+              context.go(GoRoutes.signIn.fullPath);
+            }
+          } catch (e) {
+            snackbar.alert(
+                context, kDebugMode ? e.toString() : '로그아웃에 실패했습니다 다시 시도해주세요.');
           }
         },
         showCancelButton: true,
@@ -55,7 +82,7 @@ class Setting extends HookConsumerWidget {
                     padding: const EdgeInsets.only(right: 20),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(5),
-                      onTap: handleLogout,
+                      onTap: showLogoutPopup,
                       child: const Text(
                         '로그아웃',
                         style: TextStyle(
@@ -129,7 +156,7 @@ class Setting extends HookConsumerWidget {
               ),
               SettingListTile(
                 title: '탈퇴하기',
-                onPressed: removeUser,
+                onPressed: showRemoveUserPopup,
               )
             ],
           ),

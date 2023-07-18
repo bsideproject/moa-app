@@ -56,7 +56,7 @@ dependencies:
   flutter_web_auth: ^0.5.0
   google_sign_in: ^6.1.0
   flutter_naver_login: ^1.8.0
-  kakao_flutter_sdk_user: ^1.4.3
+  kakao_flutter_sdk_user: ^1.5.0
   sign_in_with_apple: ^4.3.0
   flutter_cache_manager: ^3.3.0
   html: ^0.15.3
@@ -140,7 +140,7 @@ flutter:
 flutter_native_splash:
   android_12:
     icon_background_color: "#F26849"
-    image: assets/icons/logo.png
+    image: assets/icons/android12Logo.png
   # Modify the float_native_splash attribute and enter the command below.
   # dart run flutter_native_splash:create
   # Note: https://pub.dev/packages/flutter_native_splash

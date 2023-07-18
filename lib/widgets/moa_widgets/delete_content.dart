@@ -16,10 +16,12 @@ class DeleteContent extends HookWidget {
     required this.contentName,
     required this.type,
     required this.onPressed,
+    required this.folderColor,
   });
   final String contentName;
   final ContentType type;
   final Function() onPressed;
+  final Color folderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +43,10 @@ class DeleteContent extends HookWidget {
                       margin: const EdgeInsets.only(top: 30),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 8),
-                      decoration: const BoxDecoration(
-                        color: AppColors.folderColorFAE3CB,
-                        borderRadius: BorderRadius.all(Radius.circular(50)),
+                      decoration: BoxDecoration(
+                        color: folderColor,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(50)),
                       ),
                       child: Text(
                         '#$contentName',
@@ -97,8 +100,8 @@ class DeleteContent extends HookWidget {
                         image: DecorationImage(
                           fit: BoxFit.contain,
                           image: Assets.folder,
-                          colorFilter: const ColorFilter.mode(
-                            AppColors.folderColorD7E5FC,
+                          colorFilter: ColorFilter.mode(
+                            folderColor,
                             BlendMode.srcIn,
                           ),
                         ),
@@ -106,7 +109,7 @@ class DeleteContent extends HookWidget {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      '${"’$contentName"}\n폴더를 삭제하시겠어요?',
+                      '${"’$contentName’"}\n폴더를 삭제하시겠어요?',
                       textAlign: TextAlign.center,
                       style: const H2TextStyle(),
                     ),
