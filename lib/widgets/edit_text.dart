@@ -74,7 +74,7 @@ class _EditTextState extends State<EditText> {
           suffixIcon: widget.suffixIcon,
           contentPadding: const EdgeInsets.symmetric(
             vertical: 16,
-            horizontal: 25,
+            horizontal: 20,
           ),
           hintText: widget.hintText,
           hintStyle: const Hash1TextStyle()

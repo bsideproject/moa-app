@@ -40,6 +40,7 @@ class Assets {
       const AssetImage('$_imgPath/moaSwitchImg.png');
   static AssetImage moaCommentImg =
       const AssetImage('$_imgPath/moaCommentImg.png');
+  static AssetImage profileMoa = const AssetImage('$_imgPath/profileMoa.png');
 }
 
 class Svgs {

@@ -10,9 +10,9 @@ import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/app_bar.dart';
-import 'package:moa_app/widgets/folder_list.dart';
 import 'package:moa_app/widgets/moa_widgets/add_folder.dart';
 import 'package:moa_app/widgets/moa_widgets/dynamic_grid_list.dart';
+import 'package:moa_app/widgets/moa_widgets/folder_list.dart';
 
 class EditMyTypeView extends HookWidget {
   const EditMyTypeView({super.key});
@@ -138,7 +138,14 @@ class EditMyTypeView extends HookWidget {
                             child: Image(image: Assets.emptyFolder),
                           )
                         : FolderList(
-                            folder: item,
+                            folder: FolderModel(
+                              folderId: item.folderId,
+                              folderName: item.folderName,
+                              count: item.count,
+                              thumbnailUrl: item.thumbnailUrl == 'default'
+                                  ? ''
+                                  : item.thumbnailUrl,
+                            ),
                             folderColor: folderColors[index % 4],
                             onPressMore: () => editFolderName(item.folderId),
                             onPress: () =>

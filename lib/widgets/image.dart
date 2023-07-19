@@ -24,7 +24,7 @@ class ImagePlaceholder extends StatelessWidget {
         child: const Material(
           clipBehavior: Clip.hardEdge,
           color: AppColors.disabled,
-          child: Icon(Icons.person, color: Colors.white),
+          // child: Icon(Icons.person, color: Colors.white),
         ),
       ),
     );

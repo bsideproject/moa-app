@@ -261,24 +261,33 @@ final routeProvider = Provider(
                 ),
             routes: [
               GoRoute(
-                parentNavigatorKey: _rootNavigatorKey,
-                name: GoRoutes.addImageContent.name,
-                path: GoRoutes.addImageContent.path,
-                pageBuilder: (context, state) => buildIosPageTransitions<void>(
-                  context: context,
-                  state: state,
-                  child: const AddImageContent(),
-                ),
-              ),
+                  parentNavigatorKey: _rootNavigatorKey,
+                  name: GoRoutes.addImageContent.name,
+                  path: GoRoutes.addImageContent.path,
+                  pageBuilder: (context, state) {
+                    var addImage = state.extra as AddImageContent;
+                    return buildIosPageTransitions<void>(
+                      context: context,
+                      state: state,
+                      child: AddImageContent(
+                        folderId: addImage.folderId,
+                      ),
+                    );
+                  }),
               GoRoute(
                 parentNavigatorKey: _rootNavigatorKey,
                 name: GoRoutes.addLinkContent.name,
                 path: GoRoutes.addLinkContent.path,
-                pageBuilder: (context, state) => buildIosPageTransitions<void>(
-                  context: context,
-                  state: state,
-                  child: const AddLinkContent(),
-                ),
+                pageBuilder: (context, state) {
+                  var addLink = state.extra as AddLinkContent;
+                  return buildIosPageTransitions<void>(
+                    context: context,
+                    state: state,
+                    child: AddLinkContent(
+                      folderId: addLink.folderId,
+                    ),
+                  );
+                },
               ),
             ]),
         GoRoute(

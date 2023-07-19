@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
+import 'package:moa_app/models/user_model.dart';
 import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/repositories/user_repository.dart';
 import 'package:moa_app/screens/setting/widgets/setting_list_tile.dart';
@@ -97,46 +98,63 @@ class Setting extends HookConsumerWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              GestureDetector(
-                onTap: pickImage,
-                child: Stack(
-                  children: [
-                    const CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(
-                          'https://avatars.githubusercontent.com/u/73378472?v=4'),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        width: 25,
-                        height: 25,
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: AppColors.blackColor,
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: Image(
-                          color: AppColors.whiteColor,
-                          image: Assets.pencil,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(height: 5),
-              const Text(
-                'nain',
-                style: H2TextStyle(),
-              ),
-              const SizedBox(height: 3),
-              Text(
-                'moamoa@gmail.com',
-                style: const Body1TextStyle().merge(
-                    TextStyle(color: AppColors.blackColor.withOpacity(0.45))),
-              ),
+              FutureBuilder<UserModel?>(
+                  future: UserRepository.instance.getUser(),
+                  builder: (context, snapshot) {
+                    var userInfo = snapshot.data;
+                    if (snapshot.hasData) {
+                      return Column(
+                        children: [
+                          GestureDetector(
+                            onTap: pickImage,
+                            child: Stack(
+                              children: [
+                                Image(
+                                  width: 78,
+                                  height: 69,
+                                  image: Assets.profileMoa,
+                                ),
+                                // const CircleAvatar(
+                                //   radius: 50,
+                                //   backgroundImage: NetworkImage(
+                                //       'https://avatars.githubusercontent.com/u/73378472?v=4'),
+                                // ),
+                                // Positioned(
+                                //   bottom: 0,
+                                //   right: 0,
+                                //   child: Container(
+                                //     width: 25,
+                                //     height: 25,
+                                //     padding: const EdgeInsets.all(6),
+                                //     decoration: BoxDecoration(
+                                //       color: AppColors.blackColor,
+                                //       borderRadius: BorderRadius.circular(50),
+                                //     ),
+                                //     child: Image(
+                                //       color: AppColors.whiteColor,
+                                //       image: Assets.pencil,
+                                //     ),
+                                //   ),
+                                // )
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            userInfo?.nickname ?? '',
+                            style: const H2TextStyle(),
+                          ),
+                          const SizedBox(height: 3),
+                          Text(
+                            userInfo?.email ?? '',
+                            style: const Body1TextStyle().merge(TextStyle(
+                                color: AppColors.blackColor.withOpacity(0.45))),
+                          ),
+                        ],
+                      );
+                    }
+                    return const SizedBox();
+                  }),
               const SizedBox(height: 30),
               const Divider(
                 thickness: 10,

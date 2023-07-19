@@ -4,6 +4,7 @@ import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/folder_model.dart';
+import 'package:moa_app/widgets/image.dart';
 
 class FolderList extends HookWidget {
   const FolderList({
@@ -51,12 +52,9 @@ class FolderList extends HookWidget {
                         margin: const EdgeInsets.only(top: 30),
                         width: 32,
                         height: 32,
-
-                        // todo 폴더 첫이미지 url
-                        child: const CircleAvatar(
-                          radius: 30,
-                          backgroundColor: AppColors.blackColor,
-                          child: Icon(Icons.access_alarm),
+                        child: ImageOnNetwork(
+                          imageURL: folder.thumbnailUrl ?? '',
+                          borderRadius: 30,
                         ),
                       ),
                       Positioned(
@@ -82,7 +80,7 @@ class FolderList extends HookWidget {
                   const SizedBox(height: 20),
                   Text(
                     folder.folderName,
-                    style: const Hash1TextStyle(),
+                    style: const H4TextStyle(),
                   ),
                   const SizedBox(height: 3),
                   folder.updatedDate != null
@@ -99,13 +97,13 @@ class FolderList extends HookWidget {
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 25),
+              margin: const EdgeInsets.only(top: 20),
               child: Material(
                 clipBehavior: Clip.antiAlias,
                 borderRadius: BorderRadius.circular(25),
                 color: Colors.transparent,
                 child: IconButton(
-                  iconSize: 24,
+                  iconSize: 20,
                   onPressed: onPressMore,
                   icon: const Icon(
                     Icons.more_vert,

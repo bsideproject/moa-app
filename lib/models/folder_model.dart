@@ -8,6 +8,7 @@ class FolderModel with _$FolderModel {
   const factory FolderModel({
     required String folderId,
     required String folderName,
+    String? thumbnailUrl,
     required int count,
     String? updatedDate,
   }) = _FolderModel;

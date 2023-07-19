@@ -1,8 +1,16 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
+import 'package:moa_app/models/content_model.dart';
+import 'package:moa_app/models/hashtag_model.dart';
+import 'package:moa_app/repositories/content_repository.dart';
 import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/widgets/app_bar.dart';
 import 'package:moa_app/widgets/button.dart';
@@ -10,27 +18,37 @@ import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/moa_widgets/edit_content.dart';
 import 'package:moa_app/widgets/moa_widgets/error_text.dart';
 import 'package:moa_app/widgets/moa_widgets/hashtag_box.dart';
+import 'package:moa_app/widgets/snackbar.dart';
 
 class AddImageContent extends HookWidget {
-  const AddImageContent({super.key});
+  const AddImageContent({super.key, required this.folderId});
+  final String folderId;
 
   @override
   Widget build(BuildContext context) {
-    var image = useState('');
+    var picker = ImagePicker();
+    var imageFile = useState<XFile?>(null);
+
+    void pickImage(ImageSource source) async {
+      var pickedFile = await picker.pickImage(source: source);
+      imageFile.value = pickedFile;
+    }
+
     var title = useState('');
     var memo = useState('');
     var updatedHashtag = useState('');
 
-    var tagList = useState(<String>['#자취레시피', '#꿀팁', '#카고바지', '#해시태그']);
+    var tagList = useState<List<HashtagModel>>(
+        [HashtagModel(tagId: 'tagId', hashTag: 'hashTag', count: 21)]);
 
     var imageError = useState('');
     var titleError = useState('');
 
-    void completeAddContent() {
-      if (image.value.isEmpty ||
+    void completeAddContent() async {
+      if (imageFile.value == null ||
           title.value.isEmpty ||
           title.value.length > 30) {
-        if (image.value.isEmpty) {
+        if (imageFile.value == null) {
           imageError.value = '이미지를 선택해주세요.';
         }
 
@@ -39,6 +57,26 @@ class AddImageContent extends HookWidget {
         }
 
         return;
+      }
+
+      try {
+        await ContentRepository.instance.addContent(
+          contentType: ContentType.image,
+          content: ContentModel(
+            contentId: folderId,
+            name: title.value,
+            memo: memo.value,
+            hashTags: tagList.value,
+            imageUrl: imageFile.value.toString(),
+          ),
+        );
+
+        if (context.mounted) {
+          context.go('/');
+        }
+      } catch (e) {
+        snackbar.alert(
+            context, kDebugMode ? e.toString() : '오류가 발생했어요 다시 시도해주세요.');
       }
     }
 
@@ -53,11 +91,11 @@ class AddImageContent extends HookWidget {
     }
 
     useEffect(() {
-      if (image.value.isNotEmpty) {
+      if (imageFile.value != null) {
         imageError.value = '';
       }
       return null;
-    }, [image.value]);
+    }, [imageFile.value]);
 
     void showAddHashtagModal() {
       General.instance.showBottomSheet(
@@ -102,26 +140,38 @@ class AddImageContent extends HookWidget {
                       borderRadius: BorderRadius.circular(15),
                       child: InkWell(
                         borderRadius: BorderRadius.circular(15),
-                        onTap: () {},
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image(
-                              width: 16,
-                              height: 16,
-                              image: Assets.circlePlus,
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              '대표 이미지 추가하기',
-                              style: const InputLabelTextStyle().merge(
-                                TextStyle(
-                                  color: AppColors.blackColor.withOpacity(0.3),
+                        onTap: () => pickImage(ImageSource.gallery),
+                        child: imageFile.value != null
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image:
+                                        FileImage(File(imageFile.value!.path)),
+                                  ),
                                 ),
+                              )
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image(
+                                    width: 16,
+                                    height: 16,
+                                    image: Assets.circlePlus,
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    '대표 이미지 추가하기',
+                                    style: const InputLabelTextStyle().merge(
+                                      TextStyle(
+                                        color: AppColors.blackColor
+                                            .withOpacity(0.3),
+                                      ),
+                                    ),
+                                  )
+                                ],
                               ),
-                            )
-                          ],
-                        ),
                       ),
                     ),
                   ),
@@ -168,7 +218,7 @@ class AddImageContent extends HookWidget {
                     children: [
                       ...tagList.value.map((tag) {
                         return HashtagBox(
-                          hashtagName: tag,
+                          hashtag: tag,
                         );
                       }).toList(),
                       SizedBox(

@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
+import 'package:moa_app/models/hashtag_model.dart';
 import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/widgets/app_bar.dart';
 import 'package:moa_app/widgets/button.dart';
@@ -12,7 +13,8 @@ import 'package:moa_app/widgets/moa_widgets/error_text.dart';
 import 'package:moa_app/widgets/moa_widgets/hashtag_box.dart';
 
 class AddLinkContent extends HookWidget {
-  const AddLinkContent({super.key});
+  const AddLinkContent({super.key, required this.folderId});
+  final String folderId;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class AddLinkContent extends HookWidget {
     var memo = useState('');
     var updatedHashtag = useState('');
 
-    var tagList = useState(<String>['#자취레시피', '#꿀팁', '#카고바지', '#해시태그']);
+    var tagList = useState<List<HashtagModel>>([]);
 
     var titleError = useState('');
     var linkError = useState('');
@@ -204,7 +206,7 @@ class AddLinkContent extends HookWidget {
                     children: [
                       ...tagList.value.map((tag) {
                         return HashtagBox(
-                          hashtagName: tag,
+                          hashtag: tag,
                         );
                       }).toList(),
                       SizedBox(
