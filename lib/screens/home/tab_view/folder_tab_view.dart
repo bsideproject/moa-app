@@ -1,4 +1,5 @@
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -17,6 +18,7 @@ import 'package:moa_app/widgets/moa_widgets/bottom_modal_item.dart';
 import 'package:moa_app/widgets/moa_widgets/delete_content.dart';
 import 'package:moa_app/widgets/moa_widgets/edit_content.dart';
 import 'package:moa_app/widgets/moa_widgets/folder_list.dart';
+import 'package:moa_app/widgets/snackbar.dart';
 
 class FolderTabView extends HookWidget {
   const FolderTabView(
@@ -86,11 +88,14 @@ class FolderTabView extends HookWidget {
           contentName: folderName,
           type: ContentType.folder,
           onPressed: () async {
-            // todo 폴더 삭제 api 연동후 성공하면 아래 코드 실행 실패시 snackbar 경고
-
-            await FolderRepository.instance
-                .deleteFolder(folderName: folderName);
-            await source.refresh(true);
+            try {
+              await FolderRepository.instance
+                  .deleteFolder(folderName: folderName);
+              await source.refresh(true);
+            } catch (error) {
+              snackbar.alert(context,
+                  kDebugMode ? error.toString() : '오류가 발생했어요 다시 시도해주세요.');
+            }
           },
         ),
       );

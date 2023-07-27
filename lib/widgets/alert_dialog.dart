@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/color_constants.dart';
+import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/widgets/button.dart';
 
@@ -127,12 +128,12 @@ class _AlertDialog {
     bool barrierDismissible = true,
     required String title,
     required String content,
-    String? leftText = '예',
-    String? rightText = '아니요',
-    Color? leftButtonBackgroundColor,
-    Color? leftTextColor,
-    Function? onPressLeft,
-    void Function()? onPressRight,
+    String? topText = '예',
+    String? bottomText = '아니요',
+    Color? topButtonBackgroundColor,
+    Color? topTextColor,
+    Function? onPressTop,
+    void Function()? onPressBottom,
   }) {
     var width = MediaQuery.of(context).size.width;
 
@@ -189,33 +190,76 @@ class _AlertDialog {
             textAlign: TextAlign.center,
           ),
           actions: <Widget>[
-            Row(
+            Column(
               children: [
-                Expanded(
-                  child: Button(
-                    width: MediaQuery.of(context).size.width,
-                    text: leftText,
-                    textStyle: const H3TextStyle(),
-                    onPress: () {
+                Ink(
+                  width: double.infinity,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: AppColors.grayBackground,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: InkWell(
+                    splashColor: AppColors.subTitle,
+                    onTap: () {
                       Navigator.of(context).pop();
-                      if (onPressLeft != null) onPressLeft();
+                      if (onPressTop != null) onPressTop();
                     },
-                    color: leftTextColor ?? AppColors.textInputBackground,
-                    backgroundColor: AppColors.blackColor,
+                    borderRadius: BorderRadius.circular(8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image(
+                          width: 18,
+                          height: 18,
+                          image: Assets.image,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          topText!,
+                          style: const H3TextStyle().merge(
+                            TextStyle(
+                              color: topTextColor ?? AppColors.blackColor,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Button(
-                    width: MediaQuery.of(context).size.width,
-                    text: rightText,
-                    textStyle: const H3TextStyle(),
-                    onPress: () {
+                const SizedBox(height: 10),
+                Ink(
+                  width: double.infinity,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: InkWell(
+                    onTap: () {
                       Navigator.of(context).pop();
-                      if (onPressRight != null) onPressRight();
+                      if (onPressBottom != null) onPressBottom();
                     },
-                    color: leftTextColor ?? AppColors.textInputBackground,
-                    backgroundColor: AppColors.primaryColor,
+                    borderRadius: BorderRadius.circular(8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image(
+                          width: 18,
+                          height: 18,
+                          image: Assets.link,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          bottomText!,
+                          style: const H3TextStyle().merge(
+                            const TextStyle(
+                              color: AppColors.whiteColor,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ],

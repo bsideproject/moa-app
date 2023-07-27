@@ -22,6 +22,7 @@ class AddLinkContent extends HookWidget {
     var link = useState('');
     var memo = useState('');
     var updatedHashtag = useState('');
+    // var selectedHashtagList = useState<List<HashtagModel>>([]);
 
     var tagList = useState<List<HashtagModel>>([]);
 
@@ -206,6 +207,7 @@ class AddLinkContent extends HookWidget {
                     children: [
                       ...tagList.value.map((tag) {
                         return HashtagBox(
+                          isSelected: false,
                           hashtag: tag,
                         );
                       }).toList(),

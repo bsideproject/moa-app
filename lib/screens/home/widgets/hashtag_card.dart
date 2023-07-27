@@ -35,12 +35,16 @@ class ContentCard extends HookWidget {
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColors.moaOpacity30),
                   borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    image: NetworkImage(content.contentImageUrl),
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 10),
             Text(
-              content.name,
+              content.contentName,
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
@@ -49,7 +53,7 @@ class ContentCard extends HookWidget {
             ),
             const SizedBox(height: 2),
             Text(
-              content.memo,
+              content.contentMemo ?? '',
               style: const TextStyle(
                 fontSize: 14,
                 fontFamily: FontConstants.pretendard,
@@ -59,12 +63,12 @@ class ContentCard extends HookWidget {
             const SizedBox(height: 15),
             Row(
               children: [
-                ...content.hashTags.map((tag) {
+                ...content.contentHashTag.map((tag) {
                   return Container(
                     margin: const EdgeInsets.only(right: 5),
                     child: HashtagButton(
-                      onPress: () => onPressHashtag('tag.hashTag'),
-                      text: 'tag.hashTag',
+                      onPress: () => onPressHashtag(tag.hashTag),
+                      text: tag.hashTag,
                     ),
                   );
                 }).toList(),

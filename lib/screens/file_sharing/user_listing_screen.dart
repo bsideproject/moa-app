@@ -18,10 +18,10 @@ class UserListingScreen extends HookWidget {
   Widget build(BuildContext context) {
     var content = useState(ContentModel(
       contentId: '1',
-      name: '',
-      memo: '',
-      imageUrl: '',
-      hashTags: [],
+      contentName: '',
+      contentMemo: '',
+      contentImageUrl: '',
+      contentHashTag: [],
     ));
 
     void getCrawlUrl(String text) async {
@@ -42,10 +42,10 @@ class UserListingScreen extends HookWidget {
         //     ?.attributes['content'];
 
         content.value = content.value.copyWith(
-          name: title ?? '',
-          memo: description ?? '',
-          imageUrl: image ?? '',
-          hashTags: [],
+          contentName: title ?? '',
+          contentMemo: description ?? '',
+          contentImageUrl: image ?? '',
+          contentHashTag: [],
         );
       });
     }
@@ -71,21 +71,21 @@ class UserListingScreen extends HookWidget {
             },
           ),
           const SizedBox(height: 20),
-          content.value.imageUrl.isEmpty
+          content.value.contentImageUrl.isEmpty
               ? const SizedBox()
               : ImageOnNetwork(
                   width: double.infinity,
                   height: 200,
-                  imageURL: content.value.imageUrl,
+                  imageURL: content.value.contentImageUrl,
                 ),
           const SizedBox(height: 20),
           Text(
-            content.value.name,
+            content.value.contentName,
             style: const H1TextStyle(),
           ),
           const SizedBox(height: 5),
           Text(
-            content.value.memo,
+            content.value.contentName,
             style: const H2TextStyle(),
           ),
           const SizedBox(height: 5),

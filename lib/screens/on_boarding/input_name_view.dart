@@ -59,10 +59,12 @@ class InputNameView extends HookWidget {
         case StepType.inputName:
           {
             inputUserName();
+            return;
           }
         case StepType.greeting:
           {
             step.value = StepType.tutorial;
+            return;
           }
         case StepType.tutorial:
           {
@@ -75,8 +77,8 @@ class InputNameView extends HookWidget {
             await pageController.nextPage(
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.ease);
+            return;
           }
-          break;
       }
     }
 

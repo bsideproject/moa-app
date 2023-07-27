@@ -33,6 +33,7 @@ class Assets {
   static AssetImage greeting = const AssetImage('$_imgPath/greeting.png');
   static AssetImage onboarding1 = const AssetImage('$_imgPath/onboarding1.png');
   static AssetImage onboarding2 = const AssetImage('$_imgPath/onboarding2.png');
+  static AssetImage moaWalking = const AssetImage('$_imgPath/moaWalking.png');
 
   static AssetImage moaBannerImg =
       const AssetImage('$_imgPath/moaBannerImg.png');
@@ -41,6 +42,8 @@ class Assets {
   static AssetImage moaCommentImg =
       const AssetImage('$_imgPath/moaCommentImg.png');
   static AssetImage profileMoa = const AssetImage('$_imgPath/profileMoa.png');
+  static AssetImage link = const AssetImage('$_imgPath/link.png');
+  static AssetImage image = const AssetImage('$_imgPath/image.png');
 }
 
 class Svgs {

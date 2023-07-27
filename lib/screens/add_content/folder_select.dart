@@ -18,25 +18,23 @@ class FolderSelect extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    // void editFolder() {}
-
     void selectFolder({required int index, required String folderId}) {
       alertDialog.select(
         context,
-        title: '선택',
-        content: '이미지로 추가하시겠습니까?\n아니면 링크를 추가하시겠습니까?',
-        leftText: '이미지',
-        rightText: '링크',
-        onPressRight: () {
-          context.push(
-            '${GoRoutes.folderSelect.fullPath}/${GoRoutes.addLinkContent.path}',
-            extra: AddLinkContent(folderId: folderId),
-          );
-        },
-        onPressLeft: () {
+        title: '어떤 취향으로 저장하시겠어요?',
+        content: '모으고 싶은 취향 유형을 선택해 주세요.',
+        topText: '이미지',
+        bottomText: '링크',
+        onPressTop: () {
           context.push(
             '${GoRoutes.folderSelect.fullPath}/${GoRoutes.addImageContent.path}',
             extra: AddImageContent(folderId: folderId),
+          );
+        },
+        onPressBottom: () {
+          context.push(
+            '${GoRoutes.folderSelect.fullPath}/${GoRoutes.addLinkContent.path}',
+            extra: AddLinkContent(folderId: folderId),
           );
         },
       );

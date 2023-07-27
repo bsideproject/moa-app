@@ -4,21 +4,26 @@ import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/hashtag_model.dart';
 
 class HashtagBox extends StatelessWidget {
-  const HashtagBox({super.key, required this.hashtag});
+  const HashtagBox(
+      {super.key, required this.hashtag, required this.isSelected});
   final HashtagModel hashtag;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Ink(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50),
-        color: AppColors.primaryColor,
+        color:
+            isSelected ? AppColors.primaryColor : AppColors.hashtagBackground,
       ),
       child: Text(
         hashtag.hashTag,
-        style: const TextStyle(
-          color: AppColors.whiteColor,
+        style: TextStyle(
+          color: isSelected
+              ? AppColors.whiteColor
+              : AppColors.blackColor.withOpacity(0.3),
           fontSize: 16,
           fontWeight: FontWeight.w600,
           fontFamily: FontConstants.pretendard,

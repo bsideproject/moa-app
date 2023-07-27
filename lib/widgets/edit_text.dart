@@ -30,6 +30,7 @@ class EditText extends StatefulWidget {
     this.controller,
     this.maxLines = 1,
     this.maxLength,
+    this.padding,
   });
 
   final void Function(String) onChanged;
@@ -48,6 +49,7 @@ class EditText extends StatefulWidget {
   final TextEditingController? controller;
   final int? maxLines;
   final int? maxLength;
+  final EdgeInsetsGeometry? padding;
 
   @override
   State<EditText> createState() => _EditTextState();
@@ -57,6 +59,7 @@ class _EditTextState extends State<EditText> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: widget.padding,
       decoration: BoxDecoration(
         borderRadius: widget.borderRadius ?? BorderRadius.circular(100),
         color: widget.backgroundColor,

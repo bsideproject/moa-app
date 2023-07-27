@@ -3,11 +3,11 @@ import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/repositories/token_repository.dart';
 import 'package:moa_app/utils/api.dart';
 
-enum ContentType { image, url }
+enum AddContentType { image, url }
 
 abstract class IContentRepository {
   Future<void> addContent(
-      {required ContentType contentType, required ContentModel content});
+      {required AddContentType contentType, required ContentModel content});
 }
 
 class ContentRepository implements IContentRepository {
@@ -15,46 +15,37 @@ class ContentRepository implements IContentRepository {
   static ContentRepository instance = const ContentRepository._();
 
   @override
-  Future<void> addContent(
-      {required ContentType contentType, required ContentModel content}) async {
+  Future<void> addContent({
+    required AddContentType contentType,
+    required ContentModel content,
+  }) async {
     var token = await TokenRepository.instance.getToken();
 
-    late FormData formData = FormData.fromMap({});
-
-    if (contentType == ContentType.image) {
-      /// image 방식
-      formData = FormData.fromMap({
-        'body': {
+    if (contentType.name == AddContentType.image.name) {
+      await dio.post(
+        '/api/v1/content/create',
+        data: {
           'folderId': content.contentId,
-          'name': content.name,
-          'memo': content.memo,
-          'hashTag': content.hashTags,
+          'name': content.contentName,
+          'memo': content.contentMemo,
+          'hashTag': '임시, 어드민',
           'contentType': 'IMAGE',
+          'originalFileName': '${content.contentName}.png',
+          'image': 'image/png:base64:${content.contentImageUrl}',
         },
-        'image': '/Users/a60156077/Downloads/모아조.png'
-      });
-    }
-    if (contentType == ContentType.url) {
-      /// 링크 방식
-      formData = FormData.fromMap({
-        'folderId': 'folderId',
-        'name': 'folderName',
-        'memo': 'memo',
-        'url': 'url',
-        'hashTag': 'hashTag',
-        'contentType': 'URL', //
-      });
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
     }
 
-    await dio.post(
-      '/api/v1/content/create',
-      data: formData,
-      options: Options(
-        headers: {
-          'Content-type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      ),
-    );
+    if (contentType.name == AddContentType.url.name) {
+      /// 링크 방식
+    }
   }
 }
+
+
+// 'Content-type': 'multipart/form-data',

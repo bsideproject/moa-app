@@ -19,6 +19,8 @@ class AppColors {
   static const Color danger = Color(0xffFF0000);
   static const Color linkButton = Color(0xFF232323);
   static const Color subTitle = Color(0xFF818181);
+  static const Color grayBackground = Color(0xFFD9D9D9);
+  static const Color hashtagBackground = Color(0xFFF8F8F8);
 
   ///font color
   static const Color fontTitleColor = Color(0xff000000);
