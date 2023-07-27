@@ -46,6 +46,3 @@ class ContentRepository implements IContentRepository {
     }
   }
 }
-
-
-// 'Content-type': 'multipart/form-data',
