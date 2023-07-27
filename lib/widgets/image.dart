@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:ui' as ui;
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -24,7 +27,7 @@ class ImagePlaceholder extends StatelessWidget {
         child: const Material(
           clipBehavior: Clip.hardEdge,
           color: AppColors.disabled,
-          child: Icon(Icons.person, color: Colors.white),
+          // child: Icon(Icons.person, color: Colors.white),
         ),
       ),
     );
@@ -67,5 +70,37 @@ class ImageOnNetwork extends HookWidget {
             width: width,
             height: height,
           );
+  }
+}
+
+class ImageCompleter extends HookWidget {
+  const ImageCompleter({super.key, required this.imageURL});
+  final String imageURL;
+
+  @override
+  Widget build(BuildContext context) {
+    Image image = Image.network(imageURL);
+    Completer<ui.Image> completer = Completer<ui.Image>();
+    image.image.resolve(const ImageConfiguration()).addListener(
+        ImageStreamListener((info, _) => completer.complete(info.image)));
+
+    return ListView(
+      children: [
+        FutureBuilder<ui.Image>(
+          future: completer.future,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Text(
+                '${snapshot.data!.width}x${snapshot.data!.height}',
+                style: Theme.of(context).textTheme.displayMedium,
+              );
+            } else {
+              return const Text('Loading...');
+            }
+          },
+        ),
+        image,
+      ],
+    );
   }
 }

@@ -367,7 +367,7 @@ class HashtagSource extends LoadingMoreBase<ContentModel> {
     bool isSuccess = false;
 
     try {
-      var (list, count) = await HashtagRepository.instance.getHashtagList();
+      var (list, count) = await HashtagRepository.instance.getHashtagView();
       contentCount.value = count;
       for (ContentModel content in list) {
         if (!contains(content) && _hasMore) {

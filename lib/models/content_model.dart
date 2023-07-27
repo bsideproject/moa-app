@@ -9,10 +9,10 @@ class ContentModel with _$ContentModel {
   const ContentModel._();
   factory ContentModel({
     required String contentId,
-    required String imageUrl,
-    required String name,
-    required String memo,
-    required List<HashtagModel> hashTags,
+    required String contentImageUrl,
+    String? contentMemo,
+    required String contentName,
+    required List<HashtagModel> contentHashTag,
   }) = _ContentModel;
 
   factory ContentModel.fromJson(Map<String, dynamic> json) =>

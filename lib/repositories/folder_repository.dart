@@ -90,6 +90,7 @@ class FolderRepository implements IFolderRepository {
   Future<List<ContentModel>> getFolderDetailList(
       {required String folderName}) async {
     var token = await TokenRepository.instance.getToken();
+
     var res = await dio.get(
       '/api/v1/folder/detail/view?folderName=$folderName',
       options: Options(
@@ -98,6 +99,7 @@ class FolderRepository implements IFolderRepository {
         },
       ),
     );
+
     return res.data['data']
         .map<ContentModel>((e) => ContentModel.fromJson(e))
         .toList();

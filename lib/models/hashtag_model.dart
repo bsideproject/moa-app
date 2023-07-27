@@ -9,7 +9,7 @@ class HashtagModel with _$HashtagModel {
   factory HashtagModel({
     required String tagId,
     required String hashTag,
-    required int count,
+    int? count,
   }) = _HashtagModel;
 
   factory HashtagModel.fromJson(Map<String, dynamic> json) =>

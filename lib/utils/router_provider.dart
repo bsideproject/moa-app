@@ -18,6 +18,7 @@ import 'package:moa_app/screens/on_boarding/notice_view.dart';
 import 'package:moa_app/screens/on_boarding/sign_in.dart';
 import 'package:moa_app/screens/setting/edit_my_type_view.dart';
 import 'package:moa_app/screens/setting/setting.dart';
+import 'package:moa_app/utils/utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -70,7 +71,7 @@ CustomTransitionPage buildIosPageTransitions<T>({
   return CustomTransitionPage<T>(
     key: state.pageKey,
     child: child,
-    transitionDuration: const Duration(milliseconds: 250),
+    transitionDuration: const Duration(milliseconds: 180),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = const Offset(1.0, 0.0);
       var end = Offset.zero;
@@ -178,11 +179,19 @@ final routeProvider = Provider(
                   name: GoRoutes.folder.name,
                   path: '${GoRoutes.folder.path}/:folderName',
                   pageBuilder: (context, state) {
+                    late String decodeFolderName =
+                        state.pathParameters['folderName']!;
+
+                    if (isStringEncoded(state.pathParameters['folderName']!)) {
+                      decodeFolderName = Uri.decodeFull(
+                          state.pathParameters['folderName'] ?? '');
+                    }
+
                     return buildIosPageTransitions<void>(
                       context: context,
                       state: state,
                       child: FolderDetailView(
-                        folderName: state.pathParameters['folderName']!,
+                        folderName: decodeFolderName,
                       ),
                     );
                   },
@@ -261,24 +270,33 @@ final routeProvider = Provider(
                 ),
             routes: [
               GoRoute(
-                parentNavigatorKey: _rootNavigatorKey,
-                name: GoRoutes.addImageContent.name,
-                path: GoRoutes.addImageContent.path,
-                pageBuilder: (context, state) => buildIosPageTransitions<void>(
-                  context: context,
-                  state: state,
-                  child: const AddImageContent(),
-                ),
-              ),
+                  parentNavigatorKey: _rootNavigatorKey,
+                  name: GoRoutes.addImageContent.name,
+                  path: GoRoutes.addImageContent.path,
+                  pageBuilder: (context, state) {
+                    var addImage = state.extra as AddImageContent;
+                    return buildIosPageTransitions<void>(
+                      context: context,
+                      state: state,
+                      child: AddImageContent(
+                        folderId: addImage.folderId,
+                      ),
+                    );
+                  }),
               GoRoute(
                 parentNavigatorKey: _rootNavigatorKey,
                 name: GoRoutes.addLinkContent.name,
                 path: GoRoutes.addLinkContent.path,
-                pageBuilder: (context, state) => buildIosPageTransitions<void>(
-                  context: context,
-                  state: state,
-                  child: const AddLinkContent(),
-                ),
+                pageBuilder: (context, state) {
+                  var addLink = state.extra as AddLinkContent;
+                  return buildIosPageTransitions<void>(
+                    context: context,
+                    state: state,
+                    child: AddLinkContent(
+                      folderId: addLink.folderId,
+                    ),
+                  );
+                },
               ),
             ]),
         GoRoute(
@@ -300,8 +318,11 @@ final routeProvider = Provider(
           name: GoRoutes.inputName.name,
           path: GoRoutes.inputName.fullPath,
           builder: (context, state) {
-            var inputName = state.extra as InputNameView;
-            return InputNameView(isMember: inputName.isMember);
+            if (state.extra != null) {
+              var inputName = state.extra as InputNameView;
+              return InputNameView(isMember: inputName.isMember);
+            }
+            return const InputNameView(isMember: true);
           },
         ),
         GoRoute(

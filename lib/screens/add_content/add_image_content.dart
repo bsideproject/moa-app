@@ -1,36 +1,52 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
-import 'package:moa_app/utils/general.dart';
+import 'package:moa_app/models/content_model.dart';
+import 'package:moa_app/models/hashtag_model.dart';
+import 'package:moa_app/repositories/content_repository.dart';
+import 'package:moa_app/repositories/hashtag_repository.dart';
+import 'package:moa_app/utils/utils.dart';
 import 'package:moa_app/widgets/app_bar.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
-import 'package:moa_app/widgets/moa_widgets/edit_content.dart';
 import 'package:moa_app/widgets/moa_widgets/error_text.dart';
 import 'package:moa_app/widgets/moa_widgets/hashtag_box.dart';
+import 'package:moa_app/widgets/snackbar.dart';
 
 class AddImageContent extends HookWidget {
-  const AddImageContent({super.key});
+  const AddImageContent({super.key, required this.folderId});
+  final String folderId;
 
   @override
   Widget build(BuildContext context) {
-    var image = useState('');
+    var picker = ImagePicker();
+    var imageFile = useState<XFile?>(null);
+
+    void pickImage(ImageSource source) async {
+      var pickedFile = await picker.pickImage(source: source);
+      imageFile.value = pickedFile;
+    }
+
     var title = useState('');
     var memo = useState('');
     var updatedHashtag = useState('');
-
-    var tagList = useState(<String>['#자취레시피', '#꿀팁', '#카고바지', '#해시태그']);
+    var selectedTagList = useState<List<HashtagModel>>([]);
 
     var imageError = useState('');
     var titleError = useState('');
 
-    void completeAddContent() {
-      if (image.value.isEmpty ||
+    void completeAddContent() async {
+      if (imageFile.value == null ||
           title.value.isEmpty ||
           title.value.length > 30) {
-        if (image.value.isEmpty) {
+        if (imageFile.value == null) {
           imageError.value = '이미지를 선택해주세요.';
         }
 
@@ -39,6 +55,30 @@ class AddImageContent extends HookWidget {
         }
 
         return;
+      }
+
+      String base64Image = await xFileToBase64(imageFile.value!);
+
+      try {
+        await ContentRepository.instance.addContent(
+          contentType: AddContentType.image,
+          content: ContentModel(
+            contentId: folderId,
+            contentName: title.value,
+            contentHashTag: selectedTagList.value,
+            contentImageUrl: base64Image,
+            contentMemo: memo.value,
+          ),
+        );
+
+        if (context.mounted) {
+          context.go('/');
+        }
+      } catch (error) {
+        if (context.mounted) {
+          snackbar.alert(
+              context, kDebugMode ? error.toString() : '오류가 발생했어요 다시 시도해주세요.');
+        }
       }
     }
 
@@ -52,32 +92,28 @@ class AddImageContent extends HookWidget {
       title.value = value;
     }
 
+    void onChangedHashtag(String value) {
+      updatedHashtag.value = value;
+    }
+
+    void onChangedMemo(String value) {
+      memo.value = value;
+    }
+
     useEffect(() {
-      if (image.value.isNotEmpty) {
+      if (imageFile.value != null) {
         imageError.value = '';
       }
       return null;
-    }, [image.value]);
+    }, [imageFile.value]);
 
-    void showAddHashtagModal() {
-      General.instance.showBottomSheet(
-        context: context,
-        child: EditContent(
-          title: '해시태그 추가',
-          buttonText: '추가하기',
-          onPressed: () {
-            // todo hashtag 중복 체크후 중복이면 에러메세지
-            // if 중복이면
-            return '이미 가지고 있는 해시태그예요!';
-            // 중복 아니면
-            // return '';
-            // tagList.value.add('tag')
-          },
-          updatedContentName: updatedHashtag,
-          contentName: '해시태그를 입력하세요.',
-        ),
-        isContainer: false,
-      );
+    void addHashtag() {
+      // todo hashtag 중복 체크후 중복이면 에러메세지
+      // if 중복이면
+      // return '이미 가지고 있는 해시태그예요!';
+      // 중복 아니면
+      // return '';
+      // tagList.value.add('tag')
     }
 
     return Scaffold(
@@ -102,26 +138,38 @@ class AddImageContent extends HookWidget {
                       borderRadius: BorderRadius.circular(15),
                       child: InkWell(
                         borderRadius: BorderRadius.circular(15),
-                        onTap: () {},
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image(
-                              width: 16,
-                              height: 16,
-                              image: Assets.circlePlus,
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              '대표 이미지 추가하기',
-                              style: const InputLabelTextStyle().merge(
-                                TextStyle(
-                                  color: AppColors.blackColor.withOpacity(0.3),
+                        onTap: () => pickImage(ImageSource.gallery),
+                        child: imageFile.value != null
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image:
+                                        FileImage(File(imageFile.value!.path)),
+                                  ),
                                 ),
+                              )
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image(
+                                    width: 16,
+                                    height: 16,
+                                    image: Assets.circlePlus,
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    '대표 이미지 추가하기',
+                                    style: const InputLabelTextStyle().merge(
+                                      TextStyle(
+                                        color: AppColors.blackColor
+                                            .withOpacity(0.3),
+                                      ),
+                                    ),
+                                  )
+                                ],
                               ),
-                            )
-                          ],
-                        ),
                       ),
                     ),
                   ),
@@ -157,30 +205,83 @@ class AddImageContent extends HookWidget {
                     ],
                   ),
                   const SizedBox(height: 25),
-                  const Text(
-                    '태그',
-                    style: H4TextStyle(),
-                  ),
-                  const SizedBox(height: 5),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
+                  Row(
                     children: [
-                      ...tagList.value.map((tag) {
-                        return HashtagBox(
-                          hashtagName: tag,
+                      const Text(
+                        '태그',
+                        style: H4TextStyle(),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '태그를 선택해주세요.',
+                        style: const Body1TextStyle()
+                            .merge(const TextStyle(color: AppColors.subTitle)),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  FutureBuilder<List<HashtagModel>>(
+                    future: HashtagRepository.instance.getHashtagList(),
+                    builder: (context, snapshot) {
+                      var tagListData = snapshot.data ?? [];
+                      if (snapshot.hasData) {
+                        return Wrap(
+                          spacing: 10,
+                          runSpacing: 10,
+                          children: [
+                            ...tagListData.map((tag) {
+                              return InkWell(
+                                borderRadius: BorderRadius.circular(50),
+                                onTap: () {
+                                  if (selectedTagList.value.contains(tag)) {
+                                    selectedTagList.value.remove(tag);
+                                  } else {
+                                    selectedTagList.value.add(tag);
+                                  }
+                                },
+                                child: HashtagBox(
+                                  isSelected:
+                                      selectedTagList.value.contains(tag),
+                                  hashtag: tag,
+                                ),
+                              );
+                            }).toList(),
+                          ],
                         );
-                      }).toList(),
-                      SizedBox(
-                        width: 35,
-                        height: 35,
-                        child: CircleIconButton(
-                          backgroundColor: AppColors.primaryColor,
-                          onPressed: showAddHashtagModal,
-                          icon: const Icon(
-                            Icons.add,
-                          ),
+                      }
+                      return const SizedBox();
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  EditFormText(
+                    maxLength: 7,
+                    hintText: '태그를 입력하세요.',
+                    onChanged: onChangedHashtag,
+                    suffixIcon: Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 7),
+                      width: 35,
+                      height: 35,
+                      child: CircleIconButton(
+                        backgroundColor: AppColors.primaryColor,
+                        onPressed: addHashtag,
+                        icon: const Icon(
+                          Icons.add,
                         ),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      const Spacer(),
+                      Text(
+                        '${updatedHashtag.value.length}/7',
+                        style: TextStyle(
+                            color: updatedHashtag.value.length == 7
+                                ? AppColors.danger
+                                : AppColors.blackColor.withOpacity(0.3),
+                            fontSize: 12,
+                            fontFamily: FontConstants.pretendard),
                       ),
                     ],
                   ),
@@ -197,9 +298,7 @@ class AddImageContent extends HookWidget {
                         height: 135,
                         hintText: '메모를 입력하세요.',
                         borderRadius: BorderRadius.circular(15),
-                        onChanged: (value) {
-                          memo.value = value;
-                        },
+                        onChanged: onChangedMemo,
                         backgroundColor: AppColors.textInputBackground,
                       ),
                       Positioned(

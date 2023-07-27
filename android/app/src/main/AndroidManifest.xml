@@ -105,6 +105,13 @@
                 <!-- 카카오로그인 -->
                 <data android:scheme="kakao425f4fa4567f8679a573604ddf734236" android:host="oauth"/>
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="moa" />
+            </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

@@ -22,6 +22,8 @@
 		<string>$(FLUTTER_BUILD_NAME)</string>
 		<key>CFBundleSignature</key>
 		<string>????</string>
+    <key>FlutterDeepLinkingEnabled</key>
+    <true/>
 		<key>CFBundleURLTypes</key>
 		<array>
 			<dict>
@@ -35,9 +37,11 @@
 			<dict>
 				<key>CFBundleTypeRole</key>
 				<string>Editor</string>
+        <key>CFBundleURLName</key>
+			  <string>moa</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
-					<string>moaapp</string>
+					<string>moa</string>
 				</array>
 			</dict>
 			<dict>
