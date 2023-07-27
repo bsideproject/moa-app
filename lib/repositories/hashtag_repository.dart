@@ -47,8 +47,6 @@ class HashtagRepository implements IHashtagRepository {
       ),
     );
 
-    print('res:${res.data['data']}');
-
     return res.data['data']['users']
         .map<HashtagModel>((e) => HashtagModel.fromJson(e))
         .toList();
