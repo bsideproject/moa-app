@@ -12,7 +12,7 @@ import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/user_model.dart';
 import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/repositories/auth_repository.dart';
-import 'package:moa_app/repositories/non_member_repository.dart';
+import 'package:moa_app/repositories/user_repository.dart';
 import 'package:moa_app/screens/on_boarding/input_name_view.dart';
 import 'package:moa_app/utils/logger.dart';
 import 'package:moa_app/utils/router_provider.dart';
@@ -26,26 +26,20 @@ class SignIn extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var loading = useState(false);
-    var user = useState<UserModel>(
-        const UserModel(userId: '0', email: '', nickname: ''));
-
-    //todo api 에서 nickname 가져와서 넣어주기
-    var nickname = useState('');
+    var emailUser = useState<UserModel?>(null);
 
     void hasNicknameCheck({required bool isMember}) async {
       /// 비회원
-      if (!isMember) {
-        var nonMember = await NonMemberRepository.instance.getNickname();
-        if (nonMember != null) {
-          nickname.value = nonMember.nickname ?? '';
-        }
-      }
+      // if (!isMember) {
+      //   var nonMember = await NonMemberRepository.instance.getNickname();
+      //   if (nonMember != null) {
+      //     nonMember.nickname ?? '';
+      //   }
+      // }
 
       /// 회원
-      // todo api 개발후 nickname 받아와서 넣어주기
-      // nickname.value = '';
-
-      if (nickname.value.isEmpty) {
+      var user = await UserRepository.instance.getUser();
+      if (user?.nickname == null) {
         if (context.mounted) {
           context.go(GoRoutes.inputName.fullPath,
               extra: InputNameView(isMember: isMember));
@@ -98,6 +92,7 @@ class SignIn extends HookConsumerWidget {
         child: Stack(
           children: [
             SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(vertical: 20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,7 +248,8 @@ class SignIn extends HookConsumerWidget {
                             ),
                             child: EditText(
                               onChanged: (txt) {
-                                user.value = user.value.copyWith(email: txt);
+                                emailUser.value =
+                                    emailUser.value?.copyWith(email: txt);
                               },
                               keyboardType: TextInputType.emailAddress,
                               hintText: 'Email',
@@ -280,7 +276,7 @@ class SignIn extends HookConsumerWidget {
                           ),
                           child: Button(
                             text: '로그인 하기',
-                            disabled: user.value.email == '',
+                            disabled: emailUser.value?.email == '',
                             onPress: () async {
                               // if (context.mounted) {
                               //   context.go(GoRoutes.home.fullPath);

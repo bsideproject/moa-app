@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
-import 'package:moa_app/models/hashtag_model.dart';
 
 class HashtagBox extends StatelessWidget {
   const HashtagBox(
       {super.key, required this.hashtag, required this.isSelected});
-  final HashtagModel hashtag;
+  final String hashtag;
   final bool isSelected;
 
   @override
@@ -19,7 +18,7 @@ class HashtagBox extends StatelessWidget {
             isSelected ? AppColors.primaryColor : AppColors.hashtagBackground,
       ),
       child: Text(
-        hashtag.hashTag,
+        hashtag,
         style: TextStyle(
           color: isSelected
               ? AppColors.whiteColor

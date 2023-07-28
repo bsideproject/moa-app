@@ -137,16 +137,11 @@ final routeProvider = Provider(
             return GoRoutes.inputName.fullPath;
           }
         }
+        if (token.value == null &&
+            state.matchedLocation != GoRoutes.signIn.fullPath) {
+          return GoRoutes.signIn.fullPath;
+        }
         return null;
-        // todo 토큰있으면 signin 페이지로 이동 못하게 해야됨
-        // ! 비회원 닉네임 설정 안했으면 로그인 페이지로
-        // var token = ref.read(tokenStateProvider);
-        // if (token.value == null) {
-        //   if (state.matchedLocation != GoRoutes.signIn.fullPath) {
-        //     return GoRoutes.signIn.fullPath;
-        //   }
-        // }
-        // return null;
       },
       routes: <RouteBase>[
         ShellRoute(

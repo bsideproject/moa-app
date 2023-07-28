@@ -6,8 +6,11 @@ import 'package:moa_app/utils/api.dart';
 enum AddContentType { image, url }
 
 abstract class IContentRepository {
-  Future<void> addContent(
-      {required AddContentType contentType, required ContentModel content});
+  Future<void> addContent({
+    required AddContentType contentType,
+    required ContentModel content,
+    required String hashTagStringList,
+  });
 }
 
 class ContentRepository implements IContentRepository {
@@ -18,6 +21,7 @@ class ContentRepository implements IContentRepository {
   Future<void> addContent({
     required AddContentType contentType,
     required ContentModel content,
+    required String hashTagStringList,
   }) async {
     var token = await TokenRepository.instance.getToken();
 
@@ -28,7 +32,7 @@ class ContentRepository implements IContentRepository {
           'folderId': content.contentId,
           'name': content.contentName,
           'memo': content.contentMemo,
-          'hashTag': '임시, 어드민',
+          'hashTag': hashTagStringList,
           'contentType': 'IMAGE',
           'originalFileName': '${content.contentName}.png',
           'image': 'image/png:base64:${content.contentImageUrl}',

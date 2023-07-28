@@ -1,86 +1,136 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
-import 'package:moa_app/models/hashtag_model.dart';
-import 'package:moa_app/utils/general.dart';
+import 'package:moa_app/models/content_model.dart';
+import 'package:moa_app/providers/hashtag_provider.dart';
+import 'package:moa_app/repositories/content_repository.dart';
+import 'package:moa_app/screens/add_content/add_image_content.dart';
+import 'package:moa_app/screens/add_content/widgets/add_content_bottom.dart';
 import 'package:moa_app/widgets/app_bar.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
-import 'package:moa_app/widgets/moa_widgets/edit_content.dart';
 import 'package:moa_app/widgets/moa_widgets/error_text.dart';
-import 'package:moa_app/widgets/moa_widgets/hashtag_box.dart';
+import 'package:moa_app/widgets/snackbar.dart';
 
-class AddLinkContent extends HookWidget {
+class AddLinkContent extends HookConsumerWidget {
   const AddLinkContent({super.key, required this.folderId});
   final String folderId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var hashtagAsync = ref.watch(hashtagProvider);
     var title = useState('');
     var link = useState('');
     var memo = useState('');
-    var updatedHashtag = useState('');
-    // var selectedHashtagList = useState<List<HashtagModel>>([]);
-
-    var tagList = useState<List<HashtagModel>>([]);
+    var hashtag = useState('');
+    var hashtagController = useTextEditingController();
+    var selectedTagList = useState<List<SelectedTagModel>>([]);
 
     var titleError = useState('');
+    var tagError = useState('');
     var linkError = useState('');
 
-    void completeAddContent() {
+    void completeAddContent() async {
       if (link.value.isEmpty ||
           title.value.isEmpty ||
-          title.value.length > 30) {
-        if (title.value.isEmpty) {
+          selectedTagList.value.where((e) => e.isSelected).isEmpty) {
+        if (link.value.isEmpty) {
           linkError.value = '링크를 입력해주세요.';
+        }
+
+        if (title.value.isEmpty) {
+          titleError.value = '제목을 입력해주세요.';
+        }
+
+        if (selectedTagList.value.where((e) => e.isSelected).isEmpty) {
+          tagError.value = '태그를 선택해주세요.';
         }
 
         return;
       }
+
+      var selectTag = [];
+      selectedTagList.value.map((element) {
+        if (element.isSelected) {
+          selectTag.add(element.name);
+        }
+      }).toList();
+
+      var hashTagStringList = selectTag.join(',');
+
+      try {
+        await ContentRepository.instance.addContent(
+          contentType: AddContentType.image,
+          content: ContentModel(
+            contentId: folderId,
+            contentName: title.value,
+            contentHashTag: [],
+            contentImageUrl: '',
+            contentMemo: memo.value,
+          ),
+          hashTagStringList: hashTagStringList,
+        );
+
+        if (context.mounted) {
+          context.go('/');
+        }
+      } catch (error) {
+        if (context.mounted) {
+          snackbar.alert(
+              context, kDebugMode ? error.toString() : '오류가 발생했어요 다시 시도해주세요.');
+        }
+      }
     }
 
     void onChangedTitle(String value) {
-      if (value.isNotEmpty || value.length < 30) {
-        titleError.value = '';
-      }
-      if (value.length > 30) {
-        titleError.value = '1~30자로 입력할 수 있어요.';
-      }
       title.value = value;
+      titleError.value = '';
     }
 
     void onChangedLink(String value) {
-      if (value.isNotEmpty || value.length < 30) {
-        linkError.value = '';
-      }
-      if (value.length > 30) {
-        linkError.value = '1~30자로 입력할 수 있어요.';
-      }
       link.value = value;
+      linkError.value = '';
     }
 
-    void showAddHashtagModal() {
-      General.instance.showBottomSheet(
-        context: context,
-        child: EditContent(
-          title: '해시태그 추가',
-          buttonText: '추가하기',
-          onPressed: () {
-            // todo hashtag 중복 체크후 중복이면 에러메세지
-            // if 중복이면
-            return '이미 가지고 있는 해시태그예요!';
-            // 중복 아니면
-            // return '';
-            // tagList.value.add('tag')
-          },
-          updatedContentName: updatedHashtag,
-          contentName: '해시태그를 입력하세요.',
-        ),
-        isContainer: false,
-      );
+    void onChangedHashtag(String value) {
+      hashtag.value = value;
     }
+
+    void onChangedMemo(String value) {
+      memo.value = value;
+    }
+
+    void addHashtag() {
+      if (selectedTagList.value.map((e) => e.name).contains(hashtag.value)) {
+        tagError.value = '중복 태그가 존재해요.';
+        return;
+      }
+
+      if (hashtagController.text.isEmpty) {
+        return;
+      }
+
+      selectedTagList.value = [
+        SelectedTagModel(name: hashtag.value, isSelected: true),
+        ...selectedTagList.value
+      ];
+      tagError.value = '';
+      hashtagController.clear();
+    }
+
+    useEffect(() {
+      if (hashtagAsync.hasValue) {
+        selectedTagList.value = hashtagAsync.value!
+            .map((e) => SelectedTagModel(name: e.hashTag, isSelected: false))
+            .toList();
+      }
+      return null;
+    }, [hashtagAsync.isLoading]);
 
     return Scaffold(
       appBar: const AppBarBack(
@@ -93,6 +143,8 @@ class AddLinkContent extends HookWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              padding: const EdgeInsets.only(bottom: 100),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -101,7 +153,7 @@ class AddLinkContent extends HookWidget {
                     style: H4TextStyle(),
                   ),
                   const SizedBox(height: 5),
-                  EditFormText(
+                  EditText(
                     onChanged: onChangedLink,
                     hintText: '링크를 입력하세요.',
                   ),
@@ -167,94 +219,18 @@ class AddLinkContent extends HookWidget {
                       },
                     ),
                   ),
-                  const SizedBox(height: 25),
-                  const Text(
-                    '제목',
-                    style: H4TextStyle(),
-                  ),
-                  const SizedBox(height: 5),
-                  EditFormText(
-                    onChanged: onChangedTitle,
-                    hintText: '1~30자로 입력할 수 있어요.',
-                  ),
-                  ErrorText(
-                    errorText: titleError.value,
-                    errorValidate: titleError.value.isNotEmpty,
-                  ),
-                  Row(
-                    children: [
-                      const Spacer(),
-                      Text(
-                        '${title.value.length}/30',
-                        style: TextStyle(
-                            color: title.value.length > 30
-                                ? AppColors.danger
-                                : AppColors.blackColor.withOpacity(0.3),
-                            fontSize: 12,
-                            fontFamily: FontConstants.pretendard),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 25),
-                  const Text(
-                    '태그',
-                    style: H4TextStyle(),
-                  ),
-                  const SizedBox(height: 5),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: [
-                      ...tagList.value.map((tag) {
-                        return HashtagBox(
-                          isSelected: false,
-                          hashtag: tag,
-                        );
-                      }).toList(),
-                      SizedBox(
-                        width: 35,
-                        height: 35,
-                        child: CircleIconButton(
-                          backgroundColor: AppColors.primaryColor,
-                          onPressed: showAddHashtagModal,
-                          icon: const Icon(
-                            Icons.add,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 25),
-                  const Text(
-                    '메모',
-                    style: H4TextStyle(),
-                  ),
-                  const SizedBox(height: 5),
-                  Stack(
-                    children: [
-                      EditText(
-                        maxLines: 4,
-                        height: 135,
-                        hintText: '메모를 입력하세요.',
-                        borderRadius: BorderRadius.circular(15),
-                        onChanged: (value) {
-                          memo.value = value;
-                        },
-                        backgroundColor: AppColors.textInputBackground,
-                      ),
-                      Positioned(
-                        right: 20,
-                        bottom: 20,
-                        child: Text(
-                          '0/100',
-                          style: const Hash1TextStyle().merge(TextStyle(
-                            fontSize: 12,
-                            color: AppColors.blackColor.withOpacity(0.3),
-                          )),
-                        ),
-                      ),
-                    ],
-                  ),
+                  AddContentBottom(
+                    onChangedTitle: onChangedTitle,
+                    addHashtag: addHashtag,
+                    hashtagController: hashtagController,
+                    onChangedHashtag: onChangedHashtag,
+                    onChangedMemo: onChangedMemo,
+                    memo: memo,
+                    tagError: tagError,
+                    title: title,
+                    titleError: titleError,
+                    selectedTagList: selectedTagList,
+                  )
                 ],
               ),
             ),
