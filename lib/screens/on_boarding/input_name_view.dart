@@ -31,6 +31,7 @@ class InputNameView extends HookWidget {
     var pageController = usePageController();
     var step = useState<StepType>(StepType.inputName);
     var isNextPage = useState(false);
+    var focusNode = useFocusNode();
 
     bool validateNickname(String value) {
       const pattern = r'^[가-힣]{2,8}$'; // 정규식 패턴: 한글 2~8글자
@@ -48,8 +49,7 @@ class InputNameView extends HookWidget {
           await UserRepository.instance.editUserNickname(nickname: name.value);
           step.value = StepType.greeting;
         } catch (e) {
-          snackbar.alert(context,
-              kDebugMode ? e.toString() : '닉네임 변경에 실패했습니다. 다시 시도해주세요.');
+          snackbar.alert(context, kDebugMode ? e.toString() : '중복된 닉네임입니다.');
         }
       }
     }
@@ -59,6 +59,7 @@ class InputNameView extends HookWidget {
         case StepType.inputName:
           {
             inputUserName();
+            focusNode.unfocus();
             return;
           }
         case StepType.greeting:
@@ -142,6 +143,7 @@ class InputNameView extends HookWidget {
               const SizedBox(height: 25),
               EditFormText(
                 maxLength: 8,
+                focusNode: focusNode,
                 controller: controller,
                 onChanged: onChangedName,
                 hintText: '닉네임을 입력하세요.',
@@ -211,132 +213,156 @@ class InputNameView extends HookWidget {
           );
 
         case StepType.tutorial:
-          return Flexible(
-            flex: 3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
                   '모아는 다음과 같은 방법으로\n취향을 저장할 수 있어요!',
                   style:
                       const H1TextStyle().merge(const TextStyle(fontSize: 28)),
                 ),
-                Expanded(
-                  child: PageView(
-                    onPageChanged: (value) {
-                      if (value == 0) {
-                        isNextPage.value = false;
-                      } else {
-                        isNextPage.value = true;
-                      }
-                    },
-                    controller: pageController,
-                    physics: const ClampingScrollPhysics(),
-                    children: [
-                      Column(
-                        children: [
-                          const Spacer(),
-                          Image(
-                            image: Assets.onboarding1,
-                            width: 114,
-                            height: 88,
-                          ),
-                          const SizedBox(height: 20),
-                          Text(
-                            '앱으로 추가하기',
-                            style: const H1TextStyle()
-                                .merge(const TextStyle(fontSize: 22)),
-                          ),
-                          const SizedBox(height: 7),
-                          Text(
-                            '어플에서 직접 입력하여 추가할 수 있어요!',
-                            style: const Body1TextStyle().merge(
-                              const TextStyle(color: AppColors.subTitle),
-                            ),
-                          )
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          const Spacer(),
-                          Image(
-                            image: Assets.onboarding2,
-                            width: 136,
-                            height: 103,
-                          ),
-                          const SizedBox(height: 20),
-                          Text(
-                            '외부 웹에서 공유하기',
-                            style: const H1TextStyle()
-                                .merge(const TextStyle(fontSize: 22)),
-                          ),
-                          const SizedBox(height: 7),
-                          Text(
-                            '외부 링크도 간편하게 등록하세요!',
-                            style: const Body1TextStyle().merge(
-                              const TextStyle(color: AppColors.subTitle),
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 60),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              ),
+              SizedBox(
+                height: 300,
+                child: PageView(
+                  onPageChanged: (value) {
+                    if (value == 0) {
+                      isNextPage.value = false;
+                    } else {
+                      isNextPage.value = true;
+                    }
+                  },
+                  controller: pageController,
+                  physics: const ClampingScrollPhysics(),
                   children: [
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(8)),
-                        color: !isNextPage.value
-                            ? AppColors.primaryColor
-                            : AppColors.blackColor.withOpacity(0.3),
-                      ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image(
+                          image: Assets.onboarding1,
+                          width: 114,
+                          height: 88,
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          '앱으로 추가하기',
+                          style: const H1TextStyle()
+                              .merge(const TextStyle(fontSize: 22)),
+                        ),
+                        const SizedBox(height: 7),
+                        Text(
+                          '어플에서 직접 입력하여 추가할 수 있어요!',
+                          style: const Body1TextStyle().merge(
+                            const TextStyle(color: AppColors.subTitle),
+                          ),
+                        )
+                      ],
                     ),
-                    const SizedBox(width: 5),
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(8)),
-                        color: isNextPage.value
-                            ? AppColors.primaryColor
-                            : AppColors.blackColor.withOpacity(0.3),
-                      ),
-                    )
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image(
+                          image: Assets.onboarding2,
+                          width: 136,
+                          height: 103,
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          '외부 웹에서 공유하기',
+                          style: const H1TextStyle()
+                              .merge(const TextStyle(fontSize: 22)),
+                        ),
+                        const SizedBox(height: 7),
+                        Text(
+                          '외부 링크도 간편하게 등록하세요!',
+                          style: const Body1TextStyle().merge(
+                            const TextStyle(color: AppColors.subTitle),
+                          ),
+                        )
+                      ],
+                    ),
                   ],
-                )
-              ],
-            ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
+                      color: !isNextPage.value
+                          ? AppColors.primaryColor
+                          : AppColors.blackColor.withOpacity(0.3),
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
+                      color: isNextPage.value
+                          ? AppColors.primaryColor
+                          : AppColors.blackColor.withOpacity(0.3),
+                    ),
+                  )
+                ],
+              ),
+            ],
           );
         default:
           return const SizedBox();
       }
     }
 
+    var isFocus = useState(false);
+    focusNode.addListener(() {
+      if (focusNode.hasFocus) {
+        isFocus.value = true;
+        return;
+      }
+      isFocus.value = false;
+    });
+
     return Scaffold(
-      appBar: AppBar(),
       body: SafeArea(
         child: Padding(
-          padding:
-              const EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 30),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          padding: const EdgeInsets.only(bottom: 30),
+          child: Stack(
+            fit: StackFit.expand,
             children: [
-              const SizedBox(height: 100),
-              widgetByStep(),
-              const Spacer(),
-              Button(
-                disabled:
-                    !name.value.isNotEmpty || !validateNickname(name.value),
-                text: isNextPage.value ? '확인' : '다음',
-                onPress: handleNext,
-              ),
+              step.value == StepType.tutorial
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 85),
+                      child: widgetByStep(),
+                    )
+                  : AnimatedPadding(
+                      padding: EdgeInsets.only(
+                          left: 20,
+                          right: 20,
+                          top: focusNode.hasFocus ? 0 : 85),
+                      duration: const Duration(milliseconds: 180),
+                      curve: Curves.easeIn,
+                      child: SingleChildScrollView(
+                        physics: const ClampingScrollPhysics(),
+                        child: widgetByStep(),
+                      ),
+                    ),
+              Positioned(
+                bottom: 0,
+                left: 20,
+                width: MediaQuery.of(context).size.width - 40,
+                child: Button(
+                  disabled:
+                      !name.value.isNotEmpty || !validateNickname(name.value),
+                  text: isNextPage.value ? '확인' : '다음',
+                  onPress: handleNext,
+                ),
+              )
             ],
           ),
         ),

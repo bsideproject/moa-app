@@ -74,6 +74,7 @@ class _EditTextState extends State<EditText> {
         autocorrect: widget.autocorrect,
         style: const Hash1TextStyle().merge(widget.style),
         decoration: InputDecoration(
+          counterText: '',
           suffixIcon: widget.suffixIcon,
           contentPadding: const EdgeInsets.symmetric(
             vertical: 16,
@@ -86,14 +87,13 @@ class _EditTextState extends State<EditText> {
           enabledBorder: OutlineInputBorder(
             borderRadius: widget.borderRadius ?? BorderRadius.circular(100),
             borderSide: const BorderSide(
-              color: AppColors.whiteColor,
+              color: Colors.transparent,
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: widget.borderRadius ?? BorderRadius.circular(100),
             borderSide: const BorderSide(
-              width: 0,
-              color: AppColors.whiteColor,
+              color: Colors.transparent,
             ),
           ),
         ),

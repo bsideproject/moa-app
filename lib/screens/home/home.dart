@@ -80,40 +80,12 @@ class Home extends HookConsumerWidget {
                           if (snapshot.hasData) {
                             return Container(
                               margin: const EdgeInsets.only(right: 150),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      text: '안녕하세요 ${userInfo?.nickname}님!',
-                                      style: const H1TextStyle(),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        '#카페러버',
-                                        style: const Body1TextStyle().merge(
-                                          TextStyle(
-                                            color: AppColors.blackColor
-                                                .withOpacity(0.3),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 5),
-                                      Text(
-                                        '#취미부자',
-                                        style: const Body1TextStyle().merge(
-                                          TextStyle(
-                                            color: AppColors.blackColor
-                                                .withOpacity(0.3),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                              alignment: Alignment.centerLeft,
+                              child: RichText(
+                                text: TextSpan(
+                                  text: '안녕하세요,\n${userInfo?.nickname}님!',
+                                  style: const H1TextStyle(),
+                                ),
                               ),
                             );
                           }

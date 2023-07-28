@@ -22,12 +22,11 @@ class TokenRepository implements ITokenRepository {
   @override
   Future<void> setToken({required String token}) async {
     try {
-      if (kIsWeb) {
-        SharedPreferences prefs = await _prefs;
-        await prefs.setString('token', token);
-        return;
+      SharedPreferences prefs = await _prefs;
+      await prefs.setString('token', token);
+      if (!kIsWeb) {
+        await storage.write(key: key, value: token);
       }
-      await storage.write(key: key, value: token);
     } catch (e) {
       logger.d(e);
     }
@@ -36,12 +35,11 @@ class TokenRepository implements ITokenRepository {
   @override
   Future<void> removeToken() async {
     try {
-      if (kIsWeb) {
-        SharedPreferences prefs = await _prefs;
-        await prefs.remove('token');
-        return;
+      SharedPreferences prefs = await _prefs;
+      await prefs.remove('token');
+      if (!kIsWeb) {
+        await storage.delete(key: key);
       }
-      await storage.delete(key: key);
     } catch (e) {
       logger.d(e);
     }
@@ -50,18 +48,22 @@ class TokenRepository implements ITokenRepository {
   @override
   Future<Object?> getToken() async {
     try {
-      if (kIsWeb) {
-        SharedPreferences prefs = await _prefs;
-        var token = prefs.getString('token');
+      SharedPreferences prefs = await _prefs;
+      var token = prefs.getString('token');
+      if (token == null) {
+        FlutterSecureStorage storage = const FlutterSecureStorage();
+        await storage.deleteAll();
+
+        return null;
+      }
+
+      if (!kIsWeb) {
+        var token = await storage.read(key: key);
         return token;
       }
-      var token = await storage.read(key: key);
       return token;
 
       // todo refresh token 구현
-      // var testAdminToken =
-      //     'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpZCI6IjUyNThkYzA3LWMxMDItNDg0NC04Yzk1LWM3ODY4YWYzY2M2YiIsImV4cCI6MzE1NTY5MDY3NDE4NDI3MiwiaWF0IjoxNjg3NzQzOTUzfQ.rZtKeIymBoDd9Z2iLMEuQrTUeCmgZyKwlYU5imxVdpo';
-      // return testAdminToken;
     } catch (e) {
       logger.d(e);
     }
