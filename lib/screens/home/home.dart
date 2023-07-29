@@ -10,7 +10,7 @@ import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/models/folder_model.dart';
 import 'package:moa_app/models/user_model.dart';
 import 'package:moa_app/providers/button_click_provider.dart';
-import 'package:moa_app/repositories/folder_repository.dart';
+import 'package:moa_app/providers/folder_view_provider.dart';
 import 'package:moa_app/repositories/hashtag_repository.dart';
 import 'package:moa_app/repositories/user_repository.dart';
 import 'package:moa_app/screens/home/tab_view/folder_tab_view.dart';
@@ -23,6 +23,8 @@ class Home extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var folderAsync = ref.watch(folderViewProvider.notifier);
+    // var hashtagAsync = ref.watch(hashtagViewProvider.notifier);
     var isClick = ref.watch(buttonClickStateProvider);
     var tabIdx = useState(0);
     TabController tabController = useTabController(initialLength: 2);
@@ -109,11 +111,13 @@ class Home extends HookConsumerWidget {
                 controller: tabController,
                 children: <Widget>[
                   TabViewItem(
+                    futureList: folderAsync.future,
                     uniqueKey: const Key('folderTab'),
                     folderCount: folderCount,
                     contentCount: contentCount,
                   ),
                   TabViewItem(
+                    futureList: Future.value([]),
                     uniqueKey: const Key('hashtagTab'),
                     folderCount: folderCount,
                     contentCount: contentCount,
@@ -263,8 +267,9 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
 }
 
 class FolderSource extends LoadingMoreBase<FolderModel> {
-  FolderSource({required this.folderCount});
+  FolderSource({required this.folderCount, required this.futureList});
   final ValueNotifier<int> folderCount;
+  final Future<List<FolderModel>> futureList;
   var count = 0;
   int pageIndex = 1;
   bool _hasMore = false;
@@ -288,9 +293,8 @@ class FolderSource extends LoadingMoreBase<FolderModel> {
   @override
   Future<bool> loadData([bool isloadMoreAction = false]) async {
     bool isSuccess = false;
-
     try {
-      var list = await FolderRepository.instance.getFolderList();
+      var list = await futureList;
       folderCount.value = list.length;
 
       for (FolderModel folder in list) {
@@ -362,10 +366,12 @@ class TabViewItem extends StatefulWidget {
   const TabViewItem({
     super.key,
     required this.uniqueKey,
+    required this.futureList,
     required this.folderCount,
     required this.contentCount,
   });
   final Key uniqueKey;
+  final Future<List<FolderModel>> futureList;
   final ValueNotifier<int> folderCount;
   final ValueNotifier<int> contentCount;
 
@@ -376,6 +382,7 @@ class TabViewItem extends StatefulWidget {
 class TabViewItemState extends State<TabViewItem>
     with AutomaticKeepAliveClientMixin {
   late final FolderSource folderSource = FolderSource(
+    futureList: widget.futureList,
     folderCount: widget.folderCount,
   );
   late final HashtagSource hashtagSource = HashtagSource(

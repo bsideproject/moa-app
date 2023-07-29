@@ -13,12 +13,14 @@ class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
     this.isBottomBorderDisplayed = true,
     this.bottomBorderStyle = const BottomBorderStyle(),
+    this.onPressedBack,
   }) : super(key: key);
   final String? title;
   final Widget? leading;
   final List<Widget>? actions;
   final bool isBottomBorderDisplayed;
   final BottomBorderStyle bottomBorderStyle;
+  final VoidCallback? onPressedBack;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,10 @@ class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
           image: Assets.arrowBack,
         ),
         onPressed: () {
+          if (onPressedBack != null) {
+            onPressedBack!();
+            return;
+          }
           context.pop();
         },
       ),

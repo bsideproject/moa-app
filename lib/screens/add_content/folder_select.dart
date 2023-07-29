@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
@@ -13,12 +13,23 @@ import 'package:moa_app/widgets/alert_dialog.dart';
 import 'package:moa_app/widgets/app_bar.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
 
-class FolderSelect extends HookWidget {
-  const FolderSelect({super.key});
+class FolderSelect extends HookConsumerWidget {
+  const FolderSelect({super.key, this.receiveUrl});
+  final String? receiveUrl;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     void selectFolder({required int index, required String folderId}) {
+      if (receiveUrl != null) {
+        context.push(
+          '${GoRoutes.folderSelect.fullPath}/${GoRoutes.addLinkContent.path}',
+          extra: AddLinkContent(
+            folderId: folderId,
+            receiveUrl: receiveUrl,
+          ),
+        );
+        return;
+      }
       alertDialog.select(
         context,
         title: '어떤 취향으로 저장하시겠어요?',
@@ -41,9 +52,17 @@ class FolderSelect extends HookWidget {
     }
 
     return Scaffold(
-      appBar: const AppBarBack(
+      appBar: AppBarBack(
         isBottomBorderDisplayed: false,
         title: '폴더 선택',
+        onPressedBack: () {
+          /// 외부 공유url 받아서 들어온 경우 뒤로가기가 안되기 떄문에 홈으로 이동
+          if (receiveUrl != null) {
+            context.go('/');
+            return;
+          }
+          context.pop();
+        },
       ),
       body: SafeArea(
         child: Padding(

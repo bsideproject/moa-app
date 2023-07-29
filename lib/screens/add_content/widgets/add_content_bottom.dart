@@ -21,6 +21,8 @@ class AddContentBottom extends HookWidget {
     required this.tagError,
     required this.onChangedMemo,
     required this.memo,
+    this.titleController,
+    this.memoController,
   });
   final ValueChanged<String> onChangedTitle;
   final ValueNotifier<String> titleError;
@@ -32,6 +34,8 @@ class AddContentBottom extends HookWidget {
   final ValueNotifier<String> tagError;
   final ValueChanged<String> onChangedMemo;
   final ValueNotifier<String> memo;
+  final TextEditingController? titleController;
+  final TextEditingController? memoController;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +49,7 @@ class AddContentBottom extends HookWidget {
         ),
         const SizedBox(height: 5),
         EditText(
+          controller: titleController,
           maxLength: 30,
           onChanged: onChangedTitle,
           hintText: '1~30자로 입력할 수 있어요.',
@@ -161,6 +166,7 @@ class AddContentBottom extends HookWidget {
         Stack(
           children: [
             EditText(
+              controller: memoController,
               maxLines: 4,
               maxLength: 100,
               height: 135,
