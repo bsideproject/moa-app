@@ -253,13 +253,20 @@ final routeProvider = Provider(
             name: GoRoutes.folderSelect.name,
             path: GoRoutes.folderSelect.fullPath,
             pageBuilder: (context, state) {
-              var folderSelect = state.extra as FolderSelect;
+              if (state.extra != null) {
+                var folderSelect = state.extra as FolderSelect;
+                return buildIosPageTransitions<void>(
+                  context: context,
+                  state: state,
+                  child: FolderSelect(
+                    receiveUrl: folderSelect.receiveUrl,
+                  ),
+                );
+              }
               return buildIosPageTransitions<void>(
                 context: context,
                 state: state,
-                child: FolderSelect(
-                  receiveUrl: folderSelect.receiveUrl,
-                ),
+                child: const FolderSelect(),
               );
             },
             routes: [
@@ -288,6 +295,7 @@ final routeProvider = Provider(
                     state: state,
                     child: AddLinkContent(
                       folderId: addLink.folderId,
+                      receiveUrl: addLink.receiveUrl,
                     ),
                   );
                 },

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:html/parser.dart' as html_parser;
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
@@ -22,15 +24,17 @@ import 'package:moa_app/widgets/moa_widgets/error_text.dart';
 import 'package:moa_app/widgets/snackbar.dart';
 
 class AddLinkContent extends HookConsumerWidget {
-  const AddLinkContent({super.key, required this.folderId});
+  const AddLinkContent({super.key, required this.folderId, this.receiveUrl});
   final String folderId;
+  final String? receiveUrl;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var hashtagAsync = ref.watch(hashtagProvider);
     var picker = ImagePicker();
     var imageFile = useState<XFile?>(null);
-    var defaultImageList = useState<List<String>>([]);
+    var receiveImage = useState<String?>(null);
+    // var defaultImageList = useState<List<String>>([]);
 
     var title = useState('');
     var link = useState('');
@@ -43,6 +47,10 @@ class AddLinkContent extends HookConsumerWidget {
     var titleError = useState('');
     var tagError = useState('');
     var linkError = useState('');
+
+    var linkController = useTextEditingController();
+    var titleController = useTextEditingController();
+    var memoController = useTextEditingController();
 
     void pickImage({required ImageSource source, required int index}) async {
       if (index == 0) {
@@ -161,6 +169,40 @@ class AddLinkContent extends HookConsumerWidget {
       return null;
     }, [hashtagAsync.isLoading]);
 
+    /// 공유로 받아온 url 크롤링
+    void getCrawlUrl(String url) async {
+      await http.get(Uri.parse(url)).then((response) {
+        var document = html_parser.parse(response.body);
+
+        var crawledTitle = document.head
+            ?.querySelector("meta[property='og:title']")
+            ?.attributes['content'];
+        var crawledDescription = document.head
+            ?.querySelector("meta[property='og:description']")
+            ?.attributes['content'];
+        var crawledImage = document.head
+            ?.querySelector("meta[property='og:image']")
+            ?.attributes['content'];
+
+        link.value = url;
+        linkController.text = url;
+        title.value = crawledTitle ?? '';
+        titleController.text = crawledTitle ?? '';
+        memo.value = crawledDescription ?? '';
+        memoController.text = crawledDescription ?? '';
+        receiveImage.value = crawledImage ?? '';
+        // imageFile.value = XFile(crawledImage ?? '');
+      });
+    }
+
+    useEffect(() {
+      if (receiveUrl != null) {
+        // todo 유효한 url인지 체크필요
+        getCrawlUrl(receiveUrl!);
+      }
+      return null;
+    }, []);
+
     return Scaffold(
       appBar: const AppBarBack(
         isBottomBorderDisplayed: false,
@@ -183,7 +225,7 @@ class AddLinkContent extends HookConsumerWidget {
                   ),
                   const SizedBox(height: 5),
                   EditText(
-                    maxLength: 30,
+                    controller: linkController,
                     onChanged: onChangedLink,
                     hintText: '링크를 입력하세요.',
                   ),
@@ -191,26 +233,20 @@ class AddLinkContent extends HookConsumerWidget {
                     errorText: linkError.value,
                     errorValidate: linkError.value.isNotEmpty,
                   ),
-                  Row(
-                    children: [
-                      const Spacer(),
-                      Text(
-                        '${link.value.length}/30',
-                        style: TextStyle(
-                            color: link.value.length >= 30
-                                ? AppColors.danger
-                                : AppColors.blackColor.withOpacity(0.3),
-                            fontSize: 12,
-                            fontFamily: FontConstants.pretendard),
-                      ),
-                    ],
-                  ),
                   const SizedBox(height: 25),
                   const Text(
                     '대표 이미지',
                     style: H4TextStyle(),
                   ),
                   const SizedBox(height: 5),
+                  // receiveImage.value != null
+                  //     ? Image.network(
+                  //         receiveImage.value!,
+                  //         width: double.infinity,
+                  //         height: 200,
+                  //         fit: BoxFit.cover,
+                  //       )
+                  //     : const SizedBox(),
                   SizedBox(
                     width: double.infinity,
                     height: 85,
@@ -274,6 +310,8 @@ class AddLinkContent extends HookConsumerWidget {
                   ),
                   AddContentBottom(
                     onChangedTitle: onChangedTitle,
+                    titleController: titleController,
+                    memoController: memoController,
                     addHashtag: addHashtag,
                     hashtagController: hashtagController,
                     onChangedHashtag: onChangedHashtag,

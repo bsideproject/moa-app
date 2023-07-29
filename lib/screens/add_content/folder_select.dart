@@ -20,6 +20,16 @@ class FolderSelect extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     void selectFolder({required int index, required String folderId}) {
+      if (receiveUrl != null) {
+        context.push(
+          '${GoRoutes.folderSelect.fullPath}/${GoRoutes.addLinkContent.path}',
+          extra: AddLinkContent(
+            folderId: folderId,
+            receiveUrl: receiveUrl,
+          ),
+        );
+        return;
+      }
       alertDialog.select(
         context,
         title: '어떤 취향으로 저장하시겠어요?',
@@ -42,9 +52,17 @@ class FolderSelect extends HookConsumerWidget {
     }
 
     return Scaffold(
-      appBar: const AppBarBack(
+      appBar: AppBarBack(
         isBottomBorderDisplayed: false,
         title: '폴더 선택',
+        onPressedBack: () {
+          /// 외부 공유url 받아서 들어온 경우 뒤로가기가 안되기 떄문에 홈으로 이동
+          if (receiveUrl != null) {
+            context.go('/');
+            return;
+          }
+          context.pop();
+        },
       ),
       body: SafeArea(
         child: Padding(
