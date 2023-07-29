@@ -1,14 +1,15 @@
 import 'dart:async';
 
 import 'package:moa_app/models/folder_model.dart';
+import 'package:moa_app/repositories/folder_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'item_provider.g.dart';
+part 'folder_view_provider.g.dart';
 
 /// AsyncNotifierProvider
 // @Riverpod(keepAlive: true)
 @riverpod
-class AsyncItems extends _$AsyncItems {
+class FolderView extends _$FolderView {
   Future<List<FolderModel>> fetchItem() async {
     // get the [KeepAliveLink]
     var link = ref.keepAlive();
@@ -32,45 +33,12 @@ class AsyncItems extends _$AsyncItems {
       timer?.cancel();
     });
 
-    // var itemData = ItemRepository.instance.getItems();
-    return [];
+    var data = FolderRepository.instance.getFolderList();
+    return data;
   }
 
   @override
   Future<List<FolderModel>> build() async {
     return fetchItem();
-  }
-
-  Future<void> addItems({
-    required FolderModel item,
-  }) async {
-    state = const AsyncValue.loading();
-
-    state = await AsyncValue.guard(() async {
-      // await ItemRepository.instance.addItem(item: item);
-      return fetchItem();
-    });
-  }
-
-  Future<void> removeItems({
-    required int id,
-  }) async {
-    state = const AsyncValue.loading();
-
-    state = await AsyncValue.guard(() async {
-      // await ItemRepository.instance.removeItem(id: id);
-      return fetchItem();
-    });
-  }
-
-  Future<void> updateItems({
-    required FolderModel item,
-  }) async {
-    state = const AsyncValue.loading();
-
-    state = await AsyncValue.guard(() async {
-      // await ItemRepository.instance.updateItem(item: item);
-      return fetchItem();
-    });
   }
 }

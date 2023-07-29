@@ -129,15 +129,9 @@ final routeProvider = Provider(
           return GoRoutes.greeting.fullPath;
         }
         var token = ref.read(tokenStateProvider);
-        if (token.value != null) {
-          var user = await UserRepository.instance.getUser();
 
-          /// 닉네임 설정 안했으면 닉네임 설정 페이지로
-          if (user?.nickname == null) {
-            return GoRoutes.inputName.fullPath;
-          }
-        }
-        if (token.value == null &&
+        var user = await UserRepository.instance.getUser();
+        if ((token.value == null || user?.nickname == null) &&
             state.matchedLocation != GoRoutes.signIn.fullPath) {
           return GoRoutes.signIn.fullPath;
         }
@@ -258,11 +252,16 @@ final routeProvider = Provider(
             parentNavigatorKey: _rootNavigatorKey,
             name: GoRoutes.folderSelect.name,
             path: GoRoutes.folderSelect.fullPath,
-            pageBuilder: (context, state) => buildIosPageTransitions<void>(
-                  context: context,
-                  state: state,
-                  child: const FolderSelect(),
+            pageBuilder: (context, state) {
+              var folderSelect = state.extra as FolderSelect;
+              return buildIosPageTransitions<void>(
+                context: context,
+                state: state,
+                child: FolderSelect(
+                  receiveUrl: folderSelect.receiveUrl,
                 ),
+              );
+            },
             routes: [
               GoRoute(
                   parentNavigatorKey: _rootNavigatorKey,

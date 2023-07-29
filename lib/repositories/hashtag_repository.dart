@@ -26,6 +26,7 @@ class HashtagRepository implements IHashtagRepository {
       ),
     );
 
+    print('res.data:${res.data}');
     return (
       res.data['data']
           .map<ContentModel>((e) => ContentModel.fromJson(e))

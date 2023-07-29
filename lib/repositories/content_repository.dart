@@ -26,6 +26,7 @@ class ContentRepository implements IContentRepository {
     var token = await TokenRepository.instance.getToken();
 
     if (contentType.name == AddContentType.image.name) {
+      /// 이미지 방식
       await dio.post(
         '/api/v1/content/create',
         data: {
@@ -47,6 +48,24 @@ class ContentRepository implements IContentRepository {
 
     if (contentType.name == AddContentType.url.name) {
       /// 링크 방식
+      await dio.post(
+        '/api/v1/content/create',
+        data: {
+          'folderId': content.contentId,
+          'name': content.contentName,
+          'memo': content.contentMemo,
+          'hashTag': hashTagStringList,
+          'contentType': 'URL',
+          'url': content.contentUrl,
+          // 'originalFileName': '${content.contentName}.png',
+          // 'image': 'image/png:base64:${content.contentImageUrl}',
+        },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
     }
   }
 }

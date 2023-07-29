@@ -10,6 +10,7 @@ class ContentModel with _$ContentModel {
   factory ContentModel({
     required String contentId,
     required String contentImageUrl,
+    String? contentUrl,
     String? contentMemo,
     required String contentName,
     required List<HashtagModel> contentHashTag,
