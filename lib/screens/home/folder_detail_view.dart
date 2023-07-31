@@ -36,42 +36,6 @@ class FolderDetailView extends HookWidget {
       );
     }
 
-    // void showFolderDetailModal() {
-    //   General.instance.showBottomSheet(
-    //     context: context,
-    //     padding:
-    //         const EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 30),
-    //     height: 225,
-    //     child: Column(
-    //       children: [
-    //         BottomModalItem(
-    //           icon: Assets.share,
-    //           title: '공유하기',
-    //           onPressed: () {
-    //             // Todo url링크복사후 snackbar 알림
-    //           },
-    //         ),
-    //         BottomModalItem(
-    //           icon: Assets.pencil,
-    //           title: '폴더명 수정',
-    //           onPressed: () {
-    //             context.pop();
-    //             showEditFolderModal();
-    //           },
-    //         ),
-    //         BottomModalItem(
-    //           icon: Assets.trash,
-    //           title: '폴더 삭제',
-    //           onPressed: () {
-    //             context.pop();
-    //             showDeleteFolderModal();
-    //           },
-    //         ),
-    //       ],
-    //     ),
-    //   );
-    // }
-
     return Scaffold(
       appBar: AppBarBack(
         isBottomBorderDisplayed: false,
@@ -108,6 +72,7 @@ class FolderDetailView extends HookWidget {
                     child: DynamicGridList(
                       contentList: contentList,
                       pullToRefresh: pullToRefresh,
+                      folderName: folderName,
                     ),
                   ),
                 ],

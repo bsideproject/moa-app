@@ -4,6 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/models/content_model.dart';
+import 'package:moa_app/screens/home/content_view.dart';
 import 'package:moa_app/screens/home/widgets/hashtag_card.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/utils/utils.dart';
@@ -13,9 +14,11 @@ class DynamicGridList extends HookWidget {
     super.key,
     required this.contentList,
     required this.pullToRefresh,
+    required this.folderName,
   });
   final List<ContentModel> contentList;
   final Future<void> Function() pullToRefresh;
+  final String folderName;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +26,7 @@ class DynamicGridList extends HookWidget {
     void goContentView(String contentId) {
       context.push(
         '${GoRoutes.content.fullPath}/$contentId',
+        extra: ContentView(id: contentId, folderName: folderName),
       );
     }
 
@@ -39,10 +43,11 @@ class DynamicGridList extends HookWidget {
             ...List.generate(
               contentList.length,
               (i) => FutureBuilder(
-                  future:
-                      getImageSize(imageURL: contentList[i].contentImageUrl),
-                  builder: (context, snapshot) {
-                    var rate = snapshot.data ?? 1.4;
+                future: getImageSize(imageURL: contentList[i].contentImageUrl),
+                builder: (context, snapshot) {
+                  var rate = snapshot.data ?? 1.4;
+
+                  if (snapshot.hasData) {
                     return StaggeredGridTile.count(
                       crossAxisCellCount: 1,
                       mainAxisCellCount: rate,
@@ -59,99 +64,11 @@ class DynamicGridList extends HookWidget {
                         ),
                       ),
                     );
-                  }),
+                  }
+                  return const SizedBox();
+                },
+              ),
             )
-
-            // StaggeredGridTile.count(
-            //   crossAxisCellCount: 1,
-            //   mainAxisCellCount: 1.4,
-            //   child: ContentCard(
-            //     onPressContent: () => goContentView('0'),
-            //     onPressHashtag: (tag) {},
-            //     content: ContentModel(
-            //       contentId: '1',
-            //       imageUrl: 'https://picsum.photos/200/300',
-            //       name: 'title',
-            //       memo: 'description',
-            //       hashTags: [
-            //         HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
-            //         HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            // StaggeredGridTile.count(
-            //   crossAxisCellCount: 1,
-            //   mainAxisCellCount: 1.9,
-            //   child: ContentCard(
-            //     onPressContent: () => goContentView('1'),
-            //     onPressHashtag: (tag) {},
-            //     content: ContentModel(
-            //       contentId: '1',
-            //       imageUrl: 'https://picsum.photos/200/300',
-            //       name: 'title',
-            //       memo: 'description',
-            //       hashTags: [
-            //         HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
-            //         HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            // StaggeredGridTile.count(
-            //   crossAxisCellCount: 1,
-            //   mainAxisCellCount: 1.9,
-            //   child: ContentCard(
-            //     onPressContent: () => goContentView('2'),
-            //     onPressHashtag: (tag) {},
-            //     content: ContentModel(
-            //       contentId: '1',
-            //       imageUrl: 'https://picsum.photos/200/300',
-            //       name: 'title',
-            //       memo: 'description',
-            //       hashTags: [
-            //         HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
-            //         HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            // StaggeredGridTile.count(
-            //   crossAxisCellCount: 1,
-            //   mainAxisCellCount: 1,
-            //   child: ContentCard(
-            //     onPressContent: () => goContentView('3'),
-            //     onPressHashtag: (tag) {},
-            //     content: ContentModel(
-            //       contentId: '1',
-            //       imageUrl: 'https://picsum.photos/200/300',
-            //       name: 'title',
-            //       memo: 'description',
-            //       hashTags: [
-            //         HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
-            //         HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            // StaggeredGridTile.count(
-            //   crossAxisCellCount: 1,
-            //   mainAxisCellCount: 1.4,
-            //   child: ContentCard(
-            //     onPressContent: () => goContentView('4'),
-            //     onPressHashtag: (tag) {},
-            //     content: ContentModel(
-            //       contentId: '1',
-            //       imageUrl: 'https://picsum.photos/200/300',
-            //       name: 'title',
-            //       memo: 'description',
-            //       hashTags: [
-            //         HashtagModel(tagId: '0', hashTag: '#자취레시피', count: 1),
-            //         HashtagModel(tagId: '1', hashTag: '#꿀팁', count: 1),
-            //       ],
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),

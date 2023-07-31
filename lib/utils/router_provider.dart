@@ -203,11 +203,13 @@ final routeProvider = Provider(
                   name: GoRoutes.content.name,
                   path: '${GoRoutes.content.path}/:id',
                   pageBuilder: (context, state) {
+                    var contentView = state.extra as ContentView;
                     return buildIosPageTransitions<void>(
                       context: context,
                       state: state,
                       child: ContentView(
-                        id: state.pathParameters['id']!,
+                        id: contentView.id,
+                        folderName: contentView.folderName,
                       ),
                     );
                   },
