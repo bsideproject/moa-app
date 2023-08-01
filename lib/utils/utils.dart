@@ -12,6 +12,9 @@ Future<String> xFileToBase64(XFile xFile) async {
 }
 
 Future<num> getImageSize({required String imageURL}) async {
+  if (imageURL == '') {
+    return 1.4;
+  }
   Image image = Image.network(imageURL);
   Completer<ui.Image> completer = Completer<ui.Image>();
   image.image.resolve(const ImageConfiguration()).addListener(
@@ -24,7 +27,7 @@ Future<num> getImageSize({required String imageURL}) async {
       ? 1.9
       : imageRate < 1.2
           ? 1.2
-          : imageRate;
+          : 1.4;
 }
 
 bool isStringEncoded(String value) {

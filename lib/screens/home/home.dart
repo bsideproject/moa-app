@@ -11,6 +11,7 @@ import 'package:moa_app/models/folder_model.dart';
 import 'package:moa_app/models/user_model.dart';
 import 'package:moa_app/providers/button_click_provider.dart';
 import 'package:moa_app/providers/folder_view_provider.dart';
+import 'package:moa_app/providers/hashtag_view_provider.dart';
 import 'package:moa_app/repositories/hashtag_repository.dart';
 import 'package:moa_app/repositories/user_repository.dart';
 import 'package:moa_app/screens/home/tab_view/folder_tab_view.dart';
@@ -24,7 +25,7 @@ class Home extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var folderAsync = ref.watch(folderViewProvider.notifier);
-    // var hashtagAsync = ref.watch(hashtagViewProvider.notifier);
+    var hashtagAsync = ref.watch(hashtagViewProvider.notifier);
     var isClick = ref.watch(buttonClickStateProvider);
     var tabIdx = useState(0);
     TabController tabController = useTabController(initialLength: 2);
@@ -117,7 +118,7 @@ class Home extends HookConsumerWidget {
                     contentCount: contentCount,
                   ),
                   TabViewItem(
-                    futureList: Future.value([]),
+                    futureList: hashtagAsync,
                     uniqueKey: const Key('hashtagTab'),
                     folderCount: folderCount,
                     contentCount: contentCount,
@@ -318,18 +319,22 @@ class FolderSource extends LoadingMoreBase<FolderModel> {
 }
 
 class HashtagSource extends LoadingMoreBase<ContentModel> {
-  HashtagSource({required this.contentCount});
+  HashtagSource({required this.contentCount, required this.futureList});
   final ValueNotifier<int> contentCount;
+  final HashtagView futureList;
   int pageIndex = 1;
+  int size = 10;
   bool _hasMore = true;
   bool forceRefresh = false;
+
+  var contentList = <ContentModel>[];
   @override
-  bool get hasMore => (_hasMore && length < 30) || forceRefresh;
+  bool get hasMore => _hasMore || forceRefresh;
 
   @override
   Future<bool> refresh([bool notifyStateChanged = false]) async {
     _hasMore = true;
-    pageIndex = 1;
+    pageIndex = 0;
     //force to refresh list when you don't want clear list before request
     //for the case, if your list already has 20 items.
     forceRefresh = !notifyStateChanged;
@@ -343,14 +348,19 @@ class HashtagSource extends LoadingMoreBase<ContentModel> {
     bool isSuccess = false;
 
     try {
-      var (list, count) = await HashtagRepository.instance.getHashtagView();
-      contentCount.value = count;
-      for (ContentModel content in list) {
+      var (list, _) = await HashtagRepository.instance
+          .getHashtagView(page: pageIndex, size: 10);
+      if (contentList.length < 10) {
+        var (_, count) = await futureList.future;
+        contentCount.value = count;
+      }
+      contentList.addAll(list);
+      for (ContentModel content in contentList) {
         if (!contains(content) && _hasMore) {
           add(content);
         }
       }
-      _hasMore = false;
+      _hasMore = list.length >= 10;
       pageIndex++;
       isSuccess = true;
     } catch (e) {
@@ -371,7 +381,7 @@ class TabViewItem extends StatefulWidget {
     required this.contentCount,
   });
   final Key uniqueKey;
-  final Future<List<FolderModel>> futureList;
+  final dynamic futureList;
   final ValueNotifier<int> folderCount;
   final ValueNotifier<int> contentCount;
 
@@ -382,10 +392,11 @@ class TabViewItem extends StatefulWidget {
 class TabViewItemState extends State<TabViewItem>
     with AutomaticKeepAliveClientMixin {
   late final FolderSource folderSource = FolderSource(
-    futureList: widget.futureList,
+    futureList: widget.futureList as Future<List<FolderModel>>,
     folderCount: widget.folderCount,
   );
   late final HashtagSource hashtagSource = HashtagSource(
+    futureList: widget.futureList as HashtagView,
     contentCount: widget.contentCount,
   );
 

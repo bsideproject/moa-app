@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/screens/home/content_view.dart';
-import 'package:moa_app/screens/home/widgets/hashtag_card.dart';
+import 'package:moa_app/screens/home/widgets/content_card.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/utils/utils.dart';
 
@@ -35,7 +35,7 @@ class DynamicGridList extends HookWidget {
       child: SingleChildScrollView(
         padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
         child: StaggeredGrid.count(
-          axisDirection: AxisDirection.down, // <----- Add this line
+          axisDirection: AxisDirection.down,
           crossAxisCount: width > Breakpoints.md ? 3 : 2,
           crossAxisSpacing: 10,
           mainAxisSpacing: 20,

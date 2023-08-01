@@ -26,7 +26,6 @@ class Hashtag extends _$Hashtag {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      // await ItemRepository.instance.addItem(item: item);
       var data = await fetchItem();
       return [hashtag, ...data];
     });

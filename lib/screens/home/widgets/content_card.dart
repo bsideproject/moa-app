@@ -30,17 +30,19 @@ class ContentCard extends HookWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.moaOpacity30),
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    image: NetworkImage(content.contentImageUrl),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
+              child: content.contentImageUrl == ''
+                  ? const Text('이미지 없을 경우 모아 이미지로 대체')
+                  : Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.moaOpacity30),
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                          image: NetworkImage(content.contentImageUrl),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
             ),
             const SizedBox(height: 10),
             Text(

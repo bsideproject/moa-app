@@ -6,10 +6,12 @@ import 'package:loading_more_list/loading_more_list.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/content_model.dart';
+import 'package:moa_app/screens/home/content_view.dart';
 import 'package:moa_app/screens/home/home.dart';
-import 'package:moa_app/screens/home/widgets/hashtag_card.dart';
+import 'package:moa_app/screens/home/widgets/content_card.dart';
 import 'package:moa_app/screens/home/widgets/type_header.dart';
 import 'package:moa_app/utils/router_provider.dart';
+import 'package:moa_app/utils/utils.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
@@ -32,6 +34,7 @@ class HashtagTabView extends HookWidget {
     void goContentView(String contentId) {
       context.go(
         '${GoRoutes.content.fullPath}/$contentId',
+        extra: ContentView(id: contentId, folderName: 'folderName'),
       );
     }
 
@@ -74,15 +77,18 @@ class HashtagTabView extends HookWidget {
             uniqueKey: uniqueKey,
             child: RefreshIndicator(
               onRefresh: () {
-                // return source.refresh(true);
-                return Future.delayed(
-                  const Duration(seconds: 2),
-                  () {
-                    source.refresh(false);
-                  },
-                );
+                return source.refresh(true);
               },
               child: LoadingMoreList<ContentModel>(
+                onScrollNotification: (notification) {
+                  if (notification is ScrollEndNotification) {
+                    if (notification.metrics.pixels ==
+                        notification.metrics.maxScrollExtent) {
+                      source.loadMore();
+                    }
+                  }
+                  return false;
+                },
                 ListConfig<ContentModel>(
                   addRepaintBoundaries: true,
                   padding: const EdgeInsets.only(
@@ -94,7 +100,6 @@ class HashtagTabView extends HookWidget {
                   extendedListDelegate:
                       SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
                     crossAxisCount: width > Breakpoints.md ? 3 : 2,
-                    // crossAxisCount: 2,
                     mainAxisSpacing: 20.0,
                     crossAxisSpacing: 12.0,
                   ),
@@ -107,14 +112,24 @@ class HashtagTabView extends HookWidget {
                     return const SizedBox();
                   },
                   itemBuilder: (c, item, index) {
-                    // todo image width, height 계선해서 aspectRatio 주기
-                    return AspectRatio(
-                      aspectRatio: 0.7,
-                      child: ContentCard(
-                        onPressContent: () => goContentView('5'),
-                        content: item,
-                        onPressHashtag: (tag) => goHashtagDetailView(tag),
-                      ),
+                    return FutureBuilder(
+                      future: getImageSize(imageURL: item.contentImageUrl),
+                      builder: (context, snapshot) {
+                        var rate = snapshot.data?.toDouble() ?? 1.4;
+
+                        return AspectRatio(
+                          aspectRatio: rate == 1.9
+                              ? 0.6
+                              : rate == 1.2
+                                  ? 0.95
+                                  : 0.7,
+                          child: ContentCard(
+                            onPressContent: () => goContentView(item.contentId),
+                            content: item,
+                            onPressHashtag: (tag) => goHashtagDetailView(tag),
+                          ),
+                        );
+                      },
                     );
                   },
                 ),

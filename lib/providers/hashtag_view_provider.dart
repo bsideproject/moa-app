@@ -33,12 +33,27 @@ class HashtagView extends _$HashtagView {
       timer?.cancel();
     });
 
-    var data = HashtagRepository.instance.getHashtagView();
+    var data = await HashtagRepository.instance.getHashtagView();
     return data;
   }
 
   @override
   Future<(List<ContentModel>, int)> build() async {
     return fetchItem();
+  }
+
+  Future<(List<ContentModel>, int)> loadMoreData({
+    int? page,
+    int? size,
+  }) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      var data = await HashtagRepository.instance
+          .getHashtagView(page: page, size: size);
+      return data;
+    });
+
+    return state.value!;
   }
 }
