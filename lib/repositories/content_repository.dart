@@ -77,23 +77,27 @@ class ContentRepository implements IContentRepository {
   Future<ContentModel> getContentDetail({required String contentId}) async {
     var token = await TokenRepository.instance.getToken();
 
-    var res = await dio.get(
-      '/api/v1/content/detail/view?contentId=$contentId',
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
-      ),
-    );
+    try {
+      var res = await dio.get(
+        '/api/v1/content/detail/view?contentId=$contentId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
 
-    /// 백엔드 ContentModel 타입이 통일되지 않았으므로 임시로 타입 변환해서 넣어줌
-    return ContentModel.fromJson({
-      'contentId': '0',
-      'contentImageUrl': res.data['data']['thumbnail_image_url'],
-      'contentUrl': res.data['data']['contentUrl'] ?? '',
-      'contentMemo': res.data['data']['memo'],
-      'contentName': res.data['data']['contentName'],
-      'contentHashTag': res.data['data']['hashTags'],
-    });
+      /// 백엔드 ContentModel 타입이 통일되지 않았으므로 임시로 타입 변환해서 넣어줌
+      return ContentModel.fromJson({
+        'contentId': '0',
+        'contentImageUrl': res.data['data']['thumbnail_image_url'],
+        'contentUrl': res.data['data']['contentUrl'] ?? '',
+        'contentMemo': res.data['data']['memo'],
+        'contentName': res.data['data']['contentName'],
+        'contentHashTag': res.data['data']['hashTags'],
+      });
+    } catch (e) {
+      rethrow;
+    }
   }
 }

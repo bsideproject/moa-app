@@ -4,7 +4,7 @@ class LoadingIndicator extends StatelessWidget {
   const LoadingIndicator({
     Key? key,
     this.size,
-    this.strokeWidth = 2,
+    this.strokeWidth = 3,
   }) : super(key: key);
 
   final double? size;

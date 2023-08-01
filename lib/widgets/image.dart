@@ -62,7 +62,7 @@ class ImageOnNetwork extends HookWidget {
                 borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
                 image: DecorationImage(
                   image: imageProvider,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                 ),
               ),
             ),

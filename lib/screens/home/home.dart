@@ -112,13 +112,13 @@ class Home extends HookConsumerWidget {
                 controller: tabController,
                 children: <Widget>[
                   TabViewItem(
-                    futureList: folderAsync.future,
+                    folderList: folderAsync,
                     uniqueKey: const Key('folderTab'),
                     folderCount: folderCount,
                     contentCount: contentCount,
                   ),
                   TabViewItem(
-                    futureList: hashtagAsync,
+                    hashList: hashtagAsync,
                     uniqueKey: const Key('hashtagTab'),
                     folderCount: folderCount,
                     contentCount: contentCount,
@@ -270,7 +270,7 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
 class FolderSource extends LoadingMoreBase<FolderModel> {
   FolderSource({required this.folderCount, required this.futureList});
   final ValueNotifier<int> folderCount;
-  final Future<List<FolderModel>> futureList;
+  final FolderView? futureList;
   var count = 0;
   int pageIndex = 1;
   bool _hasMore = false;
@@ -295,7 +295,7 @@ class FolderSource extends LoadingMoreBase<FolderModel> {
   Future<bool> loadData([bool isloadMoreAction = false]) async {
     bool isSuccess = false;
     try {
-      var list = await futureList;
+      var list = await futureList!.future;
       folderCount.value = list.length;
 
       for (FolderModel folder in list) {
@@ -321,7 +321,7 @@ class FolderSource extends LoadingMoreBase<FolderModel> {
 class HashtagSource extends LoadingMoreBase<ContentModel> {
   HashtagSource({required this.contentCount, required this.futureList});
   final ValueNotifier<int> contentCount;
-  final HashtagView futureList;
+  final HashtagView? futureList;
   int pageIndex = 1;
   int size = 10;
   bool _hasMore = true;
@@ -349,7 +349,7 @@ class HashtagSource extends LoadingMoreBase<ContentModel> {
 
     try {
       if (pageIndex == 0) {
-        var (initialList, count) = await futureList.future;
+        var (initialList, count) = await futureList!.future;
         // 최초렌더시 컨텐츠 전체 개수 가져오기
         contentCount.value = count;
 
@@ -381,12 +381,14 @@ class TabViewItem extends StatefulWidget {
   const TabViewItem({
     super.key,
     required this.uniqueKey,
-    required this.futureList,
+    this.folderList,
+    this.hashList,
     required this.folderCount,
     required this.contentCount,
   });
   final Key uniqueKey;
-  final dynamic futureList;
+  final FolderView? folderList;
+  final HashtagView? hashList;
   final ValueNotifier<int> folderCount;
   final ValueNotifier<int> contentCount;
 
@@ -397,11 +399,11 @@ class TabViewItem extends StatefulWidget {
 class TabViewItemState extends State<TabViewItem>
     with AutomaticKeepAliveClientMixin {
   late final FolderSource folderSource = FolderSource(
-    futureList: widget.futureList as Future<List<FolderModel>>,
+    futureList: widget.folderList,
     folderCount: widget.folderCount,
   );
   late final HashtagSource hashtagSource = HashtagSource(
-    futureList: widget.futureList as HashtagView,
+    futureList: widget.hashList,
     contentCount: widget.contentCount,
   );
 

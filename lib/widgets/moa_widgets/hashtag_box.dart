@@ -18,7 +18,7 @@ class HashtagBox extends StatelessWidget {
             isSelected ? AppColors.primaryColor : AppColors.hashtagBackground,
       ),
       child: Text(
-        hashtag,
+        '#$hashtag',
         style: TextStyle(
           color: isSelected
               ? AppColors.whiteColor
