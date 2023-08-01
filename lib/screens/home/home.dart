@@ -366,7 +366,6 @@ class HashtagSource extends LoadingMoreBase<ContentModel> {
           add(content);
         }
       }
-
       pageIndex++;
       isSuccess = true;
     } catch (e) {
