@@ -155,6 +155,7 @@ class HashtagDetailView extends HookWidget {
                 child: DynamicGridList(
               contentList: const [],
               pullToRefresh: pullToRefresh,
+              folderName: 'folderName',
             )),
           ],
         ),
