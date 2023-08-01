@@ -348,19 +348,25 @@ class HashtagSource extends LoadingMoreBase<ContentModel> {
     bool isSuccess = false;
 
     try {
-      var (list, _) = await HashtagRepository.instance
-          .getHashtagView(page: pageIndex, size: 10);
-      if (contentList.length < 10) {
-        var (_, count) = await futureList.future;
+      if (pageIndex == 0) {
+        var (initialList, count) = await futureList.future;
+        // 최초렌더시 컨텐츠 전체 개수 가져오기
         contentCount.value = count;
+
+        contentList.addAll(initialList);
+      } else {
+        var (list, _) = await HashtagRepository.instance
+            .getHashtagView(page: pageIndex, size: size);
+        contentList.addAll(list);
+        _hasMore = list.length >= 10;
       }
-      contentList.addAll(list);
+
       for (ContentModel content in contentList) {
         if (!contains(content) && _hasMore) {
           add(content);
         }
       }
-      _hasMore = list.length >= 10;
+
       pageIndex++;
       isSuccess = true;
     } catch (e) {
