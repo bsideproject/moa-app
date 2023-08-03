@@ -53,6 +53,10 @@ class FolderList extends HookWidget {
                         width: 32,
                         height: 32,
                         child: ImageOnNetwork(
+                          border: Border.all(
+                            color: AppColors.moaOpacity30,
+                            width: 0.1,
+                          ),
                           imageURL: folder.thumbnailUrl ?? '',
                           borderRadius: 30,
                         ),

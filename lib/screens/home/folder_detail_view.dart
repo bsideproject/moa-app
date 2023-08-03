@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/content_model.dart';
@@ -13,12 +13,12 @@ import 'package:moa_app/widgets/moa_widgets/dynamic_grid_list.dart';
 import 'package:moa_app/widgets/moa_widgets/empty_content.dart';
 import 'package:share_plus/share_plus.dart';
 
-class FolderDetailView extends HookWidget {
+class FolderDetailView extends HookConsumerWidget {
   const FolderDetailView({super.key, required this.folderName});
   final String folderName;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Future<void> pullToRefresh() async {
       return Future.delayed(
         const Duration(seconds: 2),
@@ -57,9 +57,11 @@ class FolderDetailView extends HookWidget {
             .getFolderDetailList(folderName: folderName),
         builder: (context, snapshot) {
           var contentList = snapshot.data ?? [];
+
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const LoadingIndicator();
           }
+
           if (snapshot.hasData && contentList.isNotEmpty) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),

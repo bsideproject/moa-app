@@ -33,12 +33,72 @@ class FolderView extends _$FolderView {
       timer?.cancel();
     });
 
-    var data = FolderRepository.instance.getFolderList();
+    var data = await FolderRepository.instance.getFolderList();
     return data;
   }
 
   @override
   Future<List<FolderModel>> build() async {
     return fetchItem();
+  }
+
+  Future<void> addFolder({
+    required String folderName,
+  }) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      // await FolderRepository.instance.addFolder(folderName: folderName);
+      return fetchItem();
+      // return [
+      //   ...state.value ?? [],
+      //   FolderModel(
+      //     folderId: 0,
+      //     folderName: folderName,
+      //     count: 0,
+      //   )
+      // ];
+    });
+  }
+
+  Future<void> editFolderName({
+    required String currentFolderName,
+    required String editFolderName,
+  }) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      // await FolderRepository.instance.editFolderName(
+      //   currentFolderName: currentFolderName,
+      //   editFolderName: editFolderName,
+      // );
+      return fetchItem();
+
+      // return state.value?.map((element) {
+      //       if (element.folderName == currentFolderName) {
+      //         return FolderModel(
+      //           folderId: element.folderId,
+      //           folderName: editFolderName,
+      //           count: element.count,
+      //         );
+      //       }
+      //       return element;
+      //     }).toList() ??
+      //     [];
+    });
+  }
+
+  Future<void> deleteFolder({required String folderName}) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      // await FolderRepository.instance.deleteFolder(folderName: folderName);
+
+      return fetchItem();
+      // return state.value
+      //         ?.where((element) => element.folderName != folderName)
+      //         .toList() ??
+      //     [];
+    });
   }
 }

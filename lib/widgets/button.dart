@@ -186,10 +186,14 @@ class CircleIconButton extends StatefulWidget {
     required this.onPressed,
     required this.icon,
     this.backgroundColor = AppColors.textInputBackground,
+    this.width,
+    this.height,
   });
   final Function() onPressed;
   final Widget icon;
   final Color? backgroundColor;
+  final double? width;
+  final double? height;
 
   @override
   State<CircleIconButton> createState() => _CircleIconButtonState();
@@ -198,23 +202,27 @@ class CircleIconButton extends StatefulWidget {
 class _CircleIconButtonState extends State<CircleIconButton> {
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: widget.onPressed,
-      style: ButtonStyle(
-        padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
-        elevation: MaterialStateProperty.all(0),
-        shape: MaterialStateProperty.all(const CircleBorder()),
-        backgroundColor: MaterialStateProperty.all(
-          widget.backgroundColor,
-        ), // <-- Button color
-        overlayColor: MaterialStateProperty.resolveWith<Color?>((states) {
-          if (states.contains(MaterialState.pressed)) {
-            return Colors.black.withOpacity(0.1);
-          }
-          return null; // <-- Splash color
-        }),
+    return SizedBox(
+      width: widget.width,
+      height: widget.height,
+      child: ElevatedButton(
+        onPressed: widget.onPressed,
+        style: ButtonStyle(
+          padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
+          elevation: MaterialStateProperty.all(0),
+          shape: MaterialStateProperty.all(const CircleBorder()),
+          backgroundColor: MaterialStateProperty.all(
+            widget.backgroundColor,
+          ), // <-- Button color
+          overlayColor: MaterialStateProperty.resolveWith<Color?>((states) {
+            if (states.contains(MaterialState.pressed)) {
+              return Colors.black.withOpacity(0.1);
+            }
+            return null; // <-- Splash color
+          }),
+        ),
+        child: widget.icon,
       ),
-      child: widget.icon,
     );
   }
 }

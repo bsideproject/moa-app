@@ -21,6 +21,7 @@ class AppColors {
   static const Color subTitle = Color(0xFF818181);
   static const Color grayBackground = Color(0xFFD9D9D9);
   static const Color hashtagBackground = Color(0xFFF8F8F8);
+  static const Color contentHashtagBackground = Color(0xFFFFF3EE);
 
   ///font color
   static const Color fontTitleColor = Color(0xff000000);

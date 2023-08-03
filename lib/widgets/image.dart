@@ -38,14 +38,18 @@ class ImageOnNetwork extends HookWidget {
   const ImageOnNetwork({
     super.key,
     required this.imageURL,
-    this.borderRadius = 25,
+    this.borderRadius = 10,
     this.height = 50,
     this.width = 50,
+    this.border,
+    this.fit = BoxFit.cover,
   });
   final String imageURL;
   final double width;
   final double height;
   final double borderRadius;
+  final Border? border;
+  final BoxFit? fit;
 
   @override
   Widget build(BuildContext context) {
@@ -53,16 +57,18 @@ class ImageOnNetwork extends HookWidget {
         ? ImagePlaceholder(
             borderRadius: borderRadius, width: width, height: height)
         : CachedNetworkImage(
-            placeholder: (context, url) => const ImagePlaceholder(),
+            placeholder: (context, url) => ImagePlaceholder(
+                borderRadius: borderRadius, width: width, height: height),
             imageUrl: imageURL,
             imageBuilder: (context, imageProvider) => Container(
               height: height,
               width: width,
               decoration: BoxDecoration(
+                border: border ?? Border.all(color: AppColors.moaOpacity30),
                 borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
                 image: DecorationImage(
                   image: imageProvider,
-                  fit: BoxFit.cover,
+                  fit: fit,
                 ),
               ),
             ),
