@@ -48,15 +48,7 @@ class EditContent extends HookWidget {
     }
 
     void editContent() async {
-      var error = await onPressed();
-      errorText.value = error ?? '';
-      if (controller.text.isEmpty || error != '') {
-        return;
-      }
-
-      if (context.mounted) {
-        context.pop();
-      }
+      onPressed();
       emptyContentName();
     }
 
@@ -67,7 +59,7 @@ class EditContent extends HookWidget {
 
     return Container(
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppColors.whiteColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),

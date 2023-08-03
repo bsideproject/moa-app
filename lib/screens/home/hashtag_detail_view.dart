@@ -21,7 +21,6 @@ class HashtagDetailView extends HookWidget {
   Widget build(BuildContext context) {
     var gridController = useScrollController();
     var gridPageNum = useState(20);
-
     var updatedHashtagName = useState('');
 
     Future<void> pullToRefresh() async {
@@ -30,10 +29,6 @@ class HashtagDetailView extends HookWidget {
         () {},
       );
     }
-
-    // Future<void> getHashtagDetailViewList() async {
-    //     hashTagList.value = await
-    // }
 
     void showEditHashtagModal() {
       General.instance.showBottomSheet(

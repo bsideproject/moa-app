@@ -11,7 +11,7 @@ Future<String> xFileToBase64(XFile xFile) async {
   return base64Encode(bytes);
 }
 
-Future<num> getImageSize({required String imageURL}) async {
+Future<double> getImageSize({required String imageURL}) async {
   if (imageURL == '') {
     return 1.4;
   }
@@ -24,10 +24,10 @@ Future<num> getImageSize({required String imageURL}) async {
   var imageRate = size.width / size.height;
 
   return imageRate > 1.9
-      ? 1.9
+      ? 1
       : imageRate < 1.2
-          ? 1.2
-          : 1.4;
+          ? 0.8
+          : 1.2;
 }
 
 bool isStringEncoded(String value) {

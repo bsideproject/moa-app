@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
+import 'package:moa_app/providers/folder_view_provider.dart';
 import 'package:moa_app/repositories/folder_repository.dart';
 import 'package:moa_app/utils/logger.dart';
 import 'package:moa_app/widgets/button.dart';
@@ -12,12 +14,13 @@ import 'package:moa_app/widgets/snackbar.dart';
 
 final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-class AddFolder extends HookWidget {
+class AddFolder extends HookConsumerWidget {
   const AddFolder({super.key, required this.onRefresh});
   final Function onRefresh;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var folderAsync = ref.watch(folderViewProvider);
     var folderNameController = useTextEditingController();
     var folderName = useState('');
     var loading = useState(false);
@@ -32,6 +35,10 @@ class AddFolder extends HookWidget {
     }
 
     void addFolder() async {
+      if ((folderAsync.value?.length ?? 0) >= 20) {
+        snackbar.alert(context, '폴더는 최대 20개까지 추가할 수 있습니다.');
+        return;
+      }
       if (folderNameController.text.isEmpty) {
         return;
       }
@@ -39,6 +46,9 @@ class AddFolder extends HookWidget {
       try {
         loading.value = true;
         await FolderRepository.instance.addFolder(folderName: folderName.value);
+        await ref
+            .read(folderViewProvider.notifier)
+            .addFolder(folderName: folderName.value);
         onRefresh();
         if (context.mounted) {
           context.pop();
@@ -46,6 +56,8 @@ class AddFolder extends HookWidget {
         emptyFolderName();
       } catch (e) {
         logger.d(e);
+
+        // todo 폴더 중복 에러 처리
         snackbar.alert(context, '폴더 추가에 실패했습니다.');
       } finally {
         loading.value = false;

@@ -26,6 +26,7 @@ class Home extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var folderAsync = ref.watch(folderViewProvider.notifier);
     var hashtagAsync = ref.watch(hashtagViewProvider.notifier);
+
     var isClick = ref.watch(buttonClickStateProvider);
     var tabIdx = useState(0);
     TabController tabController = useTabController(initialLength: 2);
@@ -42,7 +43,7 @@ class Home extends HookConsumerWidget {
           tabIdx.value = 1;
         }
       });
-      return null;
+      return () => tabController.dispose();
     }, []);
 
     return Container(
@@ -52,6 +53,7 @@ class Home extends HookConsumerWidget {
           body: DefaultTabController(
             length: 2,
             child: ExtendedNestedScrollView(
+              physics: const BouncingScrollPhysics(),
               onlyOneScrollInBody: true,
               floatHeaderSlivers: true,
               headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -108,7 +110,6 @@ class Home extends HookConsumerWidget {
                 ];
               },
               body: TabBarView(
-                // physics: const NeverScrollableScrollPhysics(),
                 controller: tabController,
                 children: <Widget>[
                   TabViewItem(
@@ -268,9 +269,14 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
 }
 
 class FolderSource extends LoadingMoreBase<FolderModel> {
-  FolderSource({required this.folderCount, required this.futureList});
+  FolderSource(
+      {required this.folderCount,
+      required this.futureList,
+      required this.context});
   final ValueNotifier<int> folderCount;
   final FolderView? futureList;
+  final BuildContext context;
+
   var count = 0;
   int pageIndex = 1;
   bool _hasMore = false;
@@ -309,10 +315,9 @@ class FolderSource extends LoadingMoreBase<FolderModel> {
       _hasMore = false;
       pageIndex++;
       isSuccess = true;
-    } catch (e) {
+    } catch (error) {
       isSuccess = false;
-
-      logger.d(e);
+      logger.d(error);
     }
     return isSuccess;
   }
@@ -322,6 +327,7 @@ class HashtagSource extends LoadingMoreBase<ContentModel> {
   HashtagSource({required this.contentCount, required this.futureList});
   final ValueNotifier<int> contentCount;
   final HashtagView? futureList;
+
   int pageIndex = 1;
   int size = 10;
   bool _hasMore = true;
@@ -346,7 +352,6 @@ class HashtagSource extends LoadingMoreBase<ContentModel> {
   @override
   Future<bool> loadData([bool isloadMoreAction = false]) async {
     bool isSuccess = false;
-
     try {
       if (pageIndex == 0) {
         var (initialList, count) = await futureList!.future;
@@ -399,6 +404,7 @@ class TabViewItem extends StatefulWidget {
 class TabViewItemState extends State<TabViewItem>
     with AutomaticKeepAliveClientMixin {
   late final FolderSource folderSource = FolderSource(
+    context: context,
     futureList: widget.folderList,
     folderCount: widget.folderCount,
   );

@@ -130,9 +130,12 @@ final routeProvider = Provider(
         }
         var token = ref.read(tokenStateProvider);
 
+        if (token.value == null) {
+          return GoRoutes.signIn.fullPath;
+        }
+
         var user = await UserRepository.instance.getUser();
-        if ((token.value == null || user?.nickname == null) &&
-            state.matchedLocation != GoRoutes.signIn.fullPath) {
+        if (user?.nickname == null) {
           return GoRoutes.signIn.fullPath;
         }
         return null;

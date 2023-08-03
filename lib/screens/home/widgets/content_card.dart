@@ -9,11 +9,9 @@ class ContentCard extends HookWidget {
   const ContentCard({
     super.key,
     required this.content,
-    required this.onPressContent,
     required this.onPressHashtag,
   });
   final ContentModel content;
-  final Function() onPressContent;
   final Function(String) onPressHashtag;
 
   @override
@@ -22,62 +20,45 @@ class ContentCard extends HookWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
       ),
-      child: InkWell(
-        splashColor: Colors.transparent,
-        borderRadius: BorderRadius.circular(10),
-        onTap: onPressContent,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: content.contentImageUrl == ''
-                  ? const Text('이미지 없을 경우 모아 이미지로 대체')
-                  : Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.moaOpacity30),
-                        borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                          image: NetworkImage(content.contentImageUrl),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 10),
+          Text(
+            content.contentName,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              fontFamily: FontConstants.pretendard,
             ),
-            const SizedBox(height: 10),
-            Text(
-              content.contentName,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                fontFamily: FontConstants.pretendard,
-              ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            content.contentMemo ?? '',
+            style: const TextStyle(
+              fontSize: 14,
+              fontFamily: FontConstants.pretendard,
+              color: AppColors.moaDescription,
             ),
-            const SizedBox(height: 2),
-            Text(
-              content.contentMemo ?? '',
-              style: const TextStyle(
-                fontSize: 14,
-                fontFamily: FontConstants.pretendard,
-                color: AppColors.moaDescription,
-              ),
-            ),
-            const SizedBox(height: 15),
-            Row(
+          ),
+          SizedBox(height: content.contentMemo == null ? 0 : 15),
+          SizedBox(
+            width: double.infinity,
+            child: Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 ...content.contentHashTag.map((tag) {
-                  return Container(
-                    margin: const EdgeInsets.only(right: 5),
-                    child: HashtagButton(
-                      onPress: () => onPressHashtag(tag.hashTag),
-                      text: tag.hashTag,
-                    ),
+                  return HashtagButton(
+                    onPress: () => onPressHashtag(tag.hashTag),
+                    text: tag.hashTag,
                   );
                 }).toList(),
               ],
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }

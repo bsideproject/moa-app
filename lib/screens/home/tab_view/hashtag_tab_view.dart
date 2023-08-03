@@ -1,22 +1,23 @@
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:loading_more_list/loading_more_list.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/content_model.dart';
+import 'package:moa_app/providers/hashtag_view_provider.dart';
 import 'package:moa_app/screens/home/content_view.dart';
 import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/screens/home/widgets/content_card.dart';
 import 'package:moa_app/screens/home/widgets/type_header.dart';
 import 'package:moa_app/utils/router_provider.dart';
-import 'package:moa_app/utils/utils.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
+import 'package:moa_app/widgets/image.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
 
-class HashtagTabView extends HookWidget {
+class HashtagTabView extends HookConsumerWidget {
   const HashtagTabView({
     super.key,
     required this.uniqueKey,
@@ -28,7 +29,7 @@ class HashtagTabView extends HookWidget {
   final int count;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     var width = MediaQuery.of(context).size.width;
 
     void goContentView(String contentId) {
@@ -39,9 +40,9 @@ class HashtagTabView extends HookWidget {
     }
 
     void goHashtagDetailView(String tag) {
-      context.go(
-        '${GoRoutes.hashtag.fullPath}/$tag',
-      );
+      // context.go(
+      //   '${GoRoutes.hashtag.fullPath}/$tag',
+      // );
     }
 
     return Column(
@@ -77,6 +78,7 @@ class HashtagTabView extends HookWidget {
             uniqueKey: uniqueKey,
             child: RefreshIndicator(
               onRefresh: () {
+                ref.refresh(hashtagViewProvider).value;
                 return source.refresh(true);
               },
               child: LoadingMoreList<ContentModel>(
@@ -90,6 +92,7 @@ class HashtagTabView extends HookWidget {
                   return false;
                 },
                 ListConfig<ContentModel>(
+                  physics: const BouncingScrollPhysics(),
                   addRepaintBoundaries: true,
                   padding: const EdgeInsets.only(
                     left: 15,
@@ -112,24 +115,26 @@ class HashtagTabView extends HookWidget {
                     return const SizedBox();
                   },
                   itemBuilder: (c, item, index) {
-                    return FutureBuilder(
-                      future: getImageSize(imageURL: item.contentImageUrl),
-                      builder: (context, snapshot) {
-                        var rate = snapshot.data?.toDouble() ?? 1.4;
-
-                        return AspectRatio(
-                          aspectRatio: rate == 1.9
-                              ? 0.6
-                              : rate == 1.2
-                                  ? 0.95
-                                  : 0.7,
-                          child: ContentCard(
-                            onPressContent: () => goContentView(item.contentId),
+                    return InkWell(
+                      splashColor: Colors.transparent,
+                      borderRadius: BorderRadius.circular(10),
+                      onTap: () => goContentView(item.contentId),
+                      child: Column(
+                        children: [
+                          item.contentImageUrl == ''
+                              ? const Text('이미지 없을 경우 모아 이미지로 대체')
+                              : AspectRatio(
+                                  aspectRatio: 1,
+                                  child: ImageOnNetwork(
+                                    imageURL: item.contentImageUrl,
+                                  ),
+                                ),
+                          ContentCard(
                             content: item,
                             onPressHashtag: (tag) => goHashtagDetailView(tag),
                           ),
-                        );
-                      },
+                        ],
+                      ),
                     );
                   },
                 ),

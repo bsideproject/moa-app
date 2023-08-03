@@ -15,6 +15,16 @@ abstract class IContentRepository {
   Future<ContentModel> getContentDetail({
     required String contentId,
   });
+
+  Future<void> editContent({
+    required String contentId,
+    required ContentModel content,
+    required String hashTagStringList,
+  });
+
+  Future<void> deleteContent({
+    required String contentId,
+  });
 }
 
 class ContentRepository implements IContentRepository {
@@ -99,5 +109,31 @@ class ContentRepository implements IContentRepository {
     } catch (e) {
       rethrow;
     }
+  }
+
+  @override
+  Future<void> editContent({
+    required String contentId,
+    required ContentModel content,
+    required String hashTagStringList,
+  }) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteContent({required String contentId}) async {
+    var token = await TokenRepository.instance.getToken();
+
+    await dio.post(
+      '/api/v1/content/delete',
+      data: {
+        'ids': [contentId]
+      },
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
   }
 }

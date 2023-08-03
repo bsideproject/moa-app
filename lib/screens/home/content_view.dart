@@ -7,6 +7,7 @@ import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/providers/content_detail_provider.dart';
+import 'package:moa_app/providers/hashtag_view_provider.dart';
 import 'package:moa_app/screens/home/edit_content_view.dart';
 import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/widgets/app_bar.dart';
@@ -27,6 +28,7 @@ class ContentView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var contentNotifier = ref.watch(contentDetailProvider.notifier);
+    var hashtagAsync = ref.watch(hashtagViewProvider.notifier);
     var isEditMode = useState(false);
 
     void pressGoToLink() {}
@@ -37,7 +39,12 @@ class ContentView extends HookConsumerWidget {
       isEditMode.value = true;
     }
 
-    void deleteContent() {}
+    void deleteContent() async {
+      await hashtagAsync.deleteContent(contentId: id);
+      if (context.mounted) {
+        context.pop();
+      }
+    }
 
     void showContentModal() {
       General.instance.showBottomSheet(
@@ -149,6 +156,7 @@ class ContentView extends HookConsumerWidget {
                                       ),
                                       child: ImageOnNetwork(
                                         imageURL: content.contentImageUrl,
+                                        fit: BoxFit.contain,
                                       ),
                                     ),
                                   ),
