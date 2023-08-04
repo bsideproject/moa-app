@@ -23,6 +23,7 @@ class EditText extends StatefulWidget {
     this.obscureText = false,
     this.enableSuggestions = true,
     this.autocorrect = true,
+    this.width,
     this.height,
     this.borderRadius,
     this.suffixIcon,
@@ -31,6 +32,7 @@ class EditText extends StatefulWidget {
     this.maxLines = 1,
     this.maxLength,
     this.padding,
+    this.inputPadding,
   });
 
   final void Function(String) onChanged;
@@ -42,6 +44,7 @@ class EditText extends StatefulWidget {
   final bool autocorrect;
   final InputDecoration? decoration;
   final TextInputType? keyboardType;
+  final double? width;
   final double? height;
   final BorderRadius? borderRadius;
   final Widget? suffixIcon;
@@ -50,6 +53,7 @@ class EditText extends StatefulWidget {
   final int? maxLines;
   final int? maxLength;
   final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? inputPadding;
 
   @override
   State<EditText> createState() => _EditTextState();
@@ -65,6 +69,7 @@ class _EditTextState extends State<EditText> {
         color: widget.backgroundColor,
       ),
       height: widget.height,
+      width: widget.width,
       child: TextField(
         maxLength: widget.maxLength,
         maxLines: widget.maxLines,
@@ -76,13 +81,16 @@ class _EditTextState extends State<EditText> {
         decoration: InputDecoration(
           counterText: '',
           suffixIcon: widget.suffixIcon,
-          contentPadding: const EdgeInsets.symmetric(
-            vertical: 16,
-            horizontal: 20,
-          ),
+          contentPadding: widget.inputPadding ??
+              const EdgeInsets.symmetric(
+                vertical: 16,
+                horizontal: 20,
+              ),
           hintText: widget.hintText,
           hintStyle: const Hash1TextStyle()
-              .merge(TextStyle(color: AppColors.moaOpacity30))
+              .merge(TextStyle(
+                color: AppColors.moaOpacity30,
+              ))
               .merge(widget.style),
           enabledBorder: OutlineInputBorder(
             borderRadius: widget.borderRadius ?? BorderRadius.circular(100),

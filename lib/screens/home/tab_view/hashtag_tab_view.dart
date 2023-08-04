@@ -32,10 +32,11 @@ class HashtagTabView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var width = MediaQuery.of(context).size.width;
 
-    void goContentView(String contentId) {
+    void goContentView(
+        {required String contentId, required String folderName}) {
       context.go(
         '${GoRoutes.content.fullPath}/$contentId',
-        extra: ContentView(id: contentId, folderName: 'folderName'),
+        extra: ContentView(id: contentId, folderName: folderName),
       );
     }
 
@@ -118,7 +119,10 @@ class HashtagTabView extends HookConsumerWidget {
                     return InkWell(
                       splashColor: Colors.transparent,
                       borderRadius: BorderRadius.circular(10),
-                      onTap: () => goContentView(item.contentId),
+                      onTap: () => goContentView(
+                        contentId: item.contentId,
+                        folderName: item.folderName ?? '',
+                      ),
                       child: Column(
                         children: [
                           item.contentImageUrl == ''

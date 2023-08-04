@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -7,7 +8,6 @@ import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/providers/folder_view_provider.dart';
 import 'package:moa_app/repositories/folder_repository.dart';
-import 'package:moa_app/utils/logger.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/snackbar.dart';
@@ -54,11 +54,11 @@ class AddFolder extends HookConsumerWidget {
           context.pop();
         }
         emptyFolderName();
-      } catch (e) {
-        logger.d(e);
-
-        // todo 폴더 중복 에러 처리
-        snackbar.alert(context, '폴더 추가에 실패했습니다.');
+      } on DioError catch (e) {
+        // 폴더 중복 에러 처리
+        if (e.response?.statusCode == 409) {
+          snackbar.alert(context, '이미 가지고 있는 폴더이름이에요');
+        }
       } finally {
         loading.value = false;
       }

@@ -13,6 +13,7 @@ class ContentModel with _$ContentModel {
     String? contentUrl,
     String? contentMemo,
     required String contentName,
+    String? folderName,
     required List<HashtagModel> contentHashTag,
   }) = _ContentModel;
 

@@ -36,6 +36,7 @@ class AddImageContent extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var hashtagAsync = ref.watch(hashtagProvider);
+    var loading = useState(false);
     var picker = ImagePicker();
     var imageFile = useState<XFile?>(null);
 
@@ -76,6 +77,7 @@ class AddImageContent extends HookConsumerWidget {
         return;
       }
 
+      loading.value = true;
       String base64Image = await xFileToBase64(imageFile.value!);
 
       var selectTag = [];
@@ -108,6 +110,8 @@ class AddImageContent extends HookConsumerWidget {
           snackbar.alert(
               context, kDebugMode ? error.toString() : '오류가 발생했어요 다시 시도해주세요.');
         }
+      } finally {
+        loading.value = false;
       }
     }
 
@@ -233,8 +237,7 @@ class AddImageContent extends HookConsumerWidget {
             bottom: 0,
             width: MediaQuery.of(context).size.width,
             child: Button(
-              // loading: loading.value,
-              // disabled: disableSubmit.value,
+              loading: loading.value,
               onPress: completeAddContent,
               backgroundColor: AppColors.primaryColor,
               text: '완료',

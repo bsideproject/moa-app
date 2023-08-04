@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/constants/color_constants.dart';
@@ -11,6 +12,8 @@ import 'package:moa_app/repositories/user_repository.dart';
 import 'package:moa_app/screens/setting/widgets/setting_list_tile.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/alert_dialog.dart';
+import 'package:moa_app/widgets/button.dart';
+import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/snackbar.dart';
 
 class Setting extends HookConsumerWidget {
@@ -18,10 +21,13 @@ class Setting extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var editNicknameMode = useState(false);
+    var nickname = useState('');
+    var loading = useState(false);
     void pickImage() {}
 
     void goEditMyType() {
-      context.go('${GoRoutes.setting.fullPath}/${GoRoutes.editContent.path}');
+      // context.go('${GoRoutes.setting.fullPath}/${GoRoutes.editContent.path}');
     }
 
     void handleContact() {}
@@ -69,6 +75,23 @@ class Setting extends HookConsumerWidget {
       );
     }
 
+    void changeEditNicknameMode() {
+      editNicknameMode.value = true;
+    }
+
+    void editMyNickname({required String nickname}) async {
+      try {
+        loading.value = true;
+        await UserRepository.instance.editUserNickname(nickname: nickname);
+      } catch (e) {
+        snackbar.alert(
+            context, kDebugMode ? e.toString() : '닉네임 수정에 실패했습니다 다시 시도해주세요.');
+      } finally {
+        editNicknameMode.value = false;
+        loading.value = false;
+      }
+    }
+
     return Scaffold(
       body: SafeArea(
         child: SizedBox(
@@ -107,42 +130,66 @@ class Setting extends HookConsumerWidget {
                         children: [
                           GestureDetector(
                             onTap: pickImage,
-                            child: Stack(
-                              children: [
-                                Image(
-                                  width: 78,
-                                  height: 69,
-                                  image: Assets.profileMoa,
-                                ),
-                                // const CircleAvatar(
-                                //   radius: 50,
-                                //   backgroundImage: NetworkImage(
-                                //       'https://avatars.githubusercontent.com/u/73378472?v=4'),
-                                // ),
-                                // Positioned(
-                                //   bottom: 0,
-                                //   right: 0,
-                                //   child: Container(
-                                //     width: 25,
-                                //     height: 25,
-                                //     padding: const EdgeInsets.all(6),
-                                //     decoration: BoxDecoration(
-                                //       color: AppColors.blackColor,
-                                //       borderRadius: BorderRadius.circular(50),
-                                //     ),
-                                //     child: Image(
-                                //       color: AppColors.whiteColor,
-                                //       image: Assets.pencil,
-                                //     ),
-                                //   ),
-                                // )
-                              ],
+                            child: Image(
+                              width: 78,
+                              height: 69,
+                              image: Assets.profileMoa,
                             ),
                           ),
                           const SizedBox(height: 5),
-                          Text(
-                            userInfo?.nickname ?? '',
-                            style: const H2TextStyle(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(width: 20),
+                              editNicknameMode.value
+                                  ? EditText(
+                                      inputPadding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      width: 100,
+                                      height: 30,
+                                      onChanged: (value) {
+                                        nickname.value = value;
+                                      },
+                                      hintText: userInfo?.nickname,
+                                    )
+                                  : InkWell(
+                                      overlayColor: MaterialStateProperty.all(
+                                          AppColors.whiteColor),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(2)),
+                                      onTap: changeEditNicknameMode,
+                                      child: Text(
+                                        userInfo?.nickname ?? '',
+                                        style: const H2TextStyle(),
+                                      ),
+                                    ),
+                              const SizedBox(width: 5),
+                              editNicknameMode.value
+                                  ? Button(
+                                      loading: loading.value,
+                                      disabled: nickname.value == '',
+                                      onPress: () => editMyNickname(
+                                        nickname: nickname.value,
+                                      ),
+                                      height: 30,
+                                      text: '수정',
+                                      textStyle: const Body1TextStyle(),
+                                    )
+                                  : CircleIconButton(
+                                      width: 20,
+                                      height: 20,
+                                      splashColor:
+                                          AppColors.whiteColor.withOpacity(0.3),
+                                      backgroundColor: AppColors.blackColor,
+                                      onPressed: changeEditNicknameMode,
+                                      icon: Image(
+                                        width: 10,
+                                        height: 10,
+                                        color: AppColors.whiteColor,
+                                        image: Assets.pencil,
+                                      ),
+                                    ),
+                            ],
                           ),
                           const SizedBox(height: 3),
                           Text(

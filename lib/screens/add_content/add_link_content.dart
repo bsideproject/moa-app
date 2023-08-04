@@ -31,6 +31,7 @@ class AddLinkContent extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var hashtagAsync = ref.watch(hashtagProvider);
+    var loading = useState(false);
     var picker = ImagePicker();
     var imageFile = useState<XFile?>(null);
     var receiveImage = useState<String?>(null);
@@ -87,6 +88,7 @@ class AddLinkContent extends HookConsumerWidget {
 
         return;
       }
+      loading.value = true;
 
       String base64Image = await xFileToBase64(imageFile.value!);
 
@@ -121,6 +123,8 @@ class AddLinkContent extends HookConsumerWidget {
           snackbar.alert(
               context, kDebugMode ? error.toString() : '오류가 발생했어요 다시 시도해주세요.');
         }
+      } finally {
+        loading.value = false;
       }
     }
 
@@ -239,14 +243,6 @@ class AddLinkContent extends HookConsumerWidget {
                     style: H4TextStyle(),
                   ),
                   const SizedBox(height: 5),
-                  // receiveImage.value != null
-                  //     ? Image.network(
-                  //         receiveImage.value!,
-                  //         width: double.infinity,
-                  //         height: 200,
-                  //         fit: BoxFit.cover,
-                  //       )
-                  //     : const SizedBox(),
                   SizedBox(
                     width: double.infinity,
                     height: 85,
@@ -268,8 +264,6 @@ class AddLinkContent extends HookConsumerWidget {
                                 width: 0.5,
                               ),
                               color: AppColors.textInputBackground,
-                              // image:
-                              //     DecorationImage(image: Assets.moaBannerImg),
                             ),
                             child: InkWell(
                               onTap: () => pickImage(
@@ -330,8 +324,7 @@ class AddLinkContent extends HookConsumerWidget {
             bottom: 0,
             width: MediaQuery.of(context).size.width,
             child: Button(
-              // loading: loading.value,
-              // disabled: disableSubmit.value,
+              loading: loading.value,
               onPress: completeAddContent,
               backgroundColor: AppColors.primaryColor,
               text: '완료',
