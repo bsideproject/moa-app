@@ -188,12 +188,14 @@ class CircleIconButton extends StatefulWidget {
     this.backgroundColor = AppColors.textInputBackground,
     this.width,
     this.height,
+    this.splashColor,
   });
   final Function() onPressed;
   final Widget icon;
   final Color? backgroundColor;
   final double? width;
   final double? height;
+  final Color? splashColor;
 
   @override
   State<CircleIconButton> createState() => _CircleIconButtonState();
@@ -216,7 +218,10 @@ class _CircleIconButtonState extends State<CircleIconButton> {
           ), // <-- Button color
           overlayColor: MaterialStateProperty.resolveWith<Color?>((states) {
             if (states.contains(MaterialState.pressed)) {
-              return Colors.black.withOpacity(0.1);
+              if (widget.splashColor != null) {
+                return widget.splashColor;
+              }
+              return AppColors.blackColor.withOpacity(0.1);
             }
             return null; // <-- Splash color
           }),

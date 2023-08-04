@@ -42,6 +42,7 @@ class HashtagRepository implements IHashtagRepository {
               'contentUrl': e['contentUrl'] ?? '',
               'contentMemo': e['memo'],
               'contentName': e['name'],
+              'folderName': e['folderName'],
               'contentHashTag': e['hashTags'],
             }),
           )

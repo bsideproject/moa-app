@@ -13,6 +13,7 @@ import 'package:moa_app/providers/folder_view_provider.dart';
 import 'package:moa_app/repositories/folder_repository.dart';
 import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/utils/general.dart';
+import 'package:moa_app/utils/logger.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
 import 'package:moa_app/widgets/moa_widgets/add_folder.dart';
@@ -61,8 +62,9 @@ class FolderTabView extends HookConsumerWidget {
           onPressed: () async {
             try {
               await FolderRepository.instance.editFolderName(
-                  currentFolderName: folderName,
-                  editFolderName: updatedContentName.value);
+                currentFolderName: folderName,
+                editFolderName: updatedContentName.value,
+              );
               await ref.read(folderViewProvider.notifier).editFolderName(
                     currentFolderName: folderName,
                     editFolderName: updatedContentName.value,
@@ -72,10 +74,16 @@ class FolderTabView extends HookConsumerWidget {
                 context.pop();
               }
             } on DioError catch (error) {
-              // todo 폴더 중복 에러 처리
+              logger.d(error);
+              // 폴더 중복 에러 처리
               if (error.response!.statusCode == 409) {
-                snackbar.alert(context, '이미 가지고 있는 폴더이름이에요!');
+                snackbar.alert(context,
+                    kDebugMode ? error.toString() : '이미 가지고 있는 폴더이름이에요');
+                return;
               }
+
+              snackbar.alert(context,
+                  kDebugMode ? error.toString() : '오류가 발생했어요 다시 시도해주세요.');
             }
           },
         ),
