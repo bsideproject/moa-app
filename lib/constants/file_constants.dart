@@ -44,6 +44,18 @@ class Assets {
   static AssetImage profileMoa = const AssetImage('$_imgPath/profileMoa.png');
   static AssetImage link = const AssetImage('$_imgPath/link.png');
   static AssetImage image = const AssetImage('$_imgPath/image.png');
+
+  static AssetImage bagMoa = const AssetImage('$_imgPath/bagMoa.png');
+  static AssetImage book = const AssetImage('$_imgPath/book.png');
+  static AssetImage brush = const AssetImage('$_imgPath/brush.png');
+  static AssetImage heartMoa = const AssetImage('$_imgPath/heartMoa.png');
+  static AssetImage hearts = const AssetImage('$_imgPath/hearts.png');
+  static AssetImage location = const AssetImage('$_imgPath/location.png');
+  static AssetImage movie = const AssetImage('$_imgPath/movie.png');
+  static AssetImage movie2 = const AssetImage('$_imgPath/movie2.png');
+  static AssetImage newsMoa = const AssetImage('$_imgPath/newsMoa.png');
+  static AssetImage recipe = const AssetImage('$_imgPath/recipe.png');
+  static AssetImage style = const AssetImage('$_imgPath/style.png');
 }
 
 class Svgs {

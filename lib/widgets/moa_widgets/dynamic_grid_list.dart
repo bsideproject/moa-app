@@ -77,6 +77,7 @@ class DynamicGridList extends HookWidget {
                                   : AspectRatio(
                                       aspectRatio: rate!,
                                       child: ImageOnNetwork(
+                                        // fit: BoxFit.contain,
                                         width: double.infinity,
                                         border: Border.all(
                                           color: AppColors.moaOpacity30,

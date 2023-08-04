@@ -78,6 +78,7 @@ class AddImageContent extends HookConsumerWidget {
       }
 
       loading.value = true;
+
       String base64Image = await xFileToBase64(imageFile.value!);
 
       var selectTag = [];
