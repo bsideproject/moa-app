@@ -19,11 +19,15 @@ class General {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (_) => isContainer
+      isScrollControlled: true,
+      builder: (context) => isContainer
           ? Container(
               height: height,
-              padding: padding ??
-                  const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+              padding: EdgeInsets.only(
+                  left: 15,
+                  right: 15,
+                  top: 20,
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
               decoration: const BoxDecoration(
                 color: AppColors.whiteColor,
                 borderRadius: BorderRadius.only(
@@ -55,7 +59,22 @@ class General {
                     )
                   : child,
             )
-          : child,
+          : Container(
+              padding: EdgeInsets.only(
+                left: 15,
+                right: 15,
+                top: 50,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              decoration: const BoxDecoration(
+                color: AppColors.whiteColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(24),
+                  topRight: Radius.circular(24),
+                ),
+              ),
+              child: child,
+            ),
       // isDismissible: false,
       enableDrag: false,
     );

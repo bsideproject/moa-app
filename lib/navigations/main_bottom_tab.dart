@@ -122,6 +122,7 @@ class MainBottomTab extends HookConsumerWidget {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: child,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
@@ -171,6 +172,9 @@ class MainBottomTab extends HookConsumerWidget {
             ],
           ),
           child: BottomAppBar(
+            height: MediaQuery.of(context).viewInsets.bottom > 0
+                ? 0
+                : const BottomAppBar().height,
             shape: const CircularNotchedRectangle(),
             notchMargin: 5,
             padding: EdgeInsets.only(

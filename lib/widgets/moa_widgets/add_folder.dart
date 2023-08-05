@@ -69,82 +69,70 @@ class AddFolder extends HookConsumerWidget {
       emptyFolderName();
     }
 
-    return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-      ),
-      child: Stack(children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
-          child: Form(
-            key: formKey,
-            child: Column(
+    return Stack(children: [
+      Form(
+        key: formKey,
+        child: Column(
+          children: [
+            const Center(
+              child: Text('폴더 추가', style: H2TextStyle()),
+            ),
+            const SizedBox(height: 30),
+            EditFormText(
+              maxLength: 7,
+              controller: folderNameController,
+              onChanged: folderOnChangedValue,
+              hintText: '폴더명을 입력하세요.',
+              backgroundColor: AppColors.textInputBackground,
+              suffixIcon: CircleIconButton(
+                icon: Image(
+                  fit: BoxFit.contain,
+                  image: Assets.circleClose,
+                  width: 16,
+                  height: 16,
+                ),
+                onPressed: emptyFolderName,
+              ),
+            ),
+            const SizedBox(height: 5),
+            Row(
               children: [
-                const Center(
-                  child: Text('폴더 추가', style: H2TextStyle()),
-                ),
-                const SizedBox(height: 30),
-                EditFormText(
-                  maxLength: 7,
-                  controller: folderNameController,
-                  onChanged: folderOnChangedValue,
-                  hintText: '폴더명을 입력하세요.',
-                  backgroundColor: AppColors.textInputBackground,
-                  suffixIcon: CircleIconButton(
-                    icon: Image(
-                      fit: BoxFit.contain,
-                      image: Assets.circleClose,
-                      width: 16,
-                      height: 16,
-                    ),
-                    onPressed: emptyFolderName,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    const Spacer(),
-                    Text(
-                      '${folderNameController.text.length}/7',
-                      style: TextStyle(
-                          color: folderNameController.text.length == 7
-                              ? AppColors.danger
-                              : AppColors.blackColor.withOpacity(0.3),
-                          fontSize: 12,
-                          fontFamily: FontConstants.pretendard),
-                    ),
-                  ],
-                ),
                 const Spacer(),
-                Button(
-                  loading: loading.value,
-                  disabled: folderNameController.text.isEmpty,
-                  margin: const EdgeInsets.only(bottom: 30),
-                  text: '추가하기',
-                  onPress: addFolder,
-                )
+                Text(
+                  '${folderNameController.text.length}/7',
+                  style: TextStyle(
+                      color: folderNameController.text.length == 7
+                          ? AppColors.danger
+                          : AppColors.blackColor.withOpacity(0.3),
+                      fontSize: 12,
+                      fontFamily: FontConstants.pretendard),
+                ),
               ],
             ),
+            const Spacer(),
+            Button(
+              loading: loading.value,
+              disabled: folderNameController.text.isEmpty,
+              margin: const EdgeInsets.only(bottom: 30),
+              text: '추가하기',
+              onPress: addFolder,
+            )
+          ],
+        ),
+      ),
+      Positioned(
+        right: -15,
+        top: -15,
+        child: CircleIconButton(
+          backgroundColor: Colors.white,
+          onPressed: closeBottomSheet,
+          icon: const Icon(
+            Icons.close,
+            color: AppColors.blackColor,
+            size: 30,
           ),
         ),
-        Positioned(
-          right: 0,
-          top: 12,
-          child: CircleIconButton(
-            backgroundColor: Colors.white,
-            onPressed: closeBottomSheet,
-            icon: const Icon(
-              Icons.close,
-              color: AppColors.blackColor,
-              size: 30,
-            ),
-          ),
-        )
-      ]),
-    );
+      )
+    ]);
   }
 }
