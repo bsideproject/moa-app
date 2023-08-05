@@ -57,83 +57,71 @@ class EditContent extends HookWidget {
       emptyContentName();
     }
 
-    return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-      ),
-      child: Stack(children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
-          child: Form(
-            key: formKey,
-            child: Column(
+    return Stack(children: [
+      Form(
+        key: formKey,
+        child: Column(
+          children: [
+            Center(
+              child: Text(title, style: const H2TextStyle()),
+            ),
+            const SizedBox(height: 30),
+            EditFormText(
+              maxLength: maxLength ?? 7,
+              controller: controller,
+              onChanged: onChangedContentValue,
+              hintText: contentName,
+              backgroundColor: AppColors.textInputBackground,
+              suffixIcon: CircleIconButton(
+                icon: Image(
+                  fit: BoxFit.contain,
+                  image: Assets.circleClose,
+                  width: 16,
+                  height: 16,
+                ),
+                onPressed: emptyContentName,
+              ),
+            ),
+            ErrorText(
+                errorText: errorText.value,
+                errorValidate: errorText.value != ''),
+            Row(
               children: [
-                Center(
-                  child: Text(title, style: const H2TextStyle()),
-                ),
-                const SizedBox(height: 30),
-                EditFormText(
-                  maxLength: maxLength ?? 7,
-                  controller: controller,
-                  onChanged: onChangedContentValue,
-                  hintText: contentName,
-                  backgroundColor: AppColors.textInputBackground,
-                  suffixIcon: CircleIconButton(
-                    icon: Image(
-                      fit: BoxFit.contain,
-                      image: Assets.circleClose,
-                      width: 16,
-                      height: 16,
-                    ),
-                    onPressed: emptyContentName,
-                  ),
-                ),
-                ErrorText(
-                    errorText: errorText.value,
-                    errorValidate: errorText.value != ''),
-                Row(
-                  children: [
-                    const Spacer(),
-                    Text(
-                      '${controller.text.length}/${maxLength ?? 7}',
-                      style: TextStyle(
-                          color: controller.text.length >= (maxLength ?? 7)
-                              ? AppColors.danger
-                              : AppColors.blackColor.withOpacity(0.3),
-                          fontSize: 12,
-                          fontFamily: FontConstants.pretendard),
-                    ),
-                  ],
-                ),
                 const Spacer(),
-                Button(
-                  disabled: controller.text.isEmpty,
-                  margin: const EdgeInsets.only(bottom: 30),
-                  text: buttonText ?? '수정하기',
-                  onPress: editContent,
-                )
+                Text(
+                  '${controller.text.length}/${maxLength ?? 7}',
+                  style: TextStyle(
+                      color: controller.text.length >= (maxLength ?? 7)
+                          ? AppColors.danger
+                          : AppColors.blackColor.withOpacity(0.3),
+                      fontSize: 12,
+                      fontFamily: FontConstants.pretendard),
+                ),
               ],
             ),
+            const Spacer(),
+            Button(
+              disabled: controller.text.isEmpty,
+              margin: const EdgeInsets.only(bottom: 30),
+              text: buttonText ?? '수정하기',
+              onPress: editContent,
+            )
+          ],
+        ),
+      ),
+      Positioned(
+        right: -15,
+        top: -15,
+        child: CircleIconButton(
+          backgroundColor: Colors.white,
+          onPressed: closeBottomSheet,
+          icon: const Icon(
+            Icons.close,
+            color: Colors.black,
+            size: 30,
           ),
         ),
-        Positioned(
-          right: 0,
-          top: 12,
-          child: CircleIconButton(
-            backgroundColor: Colors.white,
-            onPressed: closeBottomSheet,
-            icon: const Icon(
-              Icons.close,
-              color: Colors.black,
-              size: 30,
-            ),
-          ),
-        )
-      ]),
-    );
+      )
+    ]);
   }
 }

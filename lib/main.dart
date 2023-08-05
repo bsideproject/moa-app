@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,7 +15,6 @@ import 'package:moa_app/utils/config.dart';
 import 'package:moa_app/utils/custom_scaffold.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/utils/themes.dart';
-import 'package:moa_app/utils/tools.dart';
 
 class Logger extends ProviderObserver {
   @override
@@ -37,10 +35,10 @@ class Logger extends ProviderObserver {
   }
 }
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  logger.d('Handling a background message: ${message.messageId}');
-}
+// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   await Firebase.initializeApp();
+//   logger.d('Handling a background message: ${message.messageId}');
+// }
 
 void main() async {
   usePathUrlStrategy();
@@ -52,7 +50,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   // KaKao login setup
   KakaoSdk.init(
@@ -90,6 +88,7 @@ class MyApp extends HookConsumerWidget {
         darkTheme: Themes.dark,
         themeMode: ThemeMode.light,
         routerConfig: ref.watch(routeProvider),
+        // 웹에서 scaffold를 사용할 때 최대 너비를 제한하기 위해 사용
         builder: (context, child) {
           return CustomScaffold.responsive(
             builder: (context, x, y) {

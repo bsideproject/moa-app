@@ -43,7 +43,7 @@ class Home extends HookConsumerWidget {
           tabIdx.value = 1;
         }
       });
-      return () => tabController.dispose();
+      return () {};
     }, []);
 
     return Container(

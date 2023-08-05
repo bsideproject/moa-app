@@ -124,8 +124,6 @@ class FolderTabView extends HookConsumerWidget {
         {required String folderName, required Color folderColor}) {
       General.instance.showBottomSheet(
         context: context,
-        padding:
-            const EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 30),
         height: 225,
         child: Column(
           children: [
