@@ -162,6 +162,9 @@ class MainBottomTab extends HookConsumerWidget {
           ],
         ),
         child: Container(
+          height: MediaQuery.of(context).viewInsets.bottom > 0
+              ? 0
+              : const BottomAppBar().height,
           decoration: const BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -172,9 +175,6 @@ class MainBottomTab extends HookConsumerWidget {
             ],
           ),
           child: BottomAppBar(
-            height: MediaQuery.of(context).viewInsets.bottom > 0
-                ? 0
-                : const BottomAppBar().height,
             shape: const CircularNotchedRectangle(),
             notchMargin: 5,
             padding: EdgeInsets.only(
