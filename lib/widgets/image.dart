@@ -64,7 +64,8 @@ class ImageOnNetwork extends HookWidget {
               height: height,
               width: width,
               decoration: BoxDecoration(
-                border: border ?? Border.all(color: AppColors.moaOpacity30),
+                border: border ??
+                    Border.all(color: AppColors.moaOpacity30, width: 0.5),
                 borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
                 image: DecorationImage(
                   image: imageProvider,

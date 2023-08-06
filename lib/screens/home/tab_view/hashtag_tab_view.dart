@@ -1,5 +1,6 @@
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:loading_more_list/loading_more_list.dart';
@@ -23,20 +24,33 @@ class HashtagTabView extends HookConsumerWidget {
     required this.uniqueKey,
     required this.source,
     required this.count,
+    this.isRefresh,
   });
   final Key uniqueKey;
   final HashtagSource source;
   final int count;
+  final bool? isRefresh;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var width = MediaQuery.of(context).size.width;
 
+    useEffect(() {
+      if (isRefresh == true) {
+        source.refresh(true);
+      }
+      return null;
+    }, [isRefresh]);
+
     void goContentView(
         {required String contentId, required String folderName}) {
       context.go(
         '${GoRoutes.content.fullPath}/$contentId',
-        extra: ContentView(id: contentId, folderName: folderName),
+        extra: ContentView(
+          id: contentId,
+          folderName: folderName,
+          source: source,
+        ),
       );
     }
 
@@ -125,12 +139,12 @@ class HashtagTabView extends HookConsumerWidget {
                       ),
                       child: Column(
                         children: [
-                          item.contentImageUrl == ''
+                          item.thumbnailImageUrl == ''
                               ? const Text('이미지 없을 경우 모아 이미지로 대체')
                               : AspectRatio(
                                   aspectRatio: 1,
                                   child: ImageOnNetwork(
-                                    imageURL: item.contentImageUrl,
+                                    imageURL: item.thumbnailImageUrl,
                                   ),
                                 ),
                           ContentCard(

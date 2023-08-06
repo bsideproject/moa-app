@@ -52,7 +52,8 @@ class DynamicGridList extends HookWidget {
                   children: [
                     FutureBuilder(
                       future: getImageSize(
-                          imageURL: contentList[i].contentImageUrl),
+                          // todo : 이미지 없을 경우 모아 이미지로 대체
+                          imageURL: contentList[i].thumbnailImageUrl),
                       builder: (context, snapshot) {
                         var rate = snapshot.data;
 
@@ -72,7 +73,7 @@ class DynamicGridList extends HookWidget {
                             }
 
                             if (snapshot.hasData) {
-                              return contentList[i].contentImageUrl == ''
+                              return contentList[i].thumbnailImageUrl == ''
                                   ? const Text('이미지 없을 경우 모아 이미지로 대체')
                                   : AspectRatio(
                                       aspectRatio: rate!,
@@ -85,7 +86,7 @@ class DynamicGridList extends HookWidget {
                                         ),
                                         borderRadius: 10,
                                         imageURL:
-                                            contentList[i].contentImageUrl,
+                                            contentList[i].thumbnailImageUrl,
                                       ),
                                     );
                             }
@@ -98,10 +99,10 @@ class DynamicGridList extends HookWidget {
                       onPressHashtag: (tag) {},
                       content: ContentModel(
                         contentId: contentList[i].contentId,
-                        contentImageUrl: contentList[i].contentImageUrl,
+                        thumbnailImageUrl: contentList[i].thumbnailImageUrl,
                         contentName: contentList[i].contentName,
                         contentMemo: contentList[i].contentMemo,
-                        contentHashTag: contentList[i].contentHashTag,
+                        contentHashTags: contentList[i].contentHashTags,
                       ),
                     ),
                   ],

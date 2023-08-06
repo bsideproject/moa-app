@@ -20,8 +20,8 @@ class UserListingScreen extends HookWidget {
       contentId: '1',
       contentName: '',
       contentMemo: '',
-      contentImageUrl: '',
-      contentHashTag: [],
+      thumbnailImageUrl: '',
+      contentHashTags: [],
     ));
 
     void getCrawlUrl(String text) async {
@@ -44,8 +44,8 @@ class UserListingScreen extends HookWidget {
         content.value = content.value.copyWith(
           contentName: title ?? '',
           contentMemo: description ?? '',
-          contentImageUrl: image ?? '',
-          contentHashTag: [],
+          thumbnailImageUrl: image ?? '',
+          contentHashTags: [],
         );
       });
     }
@@ -71,12 +71,12 @@ class UserListingScreen extends HookWidget {
             },
           ),
           const SizedBox(height: 20),
-          content.value.contentImageUrl.isEmpty
-              ? const SizedBox()
+          content.value.thumbnailImageUrl == ''
+              ? const Text('이미지 없을 경우 모아 이미지로 대체')
               : ImageOnNetwork(
                   width: double.infinity,
                   height: 200,
-                  imageURL: content.value.contentImageUrl,
+                  imageURL: content.value.thumbnailImageUrl,
                 ),
           const SizedBox(height: 20),
           Text(

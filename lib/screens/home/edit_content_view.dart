@@ -33,22 +33,24 @@ class EditContentView extends HookWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AspectRatio(
-            aspectRatio: 1,
-            child: Container(
-              margin: const EdgeInsets.only(top: 20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: AppColors.grayBackground,
-                  width: 0.5,
+          content.thumbnailImageUrl == ''
+              ? const Text('이미지 없을 경우 모아 이미지로 대체')
+              : AspectRatio(
+                  aspectRatio: 1,
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: AppColors.grayBackground,
+                        width: 0.5,
+                      ),
+                    ),
+                    child: ImageOnNetwork(
+                      imageURL: content.thumbnailImageUrl,
+                    ),
+                  ),
                 ),
-              ),
-              child: ImageOnNetwork(
-                imageURL: content.contentImageUrl,
-              ),
-            ),
-          ),
           const SizedBox(height: 10),
           const Text(
             '제목',
@@ -78,7 +80,7 @@ class EditContentView extends HookWidget {
             runSpacing: 10,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              ...content.contentHashTag.map(
+              ...content.contentHashTags.map(
                 (e) => Container(
                   margin: const EdgeInsets.only(top: 30),
                   padding:

@@ -159,12 +159,22 @@ final routeProvider = Provider(
             GoRoute(
               name: GoRoutes.home.name,
               path: '/',
-              pageBuilder: (context, state) =>
-                  buildPageWithDefaultTransition<void>(
-                context: context,
-                state: state,
-                child: const Home(),
-              ),
+              pageBuilder: (context, state) {
+                if (state.extra != null && state.extra is Home) {
+                  var home = state.extra as Home;
+                  return buildPageWithDefaultTransition<void>(
+                    context: context,
+                    state: state,
+                    child: Home(isRefresh: home.isRefresh),
+                  );
+                }
+
+                return buildPageWithDefaultTransition<void>(
+                  context: context,
+                  state: state,
+                  child: const Home(),
+                );
+              },
               routes: [
                 GoRoute(
                   parentNavigatorKey: _rootNavigatorKey,
@@ -213,6 +223,7 @@ final routeProvider = Provider(
                       child: ContentView(
                         id: contentView.id,
                         folderName: contentView.folderName,
+                        source: contentView.source,
                       ),
                     );
                   },

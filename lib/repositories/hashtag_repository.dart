@@ -8,6 +8,7 @@ abstract class IHashtagRepository {
   Future<(List<ContentModel>, int)> getHashtagView({
     int? page,
     int? size,
+    String? tag,
   });
   Future<List<HashtagModel>> getHashtagList();
 }
@@ -20,11 +21,14 @@ class HashtagRepository implements IHashtagRepository {
   Future<(List<ContentModel>, int)> getHashtagView({
     int? page = 0,
     int? size = 10,
+    String? tag,
   }) async {
     var token = await TokenRepository.instance.getToken();
 
     var res = await dio.get(
-      '/api/v1/hashtag/view?page=$page&size=$size',
+      tag == null
+          ? '/api/v1/hashtag/view?page=$page&size=$size'
+          : '/api/v1/hashtag/view?tag=$tag&page=$page&size=$size',
       options: Options(
         headers: {
           'Authorization': 'Bearer $token',
@@ -32,19 +36,10 @@ class HashtagRepository implements IHashtagRepository {
       ),
     );
 
-    /// 백엔드 ContentModel 타입이 통일되지 않았으므로 임시로 타입 변환해서 넣어줌
     return (
       res.data['data']
           .map<ContentModel>(
-            (e) => ContentModel.fromJson({
-              'contentId': e['contentId'],
-              'contentImageUrl': e['imageUrl'],
-              'contentUrl': e['contentUrl'] ?? '',
-              'contentMemo': e['memo'],
-              'contentName': e['name'],
-              'folderName': e['folderName'],
-              'contentHashTag': e['hashTags'],
-            }),
+            (e) => ContentModel.fromJson(e),
           )
           .toList() as List<ContentModel>,
       res.data['count'] as int

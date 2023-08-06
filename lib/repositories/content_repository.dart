@@ -50,7 +50,7 @@ class ContentRepository implements IContentRepository {
           'hashTag': hashTagStringList,
           'contentType': 'IMAGE',
           'originalFileName': '${content.contentName}.png',
-          'image': 'image/png:base64:${content.contentImageUrl}',
+          'image': 'image/png:base64:${content.thumbnailImageUrl}',
         },
         options: Options(
           headers: {
@@ -72,7 +72,7 @@ class ContentRepository implements IContentRepository {
           'contentType': 'URL',
           'url': content.contentUrl,
           'originalFileName': '${content.contentName}.png',
-          'image': 'image/png:base64:${content.contentImageUrl}',
+          'image': 'image/png:base64:${content.thumbnailImageUrl}',
         },
         options: Options(
           headers: {
@@ -97,15 +97,7 @@ class ContentRepository implements IContentRepository {
         ),
       );
 
-      /// 백엔드 ContentModel 타입이 통일되지 않았으므로 임시로 타입 변환해서 넣어줌
-      return ContentModel.fromJson({
-        'contentId': '0',
-        'contentImageUrl': res.data['data']['thumbnail_image_url'],
-        'contentUrl': res.data['data']['contentUrl'] ?? '',
-        'contentMemo': res.data['data']['memo'],
-        'contentName': res.data['data']['contentName'],
-        'contentHashTag': res.data['data']['hashTags'],
-      });
+      return ContentModel.fromJson(res.data['data']);
     } catch (e) {
       rethrow;
     }

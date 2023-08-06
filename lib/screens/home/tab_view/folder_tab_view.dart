@@ -24,15 +24,27 @@ import 'package:moa_app/widgets/moa_widgets/folder_list.dart';
 import 'package:moa_app/widgets/snackbar.dart';
 
 class FolderTabView extends HookConsumerWidget {
-  const FolderTabView(
-      {super.key, required this.uniqueKey, required this.source});
+  const FolderTabView({
+    super.key,
+    required this.uniqueKey,
+    required this.source,
+    this.isRefresh,
+  });
   final Key uniqueKey;
   final FolderSource source;
+  final bool? isRefresh;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var width = MediaQuery.of(context).size.width;
     var updatedContentName = useState('');
+
+    useEffect(() {
+      if (isRefresh == true) {
+        source.refresh(true);
+      }
+      return null;
+    }, [isRefresh]);
 
     void showAddFolderModal() {
       General.instance.showBottomSheet(

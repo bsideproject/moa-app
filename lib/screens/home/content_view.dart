@@ -9,6 +9,7 @@ import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/providers/content_detail_provider.dart';
 import 'package:moa_app/providers/hashtag_view_provider.dart';
 import 'package:moa_app/screens/home/edit_content_view.dart';
+import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/widgets/app_bar.dart';
 import 'package:moa_app/widgets/button.dart';
@@ -21,9 +22,11 @@ class ContentView extends HookConsumerWidget {
     super.key,
     required this.id,
     required this.folderName,
+    this.source,
   });
   final String id;
   final String folderName;
+  final HashtagSource? source;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,6 +44,7 @@ class ContentView extends HookConsumerWidget {
 
     void deleteContent() async {
       await hashtagAsync.deleteContent(contentId: id);
+      await source?.refresh(true);
       if (context.mounted) {
         context.pop();
       }
@@ -131,7 +135,6 @@ class ContentView extends HookConsumerWidget {
                         ),
                       );
                     }
-
                     if (snapshot.hasData && content != null) {
                       return isEditMode.value
                           ? EditContentView(
@@ -143,23 +146,28 @@ class ContentView extends HookConsumerWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  AspectRatio(
-                                    aspectRatio: 1,
-                                    child: Container(
-                                      margin: const EdgeInsets.only(top: 20),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                          color: AppColors.grayBackground,
-                                          width: 0.5,
+                                  content.thumbnailImageUrl == ''
+                                      ? const Text('이미지 없을 경우 모아 이미지로 대체')
+                                      : AspectRatio(
+                                          aspectRatio: 1,
+                                          child: Container(
+                                            margin:
+                                                const EdgeInsets.only(top: 20),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                color: AppColors.grayBackground,
+                                                width: 0.5,
+                                              ),
+                                            ),
+                                            child: ImageOnNetwork(
+                                              imageURL:
+                                                  content.thumbnailImageUrl,
+                                              fit: BoxFit.contain,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                      child: ImageOnNetwork(
-                                        imageURL: content.contentImageUrl,
-                                        fit: BoxFit.contain,
-                                      ),
-                                    ),
-                                  ),
                                   const SizedBox(height: 10),
                                   Text(
                                     content.contentName,
@@ -176,7 +184,7 @@ class ContentView extends HookConsumerWidget {
                                     spacing: 10,
                                     runSpacing: 10,
                                     children: [
-                                      ...content.contentHashTag.map(
+                                      ...content.contentHashTags.map(
                                         (e) => Container(
                                           margin:
                                               const EdgeInsets.only(top: 30),

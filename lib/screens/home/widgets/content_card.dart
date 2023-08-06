@@ -49,7 +49,7 @@ class ContentCard extends HookWidget {
               runSpacing: 10,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                ...content.contentHashTag.map((tag) {
+                ...content.contentHashTags.map((tag) {
                   return HashtagButton(
                     onPress: () => onPressHashtag(tag.hashTag),
                     text: tag.hashTag,

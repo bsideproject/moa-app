@@ -8,22 +8,24 @@ import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/models/folder_model.dart';
-import 'package:moa_app/models/user_model.dart';
 import 'package:moa_app/providers/button_click_provider.dart';
 import 'package:moa_app/providers/folder_view_provider.dart';
 import 'package:moa_app/providers/hashtag_view_provider.dart';
+import 'package:moa_app/providers/user_provider.dart';
 import 'package:moa_app/repositories/hashtag_repository.dart';
-import 'package:moa_app/repositories/user_repository.dart';
 import 'package:moa_app/screens/home/tab_view/folder_tab_view.dart';
 import 'package:moa_app/screens/home/tab_view/hashtag_tab_view.dart';
 import 'package:moa_app/screens/home/widgets/moa_comment_img.dart';
 import 'package:moa_app/utils/logger.dart';
+import 'package:moa_app/widgets/loading_indicator.dart';
 
 class Home extends HookConsumerWidget {
-  const Home({super.key});
+  const Home({super.key, this.isRefresh = false});
+  final bool isRefresh;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var userAsync = ref.watch(userStateProvider);
     var folderAsync = ref.watch(folderViewProvider.notifier);
     var hashtagAsync = ref.watch(hashtagViewProvider.notifier);
 
@@ -59,44 +61,46 @@ class Home extends HookConsumerWidget {
               headerSliverBuilder: (context, innerBoxIsScrolled) {
                 return [
                   SliverAppBar(
-                    toolbarHeight: 110,
-                    titleSpacing: 15,
-                    backgroundColor: AppColors.backgroundColor,
-                    flexibleSpace: FlexibleSpaceBar(
-                      background: Stack(
-                        children: [
-                          Positioned(
-                            right: 15,
-                            top: 3,
-                            child: Image(
-                              width: 150,
-                              height: 182,
-                              image: Assets.moaBannerImg,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    title: FutureBuilder<UserModel?>(
-                        future: UserRepository.instance.getUser(),
-                        builder: (context, snapshot) {
-                          var userInfo = snapshot.data;
-
-                          if (snapshot.hasData) {
-                            return Container(
-                              margin: const EdgeInsets.only(right: 150),
-                              alignment: Alignment.centerLeft,
-                              child: RichText(
-                                text: TextSpan(
-                                  text: '안녕하세요,\n${userInfo?.nickname}님!',
-                                  style: const H1TextStyle(),
-                                ),
+                      toolbarHeight: 110,
+                      titleSpacing: 15,
+                      backgroundColor: AppColors.backgroundColor,
+                      flexibleSpace: FlexibleSpaceBar(
+                        background: Stack(
+                          children: [
+                            Positioned(
+                              right: 15,
+                              top: 3,
+                              child: Image(
+                                width: 150,
+                                height: 182,
+                                image: Assets.moaBannerImg,
                               ),
-                            );
-                          }
+                            ),
+                          ],
+                        ),
+                      ),
+                      title: userAsync.when(
+                        error: (error, stackTrace) {
                           return const SizedBox();
-                        }),
-                  ),
+                        },
+                        loading: () => Container(
+                          margin: const EdgeInsets.only(right: 150),
+                          alignment: Alignment.centerLeft,
+                          child: const LoadingIndicator(),
+                        ),
+                        data: (userInfo) {
+                          return Container(
+                            margin: const EdgeInsets.only(right: 150),
+                            alignment: Alignment.centerLeft,
+                            child: RichText(
+                              text: TextSpan(
+                                text: '안녕하세요,\n${userInfo?.nickname}님!',
+                                style: const H1TextStyle(),
+                              ),
+                            ),
+                          );
+                        },
+                      )),
                   SliverPersistentHeader(
                     delegate: PersistentTabBar(
                       tabController: tabController,
@@ -113,12 +117,14 @@ class Home extends HookConsumerWidget {
                 controller: tabController,
                 children: <Widget>[
                   TabViewItem(
+                    isRefresh: isRefresh,
                     folderList: folderAsync,
                     uniqueKey: const Key('folderTab'),
                     folderCount: folderCount,
                     contentCount: contentCount,
                   ),
                   TabViewItem(
+                    isRefresh: isRefresh,
                     hashList: hashtagAsync,
                     uniqueKey: const Key('hashtagTab'),
                     folderCount: folderCount,
@@ -269,13 +275,12 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
 }
 
 class FolderSource extends LoadingMoreBase<FolderModel> {
-  FolderSource(
-      {required this.folderCount,
-      required this.futureList,
-      required this.context});
+  FolderSource({
+    required this.folderCount,
+    required this.futureList,
+  });
   final ValueNotifier<int> folderCount;
   final FolderView? futureList;
-  final BuildContext context;
 
   var count = 0;
   int pageIndex = 1;
@@ -328,7 +333,7 @@ class HashtagSource extends LoadingMoreBase<ContentModel> {
   final ValueNotifier<int> contentCount;
   final HashtagView? futureList;
 
-  int pageIndex = 1;
+  int pageIndex = 0;
   int size = 10;
   bool _hasMore = true;
   bool forceRefresh = false;
@@ -341,6 +346,7 @@ class HashtagSource extends LoadingMoreBase<ContentModel> {
   Future<bool> refresh([bool notifyStateChanged = false]) async {
     _hasMore = true;
     pageIndex = 0;
+    contentList = [];
     //force to refresh list when you don't want clear list before request
     //for the case, if your list already has 20 items.
     forceRefresh = !notifyStateChanged;
@@ -357,12 +363,11 @@ class HashtagSource extends LoadingMoreBase<ContentModel> {
         var (initialList, count) = await futureList!.future;
         // 최초렌더시 컨텐츠 전체 개수 가져오기
         contentCount.value = count;
-
         contentList.addAll(initialList);
       } else {
         var (list, _) = await HashtagRepository.instance
             .getHashtagView(page: pageIndex, size: size);
-        contentList.addAll(list);
+        contentList = [...contentList, ...list];
         _hasMore = list.length >= 10;
       }
 
@@ -371,7 +376,11 @@ class HashtagSource extends LoadingMoreBase<ContentModel> {
           add(content);
         }
       }
-      pageIndex++;
+
+      if (contentList.length > 10) {
+        pageIndex++;
+      }
+
       isSuccess = true;
     } catch (e) {
       isSuccess = false;
@@ -390,12 +399,14 @@ class TabViewItem extends StatefulWidget {
     this.hashList,
     required this.folderCount,
     required this.contentCount,
+    this.isRefresh,
   });
   final Key uniqueKey;
   final FolderView? folderList;
   final HashtagView? hashList;
   final ValueNotifier<int> folderCount;
   final ValueNotifier<int> contentCount;
+  final bool? isRefresh;
 
   @override
   TabViewItemState createState() => TabViewItemState();
@@ -404,7 +415,6 @@ class TabViewItem extends StatefulWidget {
 class TabViewItemState extends State<TabViewItem>
     with AutomaticKeepAliveClientMixin {
   late final FolderSource folderSource = FolderSource(
-    context: context,
     futureList: widget.folderList,
     folderCount: widget.folderCount,
   );
@@ -428,9 +438,14 @@ class TabViewItemState extends State<TabViewItem>
   Widget build(BuildContext context) {
     super.build(context);
     if (widget.uniqueKey == const Key('folderTab')) {
-      return FolderTabView(uniqueKey: widget.uniqueKey, source: folderSource);
+      return FolderTabView(
+        isRefresh: widget.isRefresh,
+        uniqueKey: widget.uniqueKey,
+        source: folderSource,
+      );
     }
     return HashtagTabView(
+      isRefresh: widget.isRefresh,
       uniqueKey: widget.uniqueKey,
       source: hashtagSource,
       count: widget.contentCount.value,
