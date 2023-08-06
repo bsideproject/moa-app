@@ -95,25 +95,23 @@ class AddContentBottom extends HookWidget {
           const SizedBox(height: 10),
           Wrap(
             spacing: 10,
-            runSpacing: 10,
             children: [
               ...selectedTagList.value.map((tag) {
-                return InkWell(
-                  borderRadius: BorderRadius.circular(50),
-                  onTap: () {
+                return HashtagBox(
+                  selected: tag.isSelected,
+                  hashtag: tag.name,
+                  onSelected: (value) {
                     selectedTagList.value = selectedTagList.value.map((e) {
                       if (e.name == tag.name) {
                         return SelectedTagModel(
-                            name: e.name, isSelected: !e.isSelected);
+                          name: e.name,
+                          isSelected: value,
+                        );
                       }
                       return e;
                     }).toList();
                     tagError.value = '';
                   },
-                  child: HashtagBox(
-                    isSelected: tag.isSelected,
-                    hashtag: tag.name,
-                  ),
                 );
               }).toList(),
             ],

@@ -11,6 +11,10 @@ abstract class IHashtagRepository {
     String? tag,
   });
   Future<List<HashtagModel>> getHashtagList();
+  Future<void> editHashtag({
+    required String tagId,
+    required String hashtags,
+  });
 }
 
 class HashtagRepository implements IHashtagRepository {
@@ -62,5 +66,26 @@ class HashtagRepository implements IHashtagRepository {
     return res.data['data']['users']
         .map<HashtagModel>((e) => HashtagModel.fromJson(e))
         .toList();
+  }
+
+  @override
+  Future<void> editHashtag({
+    required String tagId,
+    required String hashtags,
+  }) async {
+    var token = await TokenRepository.instance.getToken();
+
+    await dio.post(
+      '/api/v1/hashtag/edit',
+      data: {
+        'tagId': tagId,
+        'hashtag': hashtags,
+      },
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
   }
 }

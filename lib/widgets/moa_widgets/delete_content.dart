@@ -83,7 +83,7 @@ class DeleteContent extends HookWidget {
                     ),
                     Button(
                       text: '삭제하기',
-                      onPress: deleteContent,
+                      onPressed: deleteContent,
                     )
                   ],
                 )
@@ -135,7 +135,7 @@ class DeleteContent extends HookWidget {
                     ),
                     Button(
                       text: '삭제하기',
-                      onPress: deleteContent,
+                      onPressed: deleteContent,
                     )
                   ],
                 ),

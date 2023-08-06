@@ -79,6 +79,7 @@ class ContentView extends HookConsumerWidget {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBarBack(
         title: folderName,
         isBottomBorderDisplayed: false,
@@ -95,150 +96,145 @@ class ContentView extends HookConsumerWidget {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.only(
-                left: 15, right: 15, bottom: kBottomNavigationBarHeight),
-            child: FutureBuilder<ContentModel>(
-              future: contentNotifier.fetchItem(contentId: id),
-              builder: (context, snapshot) {
-                var content = snapshot.data;
-
-                return AnimatedSwitcher(
-                  transitionBuilder: (child, animation) {
-                    return FadeTransition(opacity: animation, child: child);
-                  },
-                  duration: const Duration(milliseconds: 300),
-                  child: () {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.9,
-                        child: Container(
-                            margin: const EdgeInsets.only(bottom: 100),
-                            child: const LoadingIndicator()),
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      return SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.9,
-                        child: const Center(
-                          child: Text(
-                            '취향을 불러오는데 실패했습니다.',
-                            style: TextStyle(
-                              color: AppColors.blackColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: FontConstants.pretendard,
-                            ),
+        child: FutureBuilder<ContentModel>(
+          future: contentNotifier.fetchItem(contentId: id),
+          builder: (context, snapshot) {
+            var content = snapshot.data;
+            return AnimatedSwitcher(
+              transitionBuilder: (child, animation) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+              duration: const Duration(milliseconds: 300),
+              child: () {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 100),
+                    child: const LoadingIndicator(),
+                  );
+                }
+                if (snapshot.hasError) {
+                  return const Center(
+                    child: Text(
+                      '취향을 불러오는데 실패했습니다.',
+                      style: TextStyle(
+                        color: AppColors.blackColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: FontConstants.pretendard,
+                      ),
+                    ),
+                  );
+                }
+                if (snapshot.hasData && content != null) {
+                  return isEditMode.value
+                      ? SingleChildScrollView(
+                          padding: const EdgeInsets.only(
+                            left: 15,
+                            right: 15,
+                            bottom: 30,
                           ),
-                        ),
-                      );
-                    }
-                    if (snapshot.hasData && content != null) {
-                      return isEditMode.value
-                          ? EditContentView(
-                              content: content,
-                              isEditMode: isEditMode,
-                            )
-                          : SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.9,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  content.thumbnailImageUrl == ''
-                                      ? const Text('이미지 없을 경우 모아 이미지로 대체')
-                                      : AspectRatio(
-                                          aspectRatio: 1,
-                                          child: Container(
-                                            margin:
-                                                const EdgeInsets.only(top: 20),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              border: Border.all(
-                                                color: AppColors.grayBackground,
-                                                width: 0.5,
-                                              ),
-                                            ),
-                                            child: ImageOnNetwork(
-                                              imageURL:
-                                                  content.thumbnailImageUrl,
-                                              fit: BoxFit.contain,
-                                            ),
+                          physics: const ClampingScrollPhysics(),
+                          child: EditContentView(
+                            content: content,
+                            isEditMode: isEditMode,
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(
+                            left: 15,
+                            right: 15,
+                            bottom: 30,
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              content.thumbnailImageUrl == ''
+                                  ? const Text('이미지 없을 경우 모아 이미지로 대체')
+                                  : AspectRatio(
+                                      aspectRatio: 1,
+                                      child: Container(
+                                        margin: const EdgeInsets.only(top: 20),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                            color: AppColors.grayBackground,
+                                            width: 0.5,
                                           ),
                                         ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    content.contentName,
-                                    style: const H2TextStyle(),
-                                  ),
-                                  const SizedBox(height: 30),
-                                  Text(
-                                    content.contentMemo ?? '',
-                                    style: const Hash1TextStyle().merge(
-                                      const TextStyle(height: 1.4),
+                                        child: ImageOnNetwork(
+                                          imageURL: content.thumbnailImageUrl,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  Wrap(
-                                    spacing: 10,
-                                    runSpacing: 10,
-                                    children: [
-                                      ...content.contentHashTags.map(
-                                        (e) => Container(
-                                          margin:
-                                              const EdgeInsets.only(top: 30),
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20, vertical: 8),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                            color: AppColors
-                                                .contentHashtagBackground,
-                                          ),
-                                          child: Text(
-                                            '#${e.hashTag}',
-                                            style: const TextStyle(
-                                              color: AppColors.subTitle,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily:
-                                                  FontConstants.pretendard,
-                                            ),
-                                          ),
+                              const SizedBox(height: 10),
+                              Text(
+                                content.contentName,
+                                style: const H2TextStyle(),
+                              ),
+                              const SizedBox(height: 30),
+                              Text(
+                                content.contentMemo ?? '',
+                                style: const Hash1TextStyle().merge(
+                                  const TextStyle(height: 1.4),
+                                ),
+                              ),
+                              Wrap(
+                                spacing: 10,
+                                runSpacing: 10,
+                                children: [
+                                  ...content.contentHashTags.map(
+                                    (e) => Container(
+                                      margin: const EdgeInsets.only(top: 30),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color:
+                                            AppColors.contentHashtagBackground,
+                                      ),
+                                      child: Text(
+                                        '#${e.hashTag}',
+                                        style: const TextStyle(
+                                          color: AppColors.subTitle,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: FontConstants.pretendard,
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 40),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Button(
-                                          backgroundColor: AppColors.linkButton,
-                                          text: '링크 바로가기',
-                                          onPress: pressGoToLink,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 15),
-                                      Expanded(
-                                        child: Button(
-                                          text: '확인',
-                                          onPress: pressConfirm,
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
                                 ],
                               ),
-                            );
-                    }
-                    return const SizedBox();
-                  }(),
-                );
-              },
-            ),
-          ),
+                              const Spacer(),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Button(
+                                      backgroundColor: AppColors.linkButton,
+                                      text: '링크 바로가기',
+                                      onPressed: pressGoToLink,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 15),
+                                  Expanded(
+                                    child: Button(
+                                      text: '확인',
+                                      onPressed: pressConfirm,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                }
+                return const SizedBox();
+              }(),
+            );
+          },
         ),
       ),
     );

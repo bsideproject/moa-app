@@ -59,7 +59,7 @@ class NoticeView extends StatelessWidget {
             const Spacer(),
             Button(
               text: '바로 이용하기',
-              onPress: handleNext,
+              onPressed: handleNext,
             )
           ],
         ),

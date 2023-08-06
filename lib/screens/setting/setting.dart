@@ -169,7 +169,7 @@ class Setting extends HookConsumerWidget {
                               ? Button(
                                   loading: loading.value,
                                   disabled: nickname.value == '',
-                                  onPress: () => editMyNickname(
+                                  onPressed: () => editMyNickname(
                                     nickname: nickname.value,
                                   ),
                                   height: 30,

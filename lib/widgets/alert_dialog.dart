@@ -86,7 +86,7 @@ class _AlertDialog {
                 width: MediaQuery.of(context).size.width,
                 text: confirmText,
                 textStyle: const H3TextStyle(),
-                onPress: () {
+                onPressed: () {
                   Navigator.of(context).pop();
                   if (onPress != null) onPress();
                 },
