@@ -52,46 +52,48 @@ class FolderDetailView extends HookConsumerWidget {
           ),
         ],
       ),
-      body: FutureBuilder<List<ContentModel>>(
-        future: FolderRepository.instance
-            .getFolderDetailList(folderName: folderName),
-        builder: (context, snapshot) {
-          var contentList = snapshot.data ?? [];
+      body: SafeArea(
+        child: FutureBuilder<List<ContentModel>>(
+          future: FolderRepository.instance
+              .getFolderDetailList(folderName: folderName),
+          builder: (context, snapshot) {
+            var contentList = snapshot.data ?? [];
 
-          return AnimatedSwitcher(
-            transitionBuilder: (child, animation) {
-              return FadeTransition(opacity: animation, child: child);
-            },
-            duration: const Duration(milliseconds: 300),
-            child: () {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const LoadingIndicator();
-              }
+            return AnimatedSwitcher(
+              transitionBuilder: (child, animation) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+              duration: const Duration(milliseconds: 300),
+              child: () {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const LoadingIndicator();
+                }
 
-              if (snapshot.hasData && contentList.isNotEmpty) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 30),
-                      TypeHeader(
-                          count: contentList.length, onPressFilter: () {}),
-                      const SizedBox(height: 5),
-                      Expanded(
-                        child: DynamicGridList(
-                          contentList: contentList,
-                          pullToRefresh: pullToRefresh,
-                          folderName: folderName,
+                if (snapshot.hasData && contentList.isNotEmpty) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 30),
+                        TypeHeader(
+                            count: contentList.length, onPressFilter: () {}),
+                        const SizedBox(height: 5),
+                        Expanded(
+                          child: DynamicGridList(
+                            contentList: contentList,
+                            pullToRefresh: pullToRefresh,
+                            folderName: folderName,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              }
-              return const EmptyContent(text: '저장된 취향이 없어요!\n취향을 저장해 주세요.');
-            }(),
-          );
-        },
+                      ],
+                    ),
+                  );
+                }
+                return const EmptyContent(text: '저장된 취향이 없어요!\n취향을 저장해 주세요.');
+              }(),
+            );
+          },
+        ),
       ),
     );
   }

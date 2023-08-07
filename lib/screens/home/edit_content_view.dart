@@ -28,9 +28,12 @@ class EditContentView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var titleController = useTextEditingController(text: content.contentName);
     var memoController = useTextEditingController(text: content.contentMemo);
+    var hashtagList = useState<List<String>>(
+        content.contentHashTags.map((e) => e.hashTag).toList());
 
     void saveEditContent() {
       // todo 컨텐츠 수정
+      // ContentRepository.instance.editContent()
       isEditMode.value = false;
     }
 
@@ -38,10 +41,9 @@ class EditContentView extends HookConsumerWidget {
       General.instance.showBottomSheet(
         context: context,
         child: ChangeHashtagList(
-          hashtagList: content.contentHashTags.map((e) => e.hashTag).toList(),
+          hashtagList: hashtagList,
         ),
       );
-      // todo 해시태그 수정
     }
 
     return Column(
@@ -96,11 +98,10 @@ class EditContentView extends HookConsumerWidget {
         ),
         Wrap(
           spacing: 10,
-          runSpacing: 10,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            ...content.contentHashTags.map(
-              (e) => Container(
+            ...hashtagList.value.map(
+              (hash) => Container(
                 margin: const EdgeInsets.only(top: 20),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -109,7 +110,7 @@ class EditContentView extends HookConsumerWidget {
                   color: AppColors.contentHashtagBackground,
                 ),
                 child: Text(
-                  '#${e.hashTag}',
+                  '#$hash',
                   style: const TextStyle(
                     color: AppColors.subTitle,
                     fontSize: 16,
@@ -149,7 +150,7 @@ class EditContentView extends HookConsumerWidget {
 
 class ChangeHashtagList extends HookConsumerWidget {
   const ChangeHashtagList({super.key, required this.hashtagList});
-  final List<String> hashtagList;
+  final ValueNotifier<List<String>> hashtagList;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -167,16 +168,10 @@ class ChangeHashtagList extends HookConsumerWidget {
     }
 
     void changeHashtag() {
-      // todo 해시태그 변경 ( 선택된 해시태그들 부모에 해시태그 상태만들어서 전달해야됨 )
-
-      // ! 부모에서 contentId로 해시태그 한번에 수정
-      // ref.read(hashtagProvider.notifier).editHashtag(
-      //       tagId: tagId,
-      //       hashtags: selectedTagList.value
-      //           .where((element) => element.isSelected)
-      //           .toList()
-      //           .join(','),
-      //     );
+      hashtagList.value = selectedTagList.value
+          .where((element) => element.isSelected)
+          .map((element) => element.name)
+          .toList();
       context.pop();
     }
 
@@ -189,7 +184,7 @@ class ChangeHashtagList extends HookConsumerWidget {
             data: (data) {
               if (selectedTagList.value.isEmpty) {
                 selectedTagList.value = data.map((e) {
-                  if (hashtagList.contains(e.hashTag)) {
+                  if (hashtagList.value.contains(e.hashTag)) {
                     return SelectedTagModel(name: e.hashTag, isSelected: true);
                   }
                   return SelectedTagModel(name: e.hashTag, isSelected: false);

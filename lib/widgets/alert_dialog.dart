@@ -37,23 +37,16 @@ class _AlertDialog {
           insetPadding: EdgeInsets.symmetric(
             horizontal: width > Breakpoints.md ? 200 : 40,
           ),
-          actionsPadding: const EdgeInsets.all(20),
+          actionsPadding:
+              const EdgeInsets.only(left: 20, right: 20, bottom: 20),
           title: Stack(
             clipBehavior: Clip.none,
             alignment: Alignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 15),
-                    Text(
-                      title,
-                      style: const H3TextStyle(),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
+              Text(
+                title,
+                style: const H3TextStyle(),
+                textAlign: TextAlign.center,
               ),
               Positioned(
                 right: -25,
@@ -83,7 +76,7 @@ class _AlertDialog {
           ),
           actions: <Widget>[
             Button(
-                width: MediaQuery.of(context).size.width,
+                width: double.infinity,
                 text: confirmText,
                 textStyle: const H3TextStyle(),
                 onPressed: () {
@@ -96,13 +89,16 @@ class _AlertDialog {
                     : confirmButtonBackgroundColor ?? AppColors.primaryColor),
             showCancelButton
                 ? Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                          if (onPressCancel != null) onPressCancel();
-                        },
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        if (onPressCancel != null) onPressCancel();
+                      },
+                      child: Container(
+                        color: AppColors.whiteColor,
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.only(top: 20),
                         child: Text(
                           cancelText ?? '',
                           style: const InputLabelTextStyle().merge(

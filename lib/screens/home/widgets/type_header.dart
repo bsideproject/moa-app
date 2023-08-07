@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:moa_app/constants/color_constants.dart';
-import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 
 class TypeHeader extends StatelessWidget {
@@ -33,30 +32,31 @@ class TypeHeader extends StatelessWidget {
             ],
           ),
         ),
-        Material(
-          child: InkWell(
-            borderRadius: BorderRadius.circular(2),
-            onTap: onPressFilter,
-            child: Row(
-              children: [
-                const Text(
-                  '최신순',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontFamily: FontConstants.pretendard,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(width: 3),
-                Image(
-                  image: Assets.newestIcon,
-                  width: 15,
-                  height: 15,
-                )
-              ],
-            ),
-          ),
-        )
+        // ! 최신순 필터기능 추후 개발
+        // Material(
+        //   child: InkWell(
+        //     borderRadius: BorderRadius.circular(2),
+        //     onTap: onPressFilter,
+        //     child: Row(
+        //       children: [
+        //         const Text(
+        //           '최신순',
+        //           style: TextStyle(
+        //             fontSize: 14,
+        //             fontFamily: FontConstants.pretendard,
+        //             fontWeight: FontWeight.w500,
+        //           ),
+        //         ),
+        //         const SizedBox(width: 3),
+        //         Image(
+        //           image: Assets.newestIcon,
+        //           width: 15,
+        //           height: 15,
+        //         )
+        //       ],
+        //     ),
+        //   ),
+        // )
       ],
     );
   }

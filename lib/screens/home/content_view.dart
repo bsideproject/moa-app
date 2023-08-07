@@ -8,6 +8,7 @@ import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/providers/content_detail_provider.dart';
 import 'package:moa_app/providers/hashtag_view_provider.dart';
+import 'package:moa_app/repositories/content_repository.dart';
 import 'package:moa_app/screens/home/edit_content_view.dart';
 import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/utils/general.dart';
@@ -16,16 +17,19 @@ import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/image.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
 import 'package:moa_app/widgets/moa_widgets/bottom_modal_item.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContentView extends HookConsumerWidget {
   const ContentView({
     super.key,
     required this.id,
     required this.folderName,
+    required this.contentType,
     this.source,
   });
   final String id;
   final String folderName;
+  final AddContentType contentType;
   final HashtagSource? source;
 
   @override
@@ -34,7 +38,12 @@ class ContentView extends HookConsumerWidget {
     var hashtagAsync = ref.watch(hashtagViewProvider.notifier);
     var isEditMode = useState(false);
 
-    void pressGoToLink() {}
+    void pressGoToLink(String contentUrl) async {
+      var url = Uri.parse(contentUrl);
+      if (!await launchUrl(url)) {
+        throw Exception('Could not launch $url');
+      }
+    }
 
     void pressConfirm() {}
 
@@ -47,7 +56,37 @@ class ContentView extends HookConsumerWidget {
       await source?.refresh(true);
       if (context.mounted) {
         context.pop();
+        context.pop();
       }
+    }
+
+    void showDeleteContentModal() {
+      General.instance.showBottomSheet(
+        height: 250,
+        context: context,
+        isCloseButton: true,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '취향 컨텐츠 삭제 시\n복구가 불가능해요.\n정말로 삭제하시겠어요?',
+                  style:
+                      const H2TextStyle().merge(const TextStyle(height: 1.5)),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 25),
+                Button(
+                  text: '삭제하기',
+                  onPressed: deleteContent,
+                )
+              ],
+            ),
+          ),
+        ),
+      );
     }
 
     void showContentModal() {
@@ -70,7 +109,7 @@ class ContentView extends HookConsumerWidget {
               title: '콘텐츠 삭제',
               onPressed: () {
                 context.pop();
-                deleteContent();
+                showDeleteContentModal();
               },
             ),
           ],
@@ -209,24 +248,31 @@ class ContentView extends HookConsumerWidget {
                                 ],
                               ),
                               const Spacer(),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Button(
-                                      backgroundColor: AppColors.linkButton,
-                                      text: '링크 바로가기',
-                                      onPressed: pressGoToLink,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 15),
-                                  Expanded(
-                                    child: Button(
+                              contentType == AddContentType.url
+                                  ? Row(
+                                      children: [
+                                        Expanded(
+                                          child: Button(
+                                            backgroundColor:
+                                                AppColors.linkButton,
+                                            text: '링크 바로가기',
+                                            onPressed: () => pressGoToLink(
+                                                content.contentUrl!),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 15),
+                                        Expanded(
+                                          child: Button(
+                                            text: '확인',
+                                            onPressed: pressConfirm,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Button(
                                       text: '확인',
                                       onPressed: pressConfirm,
                                     ),
-                                  ),
-                                ],
-                              ),
                             ],
                           ),
                         );
