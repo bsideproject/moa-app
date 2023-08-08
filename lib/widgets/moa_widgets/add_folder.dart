@@ -115,7 +115,7 @@ class AddFolder extends HookConsumerWidget {
               disabled: folderNameController.text.isEmpty,
               margin: const EdgeInsets.only(bottom: 30),
               text: '추가하기',
-              onPress: addFolder,
+              onPressed: addFolder,
             )
           ],
         ),

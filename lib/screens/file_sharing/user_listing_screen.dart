@@ -64,7 +64,7 @@ class UserListingScreen extends HookWidget {
           const SizedBox(height: 10),
           Button(
             text: 'Crawl',
-            onPress: () {
+            onPressed: () {
               if (text != null) {
                 getCrawlUrl(text!);
               }

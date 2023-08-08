@@ -360,7 +360,7 @@ class InputNameView extends HookWidget {
                   disabled:
                       !name.value.isNotEmpty || !validateNickname(name.value),
                   text: isNextPage.value ? '확인' : '다음',
-                  onPress: handleNext,
+                  onPressed: handleNext,
                 ),
               )
             ],

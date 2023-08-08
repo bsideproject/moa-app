@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/models/content_model.dart';
+import 'package:moa_app/repositories/content_repository.dart';
 import 'package:moa_app/screens/home/content_view.dart';
 import 'package:moa_app/screens/home/widgets/content_card.dart';
 import 'package:moa_app/utils/router_provider.dart';
@@ -25,10 +26,15 @@ class DynamicGridList extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    void goContentView(String contentId) {
+    void goContentView({required String contentId, String? contentUrl}) {
       context.push(
         '${GoRoutes.content.fullPath}/$contentId',
-        extra: ContentView(id: contentId, folderName: folderName),
+        extra: ContentView(
+          id: contentId,
+          folderName: folderName,
+          contentType:
+              contentUrl != null ? AddContentType.url : AddContentType.image,
+        ),
       );
     }
 
@@ -47,7 +53,12 @@ class DynamicGridList extends HookWidget {
               (i) => InkWell(
                 splashColor: Colors.transparent,
                 borderRadius: BorderRadius.circular(10),
-                onTap: () => goContentView(contentList[i].contentId),
+                onTap: () {
+                  goContentView(
+                    contentId: contentList[i].contentId,
+                    contentUrl: contentList[i].contentUrl,
+                  );
+                },
                 child: Column(
                   children: [
                     FutureBuilder(

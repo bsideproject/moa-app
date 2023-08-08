@@ -16,7 +16,7 @@ class Button extends StatelessWidget {
 
     /// Adhoc used for button with default width but with specific height
     this.height = 50,
-    this.onPress,
+    this.onPressed,
     this.color = Colors.white,
     this.fontWeight = FontWeight.w600,
     this.backgroundColor,
@@ -40,7 +40,7 @@ class Button extends StatelessWidget {
   final String? text;
   final double? width;
   final double height;
-  final VoidCallback? onPress;
+  final VoidCallback? onPressed;
   final Color color;
   final FontWeight fontWeight;
   final Color? backgroundColor;
@@ -93,7 +93,7 @@ class Button extends StatelessWidget {
       onPressed: loading
           ? () {}
           : !disabled
-              ? onPress
+              ? onPressed
               : null,
       autofocus: autofocus,
       style: ElevatedButton.styleFrom(
@@ -136,7 +136,7 @@ class Button extends StatelessWidget {
       onPressed: loading
           ? () {}
           : !disabled
-              ? onPress
+              ? onPressed
               : null,
       style: OutlinedButton.styleFrom(
         side: BorderSide(color: color, width: 1),

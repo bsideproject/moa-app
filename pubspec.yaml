@@ -75,6 +75,7 @@ dependencies:
   http_parser: ^4.0.2
   share_plus: ^7.0.2
   path_provider: ^2.0.15
+  url_launcher: ^6.1.12
 
 conditional_dependencies:
   sqflite:

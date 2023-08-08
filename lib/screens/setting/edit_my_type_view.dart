@@ -52,7 +52,6 @@ class EditMyTypeView extends HookWidget {
             // source.refresh(true);
           },
         ),
-        isContainer: false,
       );
     }
 

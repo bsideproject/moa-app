@@ -14,10 +14,13 @@ import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/content_model.dart';
+import 'package:moa_app/providers/folder_view_provider.dart';
 import 'package:moa_app/providers/hashtag_provider.dart';
+import 'package:moa_app/providers/hashtag_view_provider.dart';
 import 'package:moa_app/repositories/content_repository.dart';
 import 'package:moa_app/screens/add_content/add_image_content.dart';
 import 'package:moa_app/screens/add_content/widgets/add_content_bottom.dart';
+import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/utils/utils.dart';
 import 'package:moa_app/widgets/app_bar.dart';
 import 'package:moa_app/widgets/button.dart';
@@ -132,8 +135,16 @@ class AddLinkContent extends HookConsumerWidget {
           hashTagStringList: hashTagStringList,
         );
 
+        await ref.read(hashtagViewProvider.notifier).addContent();
+        await ref
+            .refresh(folderViewProvider.notifier)
+            .addFolder(folderName: 'folderName');
+
         if (context.mounted) {
-          context.go('/');
+          context.go(
+            '/',
+            extra: const Home(isRefresh: true),
+          );
         }
       } catch (error) {
         if (context.mounted) {
@@ -380,7 +391,7 @@ class AddLinkContent extends HookConsumerWidget {
             width: MediaQuery.of(context).size.width,
             child: Button(
               loading: loading.value,
-              onPress: completeAddContent,
+              onPressed: completeAddContent,
               backgroundColor: AppColors.primaryColor,
               text: '완료',
               height: 52 + MediaQuery.of(context).padding.bottom,

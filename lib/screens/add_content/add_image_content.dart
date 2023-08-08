@@ -249,7 +249,7 @@ class AddImageContent extends HookConsumerWidget {
             width: MediaQuery.of(context).size.width,
             child: Button(
               loading: loading.value,
-              onPress: completeAddContent,
+              onPressed: completeAddContent,
               backgroundColor: AppColors.primaryColor,
               text: '완료',
               height: 52 + MediaQuery.of(context).padding.bottom,

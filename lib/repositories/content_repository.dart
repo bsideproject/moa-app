@@ -109,7 +109,19 @@ class ContentRepository implements IContentRepository {
     required ContentModel content,
     required String hashTagStringList,
   }) async {
-    throw UnimplementedError();
+    var token = await TokenRepository.instance.getToken();
+
+    await dio.post(
+      '/api/v1/content/edit',
+      data: {
+        //todo 수정데이터
+      },
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
   }
 
   @override

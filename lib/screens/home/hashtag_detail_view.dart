@@ -41,7 +41,6 @@ class HashtagDetailView extends HookWidget {
           updatedContentName: updatedHashtagName,
           contentName: filterName,
         ),
-        isContainer: false,
       );
     }
 

@@ -224,6 +224,7 @@ final routeProvider = Provider(
                         id: contentView.id,
                         folderName: contentView.folderName,
                         source: contentView.source,
+                        contentType: contentView.contentType,
                       ),
                     );
                   },

@@ -77,7 +77,7 @@ class GreetingView extends HookWidget {
               const Spacer(),
               Button(
                 text: '다음',
-                onPress: goNextStep,
+                onPressed: goNextStep,
               ),
               const SizedBox(height: kBottomNavigationBarHeight),
             ],

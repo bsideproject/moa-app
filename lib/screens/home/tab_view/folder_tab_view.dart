@@ -54,7 +54,6 @@ class FolderTabView extends HookConsumerWidget {
             source.refresh(true);
           },
         ),
-        isContainer: false,
       );
     }
 
@@ -99,7 +98,6 @@ class FolderTabView extends HookConsumerWidget {
             }
           },
         ),
-        isContainer: false,
       );
     }
 

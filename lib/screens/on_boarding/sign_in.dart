@@ -147,7 +147,7 @@ class SignIn extends HookConsumerWidget {
                             text: 'Kakao로 로그인',
                             textStyle:
                                 const TextStyle(color: AppColors.blackColor),
-                            onPress: () {
+                            onPressed: () {
                               handleLogin(AuthRepository.instance.kakaoLogin);
                             },
                           ),
@@ -167,7 +167,7 @@ class SignIn extends HookConsumerWidget {
                                   ),
                                   backgroundColor: AppColors.blackColor,
                                   text: 'Apple로 로그인',
-                                  onPress: () {
+                                  onPressed: () {
                                     handleLogin(
                                         AuthRepository.instance.appleLogin);
                                   },
@@ -190,7 +190,7 @@ class SignIn extends HookConsumerWidget {
                             text: 'Google로 로그인',
                             textStyle:
                                 const TextStyle(color: AppColors.blackColor),
-                            onPress: () {
+                            onPressed: () {
                               handleLogin(AuthRepository.instance.googleLogin);
                             },
                           ),
@@ -210,7 +210,7 @@ class SignIn extends HookConsumerWidget {
                             text: 'Naver로 로그인',
                             textStyle:
                                 const TextStyle(color: AppColors.whiteColor),
-                            onPress: () {
+                            onPressed: () {
                               handleLogin(AuthRepository.instance.naverLogin);
                             },
                           ),
@@ -277,7 +277,7 @@ class SignIn extends HookConsumerWidget {
                           child: Button(
                             text: '로그인 하기',
                             disabled: emailUser.value?.email == '',
-                            onPress: () async {
+                            onPressed: () async {
                               // if (context.mounted) {
                               //   context.go(GoRoutes.home.fullPath);
                               // }

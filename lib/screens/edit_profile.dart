@@ -198,7 +198,7 @@ class EditProfile extends HookConsumerWidget {
                     ),
                     Button(
                       text: 'Update',
-                      onPress: () {},
+                      onPressed: () {},
                       disabled: nameValue.value == '' || descValue.value == '',
                     )
                   ],

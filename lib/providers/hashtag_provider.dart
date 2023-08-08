@@ -20,6 +20,22 @@ class Hashtag extends _$Hashtag {
     return fetchItem();
   }
 
+  Future<void> editHashtag({
+    required String tagId,
+    required String hashtags,
+  }) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      await HashtagRepository.instance.editHashtag(
+        tagId: tagId,
+        hashtags: hashtags,
+      );
+      var data = await fetchItem();
+      return data;
+    });
+  }
+
   Future<List<HashtagModel>?> addHashtag({
     required HashtagModel hashtag,
   }) async {

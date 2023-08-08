@@ -8,6 +8,7 @@ import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/providers/hashtag_view_provider.dart';
+import 'package:moa_app/repositories/content_repository.dart';
 import 'package:moa_app/screens/home/content_view.dart';
 import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/screens/home/widgets/content_card.dart';
@@ -42,14 +43,19 @@ class HashtagTabView extends HookConsumerWidget {
       return null;
     }, [isRefresh]);
 
-    void goContentView(
-        {required String contentId, required String folderName}) {
+    void goContentView({
+      required String contentId,
+      required String folderName,
+      String? contentUrl,
+    }) {
       context.go(
         '${GoRoutes.content.fullPath}/$contentId',
         extra: ContentView(
           id: contentId,
           folderName: folderName,
           source: source,
+          contentType:
+              contentUrl != null ? AddContentType.url : AddContentType.image,
         ),
       );
     }
@@ -136,6 +142,7 @@ class HashtagTabView extends HookConsumerWidget {
                       onTap: () => goContentView(
                         contentId: item.contentId,
                         folderName: item.folderName ?? '',
+                        contentUrl: item.contentUrl,
                       ),
                       child: Column(
                         children: [
