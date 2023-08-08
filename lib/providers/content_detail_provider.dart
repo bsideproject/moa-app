@@ -40,4 +40,24 @@ class ContentDetail extends _$ContentDetail {
   Future<ContentModel?> build() async {
     return null;
   }
+
+  Future<void> editContent({
+    required String contentId,
+    required String contentName,
+    required String contentMemo,
+    required String hashTagStringList,
+  }) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      // await ContentRepository.instance.editContent(
+      //   contentId: contentId,
+      //   contentName: contentName,
+      //   contentMemo: contentMemo,
+      //   hashTagStringList: hashTagStringList,
+      // );
+      var data = await fetchItem(contentId: contentId);
+      return data;
+    });
+  }
 }

@@ -17,6 +17,7 @@ class UserListingScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var content = useState(ContentModel(
+      folderName: '',
       contentId: '1',
       contentName: '',
       contentMemo: '',

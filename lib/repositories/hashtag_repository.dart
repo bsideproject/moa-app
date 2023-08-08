@@ -15,6 +15,9 @@ abstract class IHashtagRepository {
     required String tagId,
     required String hashtags,
   });
+  Future<void> deleteHashtag({
+    required List<String> tagIds,
+  });
 }
 
 class HashtagRepository implements IHashtagRepository {
@@ -79,8 +82,23 @@ class HashtagRepository implements IHashtagRepository {
       '/api/v1/hashtag/edit',
       data: {
         'tagId': tagId,
-        'hashtag': hashtags,
+        'hashTag': hashtags,
       },
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+  }
+
+  @override
+  Future<void> deleteHashtag({required List<String> tagIds}) async {
+    var token = await TokenRepository.instance.getToken();
+
+    await dio.post(
+      '/api/v1/hashtag/delete',
+      data: {'tagIds': tagIds},
       options: Options(
         headers: {
           'Authorization': 'Bearer $token',

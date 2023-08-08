@@ -49,7 +49,6 @@ class EditContent extends HookWidget {
 
     void editContent() async {
       onPressed();
-      emptyContentName();
     }
 
     void closeBottomSheet() {

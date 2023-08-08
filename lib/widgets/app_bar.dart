@@ -9,6 +9,7 @@ class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
   const AppBarBack({
     Key? key,
     this.title,
+    this.text,
     this.leading,
     this.actions,
     this.isBottomBorderDisplayed = true,
@@ -16,6 +17,7 @@ class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
     this.onPressedBack,
   }) : super(key: key);
   final String? title;
+  final Widget? text;
   final Widget? leading;
   final List<Widget>? actions;
   final bool isBottomBorderDisplayed;
@@ -26,10 +28,11 @@ class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: AppColors.whiteColor,
-      title: Text(
-        title ?? '',
-        style: const H2TextStyle(),
-      ),
+      title: text ??
+          Text(
+            title ?? '',
+            style: const H2TextStyle(),
+          ),
       leading: CircleIconButton(
         backgroundColor: AppColors.whiteColor,
         icon: Image(

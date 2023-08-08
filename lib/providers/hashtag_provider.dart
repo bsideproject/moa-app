@@ -27,10 +27,24 @@ class Hashtag extends _$Hashtag {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      await HashtagRepository.instance.editHashtag(
-        tagId: tagId,
-        hashtags: hashtags,
-      );
+      // await HashtagRepository.instance.editHashtag(
+      //   tagId: tagId,
+      //   hashtags: hashtags,
+      // );
+      var data = await fetchItem();
+      return data;
+    });
+  }
+
+  Future<void> deleteHashtag({
+    required List<String> tagIds,
+  }) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      // await HashtagRepository.instance.deleteHashtag(
+      //   tagIds: tagIds,
+      // );
       var data = await fetchItem();
       return data;
     });

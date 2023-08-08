@@ -125,6 +125,7 @@ class AddLinkContent extends HookConsumerWidget {
         await ContentRepository.instance.addContent(
           contentType: AddContentType.url,
           content: ContentModel(
+            folderName: 'folderName',
             contentId: folderId,
             contentUrl: link.value,
             contentName: title.value,

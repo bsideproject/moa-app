@@ -27,3 +27,5 @@ List<Color> folderColors = [
   AppColors.folderColorD7E5FC,
   AppColors.folderColorECD8F3,
 ];
+
+String uniqueKey = 'unique_key';
