@@ -18,7 +18,8 @@ abstract class IContentRepository {
 
   Future<void> editContent({
     required String contentId,
-    required ContentModel content,
+    required String contentName,
+    required String contentMemo,
     required String hashTagStringList,
   });
 
@@ -106,7 +107,8 @@ class ContentRepository implements IContentRepository {
   @override
   Future<void> editContent({
     required String contentId,
-    required ContentModel content,
+    required String contentName,
+    required String contentMemo,
     required String hashTagStringList,
   }) async {
     var token = await TokenRepository.instance.getToken();
@@ -114,7 +116,9 @@ class ContentRepository implements IContentRepository {
     await dio.post(
       '/api/v1/content/edit',
       data: {
-        //todo 수정데이터
+        'title': contentName,
+        'memo': contentMemo,
+        'hashTag': hashTagStringList,
       },
       options: Options(
         headers: {

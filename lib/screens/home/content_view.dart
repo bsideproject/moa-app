@@ -17,6 +17,7 @@ import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/image.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
 import 'package:moa_app/widgets/moa_widgets/bottom_modal_item.dart';
+import 'package:moa_app/widgets/snackbar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContentView extends HookConsumerWidget {
@@ -41,6 +42,9 @@ class ContentView extends HookConsumerWidget {
     void pressGoToLink(String contentUrl) async {
       var url = Uri.parse(contentUrl);
       if (!await launchUrl(url)) {
+        if (context.mounted) {
+          snackbar.alert(context, '잘못된 링크입니다.\n$url');
+        }
         throw Exception('Could not launch $url');
       }
     }

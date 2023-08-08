@@ -17,23 +17,27 @@ class DynamicGridList extends HookWidget {
     super.key,
     required this.contentList,
     required this.pullToRefresh,
-    required this.folderName,
+    this.folderNameProp,
   });
   final List<ContentModel> contentList;
   final Future<void> Function() pullToRefresh;
-  final String folderName;
+  final String? folderNameProp;
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    void goContentView({required String contentId, String? contentUrl}) {
+    void goContentView({
+      required String contentId,
+      required String folderName,
+      String? contentUrl,
+    }) {
       context.push(
         '${GoRoutes.content.fullPath}/$contentId',
         extra: ContentView(
           id: contentId,
-          folderName: folderName,
+          folderName: folderNameProp ?? folderName,
           contentType:
-              contentUrl != null ? AddContentType.url : AddContentType.image,
+              contentUrl != '' ? AddContentType.url : AddContentType.image,
         ),
       );
     }
@@ -41,6 +45,7 @@ class DynamicGridList extends HookWidget {
     return RefreshIndicator(
       onRefresh: pullToRefresh,
       child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
         child: StaggeredGrid.count(
           axisDirection: AxisDirection.down,
@@ -57,6 +62,7 @@ class DynamicGridList extends HookWidget {
                   goContentView(
                     contentId: contentList[i].contentId,
                     contentUrl: contentList[i].contentUrl,
+                    folderName: contentList[i].folderName ?? '',
                   );
                 },
                 child: Column(
@@ -114,6 +120,7 @@ class DynamicGridList extends HookWidget {
                         contentName: contentList[i].contentName,
                         contentMemo: contentList[i].contentMemo,
                         contentHashTags: contentList[i].contentHashTags,
+                        folderName: contentList[i].folderName,
                       ),
                     ),
                   ],

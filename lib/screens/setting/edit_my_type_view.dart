@@ -158,7 +158,6 @@ class EditMyTypeView extends HookWidget {
                 child: DynamicGridList(
                   contentList: const [],
                   pullToRefresh: hashtagPullToRefresh,
-                  folderName: 'folderName',
                 ),
               ),
             ],

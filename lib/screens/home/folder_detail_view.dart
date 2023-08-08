@@ -82,7 +82,7 @@ class FolderDetailView extends HookConsumerWidget {
                           child: DynamicGridList(
                             contentList: contentList,
                             pullToRefresh: pullToRefresh,
-                            folderName: folderName,
+                            folderNameProp: folderName,
                           ),
                         ),
                       ],

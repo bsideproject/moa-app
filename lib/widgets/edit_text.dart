@@ -33,6 +33,7 @@ class EditText extends StatefulWidget {
     this.maxLength,
     this.padding,
     this.inputPadding,
+    this.focusNode,
   });
 
   final void Function(String) onChanged;
@@ -54,6 +55,7 @@ class EditText extends StatefulWidget {
   final int? maxLength;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? inputPadding;
+  final FocusNode? focusNode;
 
   @override
   State<EditText> createState() => _EditTextState();
@@ -71,6 +73,7 @@ class _EditTextState extends State<EditText> {
       height: widget.height,
       width: widget.width,
       child: TextField(
+        focusNode: widget.focusNode,
         maxLength: widget.maxLength,
         maxLines: widget.maxLines,
         controller: widget.controller,

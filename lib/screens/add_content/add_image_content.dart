@@ -97,6 +97,7 @@ class AddImageContent extends HookConsumerWidget {
         await ContentRepository.instance.addContent(
           contentType: AddContentType.image,
           content: ContentModel(
+            folderName: 'folderName',
             contentId: folderId,
             contentName: title.value,
             contentHashTags: [],

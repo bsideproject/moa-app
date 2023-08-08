@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -6,7 +7,9 @@ import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/content_model.dart';
+import 'package:moa_app/providers/content_detail_provider.dart';
 import 'package:moa_app/providers/hashtag_provider.dart';
+import 'package:moa_app/repositories/content_repository.dart';
 import 'package:moa_app/screens/add_content/add_image_content.dart';
 import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/widgets/button.dart';
@@ -14,6 +17,7 @@ import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/image.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
 import 'package:moa_app/widgets/moa_widgets/hashtag_box.dart';
+import 'package:moa_app/widgets/snackbar.dart';
 
 class EditContentView extends HookConsumerWidget {
   const EditContentView({
@@ -31,10 +35,31 @@ class EditContentView extends HookConsumerWidget {
     var hashtagList = useState<List<String>>(
         content.contentHashTags.map((e) => e.hashTag).toList());
 
-    void saveEditContent() {
+    var loading = useState(false);
+
+    Future<void> saveEditContent() async {
       // todo 컨텐츠 수정
-      // ContentRepository.instance.editContent()
-      isEditMode.value = false;
+      try {
+        loading.value = true;
+        await ContentRepository.instance.editContent(
+          contentId: content.contentId,
+          contentMemo: titleController.text,
+          contentName: memoController.text,
+          hashTagStringList: hashtagList.value.join(','),
+        );
+        await ref.read(contentDetailProvider.notifier).editContent(
+              contentId: content.contentId,
+              contentMemo: titleController.text,
+              contentName: memoController.text,
+              hashTagStringList: hashtagList.value.join(','),
+            );
+        isEditMode.value = false;
+      } catch (e) {
+        snackbar.alert(
+            context, kDebugMode ? e.toString() : '오류가 발생했습니다. 다시 시도해주세요.');
+      } finally {
+        loading.value = false;
+      }
     }
 
     void showEditHashtagModal() {
@@ -139,6 +164,7 @@ class EditContentView extends HookConsumerWidget {
         ),
         const SizedBox(height: 30),
         Button(
+          loading: loading.value,
           backgroundColor: AppColors.primaryColor,
           text: '변경 내용 저장',
           onPressed: saveEditContent,

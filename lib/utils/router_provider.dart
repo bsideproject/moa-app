@@ -207,7 +207,9 @@ final routeProvider = Provider(
                       context: context,
                       state: state,
                       child: HashtagDetailView(
-                          filterName: state.pathParameters['hashtag']!),
+                        filterName: state.pathParameters['hashtag'] ?? '',
+                        tagId: state.queryParameters['tagId'] ?? '',
+                      ),
                     );
                   },
                 ),
