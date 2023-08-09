@@ -21,6 +21,7 @@ class FolderList extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('folder.thumbnailUrl:${folder.thumbnailUrl}');
     return Ink(
       decoration: BoxDecoration(
         image: DecorationImage(

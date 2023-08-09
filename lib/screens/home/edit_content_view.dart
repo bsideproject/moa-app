@@ -202,53 +202,57 @@ class ChangeHashtagList extends HookConsumerWidget {
     }
 
     return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          hashtagAsync.when(
-            data: (data) {
-              if (selectedTagList.value.isEmpty) {
-                selectedTagList.value = data.map((e) {
-                  if (hashtagList.value.contains(e.hashTag)) {
-                    return SelectedTagModel(name: e.hashTag, isSelected: true);
-                  }
-                  return SelectedTagModel(name: e.hashTag, isSelected: false);
-                }).toList();
-              }
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 30),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            hashtagAsync.when(
+              data: (data) {
+                if (selectedTagList.value.isEmpty) {
+                  selectedTagList.value = data.map((e) {
+                    if (hashtagList.value.contains(e.hashTag)) {
+                      return SelectedTagModel(
+                          name: e.hashTag, isSelected: true);
+                    }
+                    return SelectedTagModel(name: e.hashTag, isSelected: false);
+                  }).toList();
+                }
 
-              return SizedBox(
-                height: 300,
-                child: SingleChildScrollView(
-                  physics: const ClampingScrollPhysics(),
-                  padding: const EdgeInsets.only(bottom: 50),
-                  child: Wrap(
-                      spacing: 5,
-                      crossAxisAlignment: WrapCrossAlignment.start,
-                      children: [
-                        ...selectedTagList.value
-                            .map(
-                              (tag) => HashtagBox(
-                                hashtag: tag.name,
-                                selected: tag.isSelected,
-                                onSelected: (value) =>
-                                    onSelectedTag(value: value, tag: tag),
-                              ),
-                            )
-                            .toList(),
-                      ]),
-                ),
-              );
-            },
-            loading: () => const LoadingIndicator(),
-            error: (error, stackTrace) => const Text('에러'),
-          ),
-          const SizedBox(height: 10),
-          Button(
-            text: '해시태그 변경',
-            onPressed: changeHashtag,
-          )
-        ],
+                return SizedBox(
+                  height: 300,
+                  child: SingleChildScrollView(
+                    physics: const ClampingScrollPhysics(),
+                    padding: const EdgeInsets.only(bottom: 50),
+                    child: Wrap(
+                        spacing: 5,
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        children: [
+                          ...selectedTagList.value
+                              .map(
+                                (tag) => HashtagBox(
+                                  hashtag: tag.name,
+                                  selected: tag.isSelected,
+                                  onSelected: (value) =>
+                                      onSelectedTag(value: value, tag: tag),
+                                ),
+                              )
+                              .toList(),
+                        ]),
+                  ),
+                );
+              },
+              loading: () => const LoadingIndicator(),
+              error: (error, stackTrace) => const Text('에러'),
+            ),
+            const SizedBox(height: 10),
+            Button(
+              text: '해시태그 변경',
+              onPressed: changeHashtag,
+            )
+          ],
+        ),
       ),
     );
   }

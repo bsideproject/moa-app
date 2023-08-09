@@ -113,11 +113,13 @@ class ContentRepository implements IContentRepository {
   }) async {
     var token = await TokenRepository.instance.getToken();
 
-    await dio.post(
+    await dio.put(
       '/api/v1/content/edit',
       data: {
-        'title': contentName,
-        'memo': contentMemo,
+        'contentId': contentId,
+        'changeContentName': contentName,
+        // 'changeContentUrl':changeContentUrl
+        'changeContentMemo': contentMemo,
         'hashTag': hashTagStringList,
       },
       options: Options(

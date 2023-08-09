@@ -105,10 +105,12 @@ class AddLinkContent extends HookConsumerWidget {
         return;
       }
       loading.value = true;
-      late String base64Image;
-      if (defaultImage.value == null) {
+      late String base64Image = '';
+      if (imageFile.value != null) {
         base64Image = await xFileToBase64(imageFile.value!);
-      } else {
+      }
+
+      if (defaultImage.value != null) {
         base64Image = defaultImage.value!;
       }
 
