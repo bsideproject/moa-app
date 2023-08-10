@@ -56,8 +56,8 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBcNRjkFcC4wf4pJdHwsdB3G_jUfwC5Eio',
-    appId: '1:152179311533:android:ac857c908c5c344abd9724',
+    apiKey: 'AIzaSyAUdxL4T_kFatrnqMRYI_x1SWmt8u7cMt4',
+    appId: '1:152179311533:android:e6856bf7b5fce25fbd9724',
     messagingSenderId: '152179311533',
     projectId: 'moajo-app',
     storageBucket: 'moajo-app.appspot.com',
@@ -69,6 +69,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '152179311533',
     projectId: 'moajo-app',
     storageBucket: 'moajo-app.appspot.com',
+    androidClientId: '152179311533-23ktj1fi7u3fpb2dcie1p2u439dng99a.apps.googleusercontent.com',
+    iosClientId: '152179311533-2lsvtrj7junkos93nd2oekpropcv8929.apps.googleusercontent.com',
     iosBundleId: 'com.beside.moa',
   );
 }

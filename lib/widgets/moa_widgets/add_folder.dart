@@ -54,7 +54,7 @@ class AddFolder extends HookConsumerWidget {
           context.pop();
         }
         emptyFolderName();
-      } on DioError catch (e) {
+      } on DioException catch (e) {
         // 폴더 중복 에러 처리
         if (e.response?.statusCode == 409) {
           snackbar.alert(context, '이미 가지고 있는 폴더이름이에요');

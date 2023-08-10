@@ -230,6 +230,7 @@ class AddImageContent extends HookConsumerWidget {
                       errorText: imageError.value,
                       errorValidate: imageError.value.isNotEmpty),
                   AddContentBottom(
+                    padding: const EdgeInsets.symmetric(horizontal: 0),
                     onChangedTitle: onChangedTitle,
                     addHashtag: addHashtag,
                     hashtagController: hashtagController,

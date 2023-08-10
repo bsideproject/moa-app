@@ -84,7 +84,7 @@ class FolderTabView extends HookConsumerWidget {
               if (context.mounted) {
                 context.pop();
               }
-            } on DioError catch (error) {
+            } on DioException catch (error) {
               logger.d(error);
               // 폴더 중복 에러 처리
               if (error.response!.statusCode == 409) {

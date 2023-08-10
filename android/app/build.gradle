@@ -71,10 +71,10 @@ android {
 
     signingConfigs {
         release {
-//           keyAlias keystoreProperties['keyAlias']
-//           keyPassword keystoreProperties['keyPassword']
-//           storeFile file(keystoreProperties['storeFile'])
-//           storePassword keystoreProperties['storePassword']
+          keyAlias keystoreProperties['keyAlias']
+          keyPassword keystoreProperties['keyPassword']
+          storeFile file(keystoreProperties['storeFile'])
+          storePassword keystoreProperties['storePassword']
         }
         debug {
             keyAlias 'androiddebugkey'
@@ -86,9 +86,12 @@ android {
 
     buildTypes {
         debug {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
+        }
+         release {
+           shrinkResources false
+           minifyEnabled false
+           signingConfig signingConfigs.release
         }
     }
 }
@@ -99,4 +102,5 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "com.google.gms:google-services:4.3.10"
 }

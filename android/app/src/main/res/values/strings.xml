@@ -4,4 +4,5 @@
     <string name="client_id">K10uUCEMBAnAY0ZtJMeo</string>
     <string name="client_secret">qtCW1qORKI</string>
     <string name="client_name">Moa-app</string>
+    <string name="default_web_client_id">152179311533-i1kbu0metfct55ga0a3elf21ddihjcfd.apps.googleusercontent.com</string>
 </resources>

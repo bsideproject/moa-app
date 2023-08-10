@@ -21,6 +21,7 @@ class AddContentBottom extends HookWidget {
     required this.tagError,
     required this.onChangedMemo,
     required this.memo,
+    this.padding,
     this.titleController,
     this.memoController,
   });
@@ -34,13 +35,14 @@ class AddContentBottom extends HookWidget {
   final ValueNotifier<String> tagError;
   final ValueChanged<String> onChangedMemo;
   final ValueNotifier<String> memo;
+  final EdgeInsetsGeometry? padding;
   final TextEditingController? titleController;
   final TextEditingController? memoController;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      padding: padding ?? const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

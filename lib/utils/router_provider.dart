@@ -135,9 +135,10 @@ final routeProvider = Provider(
         }
 
         var user = await UserRepository.instance.getUser();
-        if (user?.nickname == null) {
-          return GoRoutes.signIn.fullPath;
+        if (token.value != null && user?.nickname == null) {
+          return GoRoutes.inputName.fullPath;
         }
+
         return null;
       },
       routes: <RouteBase>[
