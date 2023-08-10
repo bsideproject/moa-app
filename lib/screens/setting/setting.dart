@@ -8,7 +8,7 @@ import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/providers/user_provider.dart';
-import 'package:moa_app/repositories/user_repository.dart';
+import 'package:moa_app/repositories/token_repository.dart';
 import 'package:moa_app/screens/setting/widgets/setting_list_tile.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/alert_dialog.dart';
@@ -41,7 +41,7 @@ class Setting extends HookConsumerWidget {
         context,
         onPress: () async {
           try {
-            await UserRepository.instance.removeUser();
+            await TokenRepository.instance.removeToken();
             await ref.read(tokenStateProvider.notifier).removeToken();
             if (context.mounted) {
               context.go(GoRoutes.signIn.fullPath);

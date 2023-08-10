@@ -46,7 +46,7 @@ class TokenRepository implements ITokenRepository {
   }
 
   @override
-  Future<Object?> getToken() async {
+  Future<String?> getToken() async {
     try {
       SharedPreferences prefs = await _prefs;
       var token = prefs.getString('token');

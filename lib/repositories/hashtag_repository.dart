@@ -6,6 +6,7 @@ import 'package:moa_app/utils/api.dart';
 
 abstract class IHashtagRepository {
   Future<(List<ContentModel>, int)> getHashtagView({
+    String? token,
     int? page,
     int? size,
     String? tag,
@@ -26,11 +27,12 @@ class HashtagRepository implements IHashtagRepository {
 
   @override
   Future<(List<ContentModel>, int)> getHashtagView({
+    String? token,
     int? page = 0,
     int? size = 10,
     String? tag,
   }) async {
-    var token = await TokenRepository.instance.getToken();
+    var localToken = await TokenRepository.instance.getToken();
 
     var res = await dio.get(
       tag == null
@@ -38,7 +40,7 @@ class HashtagRepository implements IHashtagRepository {
           : '/api/v1/hashtag/view?tag=$tag&page=$page&size=$size',
       options: Options(
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer ${token ?? localToken}',
         },
       ),
     );

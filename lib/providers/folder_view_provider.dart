@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:moa_app/models/folder_model.dart';
+import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/repositories/folder_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,7 +12,9 @@ part 'folder_view_provider.g.dart';
 @riverpod
 class FolderView extends _$FolderView {
   Future<List<FolderModel>> fetchItem() async {
+    var token = ref.watch(tokenStateProvider).value;
     // get the [KeepAliveLink]
+
     var link = ref.keepAlive();
     // a timer to be used by the callbacks below
     Timer? timer;
@@ -33,7 +36,7 @@ class FolderView extends _$FolderView {
       timer?.cancel();
     });
 
-    var data = await FolderRepository.instance.getFolderList();
+    var data = await FolderRepository.instance.getFolderList(token: token!);
     return data;
   }
 
@@ -50,14 +53,6 @@ class FolderView extends _$FolderView {
     state = await AsyncValue.guard(() async {
       // await FolderRepository.instance.addFolder(folderName: folderName);
       return fetchItem();
-      // return [
-      //   ...state.value ?? [],
-      //   FolderModel(
-      //     folderId: 0,
-      //     folderName: folderName,
-      //     count: 0,
-      //   )
-      // ];
     });
   }
 
@@ -73,18 +68,6 @@ class FolderView extends _$FolderView {
       //   editFolderName: editFolderName,
       // );
       return fetchItem();
-
-      // return state.value?.map((element) {
-      //       if (element.folderName == currentFolderName) {
-      //         return FolderModel(
-      //           folderId: element.folderId,
-      //           folderName: editFolderName,
-      //           count: element.count,
-      //         );
-      //       }
-      //       return element;
-      //     }).toList() ??
-      //     [];
     });
   }
 
@@ -95,10 +78,6 @@ class FolderView extends _$FolderView {
       // await FolderRepository.instance.deleteFolder(folderName: folderName);
 
       return fetchItem();
-      // return state.value
-      //         ?.where((element) => element.folderName != folderName)
-      //         .toList() ??
-      //     [];
     });
   }
 }

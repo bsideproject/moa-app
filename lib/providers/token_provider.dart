@@ -6,11 +6,11 @@ part 'token_provider.g.dart';
 @riverpod
 class TokenState extends _$TokenState {
   @override
-  Future<Object?> build() async {
+  Future<String?> build() async {
     return await TokenRepository.instance.getToken();
   }
 
-  Future<Object?> addToken(String token) async {
+  Future<String?> addToken(String token) async {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
@@ -23,7 +23,6 @@ class TokenState extends _$TokenState {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      await TokenRepository.instance.removeToken();
       return null;
     });
   }

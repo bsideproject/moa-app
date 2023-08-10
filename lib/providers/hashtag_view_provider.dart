@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:moa_app/models/content_model.dart';
+import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/repositories/content_repository.dart';
 import 'package:moa_app/repositories/hashtag_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -12,6 +13,8 @@ part 'hashtag_view_provider.g.dart';
 @riverpod
 class HashtagView extends _$HashtagView {
   Future<(List<ContentModel>, int)> fetchItem({String? hashtag}) async {
+    var token = ref.watch(tokenStateProvider).value;
+
     // get the [KeepAliveLink]
     var link = ref.keepAlive();
     // a timer to be used by the callbacks below
@@ -34,7 +37,8 @@ class HashtagView extends _$HashtagView {
       timer?.cancel();
     });
 
-    var data = await HashtagRepository.instance.getHashtagView(tag: hashtag);
+    var data = await HashtagRepository.instance
+        .getHashtagView(tag: hashtag, token: token);
     return data;
   }
 

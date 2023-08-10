@@ -26,6 +26,8 @@ class Home extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var userAsync = ref.watch(userStateProvider);
+    ref.watch(folderViewProvider);
+    ref.watch(hashtagViewProvider);
     var folderAsync = ref.watch(folderViewProvider.notifier);
     var hashtagAsync = ref.watch(hashtagViewProvider.notifier);
 
@@ -363,6 +365,7 @@ class HashtagSource extends LoadingMoreBase<ContentModel> {
         var (initialList, count) = await futureList!.future;
         // 최초렌더시 컨텐츠 전체 개수 가져오기
         contentCount.value = count;
+
         contentList.addAll(initialList);
       } else {
         var (list, _) = await HashtagRepository.instance

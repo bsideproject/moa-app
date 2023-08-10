@@ -5,7 +5,7 @@ import 'package:moa_app/repositories/token_repository.dart';
 import 'package:moa_app/utils/api.dart';
 
 abstract class IFolderRepository {
-  Future<List<FolderModel>> getFolderList();
+  Future<List<FolderModel>> getFolderList({required String token});
   Future<void> addFolder({required String folderName});
   Future<void> deleteFolder({required String folderName});
   Future<void> editFolderName(
@@ -18,13 +18,13 @@ class FolderRepository implements IFolderRepository {
   static FolderRepository instance = const FolderRepository._();
 
   @override
-  Future<List<FolderModel>> getFolderList() async {
-    var token = await TokenRepository.instance.getToken();
+  Future<List<FolderModel>> getFolderList({String? token}) async {
+    var localToken = await TokenRepository.instance.getToken();
     var res = await dio.get(
       '/api/v1/folder/view',
       options: Options(
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer ${token ?? localToken}',
         },
       ),
     );

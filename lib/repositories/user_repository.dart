@@ -4,7 +4,7 @@ import 'package:moa_app/repositories/token_repository.dart';
 import 'package:moa_app/utils/api.dart';
 
 abstract class IUserRepository {
-  Future<UserModel?> getUser();
+  Future<UserModel?> getUser({String? token});
   Future<void> removeUser();
   Future<void> editUserNickname({required String nickname});
 }
@@ -14,13 +14,16 @@ class UserRepository implements IUserRepository {
   static UserRepository instance = const UserRepository._();
 
   @override
-  Future<UserModel?> getUser() async {
-    var token = await TokenRepository.instance.getToken();
+  Future<UserModel?> getUser({String? token}) async {
+    var localToken = await TokenRepository.instance.getToken();
+    if (localToken == null) {
+      return null;
+    }
     var res = await dio.get(
       '/api/v1/user/info',
       options: Options(
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer ${token ?? localToken}',
         },
       ),
     );
