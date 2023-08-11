@@ -26,6 +26,8 @@ class ContentCard extends HookWidget {
           const SizedBox(height: 10),
           Text(
             content.contentName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
@@ -35,6 +37,8 @@ class ContentCard extends HookWidget {
           const SizedBox(height: 2),
           Text(
             content.contentMemo ?? '',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               fontSize: 14,
               fontFamily: FontConstants.pretendard,
@@ -42,22 +46,39 @@ class ContentCard extends HookWidget {
             ),
           ),
           SizedBox(height: content.contentMemo == null ? 0 : 15),
-          SizedBox(
-            width: double.infinity,
-            child: Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                ...content.contentHashTags.map((tag) {
-                  return HashtagButton(
-                    onPress: () => onPressHashtag(tag.hashTag),
-                    text: tag.hashTag,
-                  );
-                }).toList(),
-              ],
-            ),
-          )
+          content.contentHashTags.length > 3
+              ? SizedBox(
+                  width: double.infinity,
+                  child: Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      ...content.contentHashTags.sublist(0, 3).map((tag) {
+                        return HashtagButton(
+                          onPress: () => onPressHashtag(tag.hashTag),
+                          text: tag.hashTag,
+                        );
+                      }).toList()
+                    ],
+                  ),
+                )
+              : SizedBox(
+                  width: double.infinity,
+                  child: Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      ...content.contentHashTags.map((tag) {
+                        return HashtagButton(
+                          onPress: () => onPressHashtag(tag.hashTag),
+                          text: tag.hashTag,
+                        );
+                      }).toList()
+                    ],
+                  ),
+                )
         ],
       ),
     );

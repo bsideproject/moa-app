@@ -11,12 +11,12 @@ class FolderList extends HookWidget {
     super.key,
     required this.folder,
     required this.folderColor,
-    required this.onPress,
+    this.onPress,
     required this.onPressMore,
   });
   final FolderModel folder;
   final Color folderColor;
-  final Function() onPress;
+  final Function()? onPress;
   final Function() onPressMore;
 
   @override
