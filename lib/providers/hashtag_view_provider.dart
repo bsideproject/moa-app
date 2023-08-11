@@ -80,4 +80,12 @@ class HashtagView extends _$HashtagView {
 
     return state.value!;
   }
+
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      return fetchItem();
+    });
+  }
 }

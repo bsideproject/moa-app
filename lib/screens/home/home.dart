@@ -394,7 +394,7 @@ class HashtagSource extends LoadingMoreBase<ContentModel> {
   }
 }
 
-class TabViewItem extends StatefulWidget {
+class TabViewItem extends HookConsumerWidget {
   const TabViewItem({
     super.key,
     required this.uniqueKey,
@@ -412,46 +412,45 @@ class TabViewItem extends StatefulWidget {
   final bool? isRefresh;
 
   @override
-  TabViewItemState createState() => TabViewItemState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    var folderWatch = ref.watch(folderViewProvider);
+    var hashWatch = ref.watch(hashtagViewProvider);
+    var folderAsync = ref.watch(folderViewProvider.notifier);
+    var hashtagAsync = ref.watch(hashtagViewProvider.notifier);
+    useAutomaticKeepAlive(wantKeepAlive: true);
 
-class TabViewItemState extends State<TabViewItem>
-    with AutomaticKeepAliveClientMixin {
-  late final FolderSource folderSource = FolderSource(
-    futureList: widget.folderList,
-    folderCount: widget.folderCount,
-  );
-  late final HashtagSource hashtagSource = HashtagSource(
-    futureList: widget.hashList,
-    contentCount: widget.contentCount,
-  );
-
-  @override
-  void dispose() {
-    folderSource.dispose();
-    hashtagSource.dispose();
-
-    super.dispose();
-  }
-
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    if (widget.uniqueKey == const Key('folderTab')) {
-      return FolderTabView(
-        isRefresh: widget.isRefresh,
-        uniqueKey: widget.uniqueKey,
-        source: folderSource,
-      );
-    }
-    return HashtagTabView(
-      isRefresh: widget.isRefresh,
-      uniqueKey: widget.uniqueKey,
-      source: hashtagSource,
-      count: widget.contentCount.value,
+    FolderSource folderSource = FolderSource(
+      futureList: folderAsync,
+      folderCount: folderCount,
     );
+    HashtagSource hashtagSource = HashtagSource(
+      futureList: hashtagAsync,
+      contentCount: contentCount,
+    );
+
+    useEffect(() {
+      return () {
+        folderSource.dispose();
+        hashtagSource.dispose();
+      };
+    }, []);
+
+    if (uniqueKey == const Key('folderTab')) {
+      return useMemoized(() {
+        return FolderTabView(
+          isRefresh: isRefresh,
+          uniqueKey: uniqueKey,
+          source: folderSource,
+        );
+      }, [folderWatch]);
+    }
+    return useMemoized(
+        () => HashtagTabView(
+              isRefresh: isRefresh,
+              uniqueKey: uniqueKey,
+              source: hashtagSource,
+              count: contentCount.value,
+            ),
+        [contentCount.value, hashWatch]);
   }
 }

@@ -13,12 +13,13 @@ class General {
     EdgeInsetsGeometry? padding,
     double? height,
     bool isCloseButton = false,
+    bool isScrollControlled = false,
   }) {
     showModalBottomSheet(
       enableDrag: false,
       context: context,
       backgroundColor: Colors.transparent,
-      // isScrollControlled: true,
+      isScrollControlled: isScrollControlled,
       builder: (context) => Container(
         height: height,
         padding: const EdgeInsets.only(

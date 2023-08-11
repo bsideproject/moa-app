@@ -35,6 +35,7 @@ class BottomModalItem extends HookWidget {
               width: 16,
               height: 16,
               image: icon,
+              color: AppColors.blackColor,
             ),
           ),
           title: Text(

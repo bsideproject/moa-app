@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/providers/content_detail_provider.dart';
+import 'package:moa_app/providers/folder_view_provider.dart';
 import 'package:moa_app/providers/hashtag_view_provider.dart';
 import 'package:moa_app/repositories/content_repository.dart';
 import 'package:moa_app/screens/home/edit_content_view.dart';
-import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/utils/general.dart';
+import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/app_bar.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/image.dart';
@@ -26,12 +28,10 @@ class ContentView extends HookConsumerWidget {
     required this.id,
     required this.folderName,
     required this.contentType,
-    this.source,
   });
   final String id;
   final String folderName;
   final AddContentType contentType;
-  final HashtagSource? source;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -57,7 +57,7 @@ class ContentView extends HookConsumerWidget {
 
     void deleteContent() async {
       await hashtagAsync.deleteContent(contentId: id);
-      await source?.refresh(true);
+      await ref.read(folderViewProvider.notifier).refresh();
       if (context.mounted) {
         context.pop();
         context.pop();
@@ -93,11 +93,22 @@ class ContentView extends HookConsumerWidget {
       );
     }
 
+    void showFolderListModal() {
+      General.instance.showBottomSheet(
+        isScrollControlled: true,
+        height: MediaQuery.of(context).size.height * 0.7,
+        context: context,
+        child: FolderListModalView(
+          contentId: id,
+          contentType: contentType,
+        ),
+      );
+    }
+
     void showContentModal() {
       General.instance.showBottomSheet(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
         context: context,
-        height: 150 + kBottomNavigationBarHeight,
+        height: 200 + kBottomNavigationBarHeight,
         child: Column(
           children: [
             BottomModalItem(
@@ -114,6 +125,14 @@ class ContentView extends HookConsumerWidget {
               onPressed: () {
                 context.pop();
                 showDeleteContentModal();
+              },
+            ),
+            BottomModalItem(
+              icon: Assets.folderIcon,
+              title: '폴더 변경',
+              onPressed: () {
+                context.pop();
+                showFolderListModal();
               },
             ),
           ],
@@ -194,24 +213,45 @@ class ContentView extends HookConsumerWidget {
                             children: [
                               content.thumbnailImageUrl == ''
                                   ? const Text('이미지 없을 경우 모아 이미지로 대체')
-                                  : AspectRatio(
-                                      aspectRatio: 1,
-                                      child: Container(
-                                        margin: const EdgeInsets.only(top: 20),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(
-                                            color: AppColors.grayBackground,
-                                            width: 0.5,
+                                  : contentType == AddContentType.url
+                                      ? Container(
+                                          width: 85,
+                                          height: 85,
+                                          margin:
+                                              const EdgeInsets.only(top: 20),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            border: Border.all(
+                                              color: AppColors.grayBackground,
+                                              width: 0.5,
+                                            ),
+                                          ),
+                                          child: ImageOnNetwork(
+                                            imageURL: content.thumbnailImageUrl,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                      : AspectRatio(
+                                          aspectRatio: 1,
+                                          child: Container(
+                                            margin:
+                                                const EdgeInsets.only(top: 20),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                color: AppColors.grayBackground,
+                                                width: 0.5,
+                                              ),
+                                            ),
+                                            child: ImageOnNetwork(
+                                              imageURL:
+                                                  content.thumbnailImageUrl,
+                                              fit: BoxFit.contain,
+                                            ),
                                           ),
                                         ),
-                                        child: ImageOnNetwork(
-                                          imageURL: content.thumbnailImageUrl,
-                                          fit: BoxFit.contain,
-                                        ),
-                                      ),
-                                    ),
                               const SizedBox(height: 10),
                               Text(
                                 content.contentName,
@@ -286,6 +326,143 @@ class ContentView extends HookConsumerWidget {
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+class FolderListModalView extends HookConsumerWidget {
+  const FolderListModalView({
+    super.key,
+    required this.contentId,
+    required this.contentType,
+  });
+  final String contentId;
+  final AddContentType contentType;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    var selectedIndex = useState(-1);
+    var folderAsync = ref.watch(folderViewProvider);
+    void selectFolder({required int index}) {
+      selectedIndex.value = index;
+    }
+
+    void changeFolder({
+      required String changeFolderId,
+      required String folderName,
+    }) async {
+      await ContentRepository.instance.changeContentFolder(
+        contentId: contentId,
+        changeFolderId: changeFolderId,
+      );
+      await ref.read(folderViewProvider.notifier).refresh();
+      if (context.mounted) {
+        context.pop();
+        context.replace(
+          '${GoRoutes.content.fullPath}/$contentId',
+          extra: ContentView(
+            id: contentId,
+            folderName: folderName,
+            contentType: contentType,
+          ),
+        );
+      }
+    }
+
+    return SafeArea(
+      child: folderAsync.when(
+        data: (folderList) {
+          return Column(
+            children: [
+              Expanded(
+                child: GridView.builder(
+                  itemCount: folderList.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 1.3,
+                    mainAxisSpacing: 10.0,
+                    crossAxisSpacing: 20.0,
+                    mainAxisExtent: 105,
+                  ),
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        Stack(
+                          children: [
+                            SizedBox(
+                              height: 80,
+                              child: Material(
+                                color: AppColors.whiteColor,
+                                child: Ink(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      fit: BoxFit.contain,
+                                      image: Assets.folder,
+                                      colorFilter: ColorFilter.mode(
+                                        folderColors[index % 4].withOpacity(
+                                          (selectedIndex.value == -1 ||
+                                                  selectedIndex.value == index)
+                                              ? 1
+                                              : 0.5,
+                                        ),
+                                        BlendMode.srcIn,
+                                      ),
+                                    ),
+                                  ),
+                                  child: InkWell(
+                                    splashColor: Colors.transparent,
+                                    borderRadius: BorderRadius.circular(8),
+                                    onTap: () => selectFolder(index: index),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            selectedIndex.value == index
+                                ? Positioned.fill(
+                                    child: Center(
+                                      child: Image(
+                                        image: Assets.check,
+                                        width: 20,
+                                        height: 20,
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox()
+                          ],
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          folderList[index].folderName,
+                          style: const H4TextStyle().merge(
+                            TextStyle(
+                              color: AppColors.blackColor.withOpacity(
+                                (selectedIndex.value == -1 ||
+                                        selectedIndex.value == index)
+                                    ? 1
+                                    : 0.5,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              Button(
+                disabled: selectedIndex.value == -1,
+                text: '폴더 변경',
+                onPressed: () => changeFolder(
+                  changeFolderId: folderList[selectedIndex.value].folderId,
+                  folderName: folderList[selectedIndex.value].folderName,
+                ),
+              )
+            ],
+          );
+        },
+        error: (error, stackTrace) => const SizedBox(),
+        loading: () => const LoadingIndicator(),
       ),
     );
   }

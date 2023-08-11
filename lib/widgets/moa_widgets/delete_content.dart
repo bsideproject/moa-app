@@ -73,7 +73,7 @@ class DeleteContent extends HookWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '태그를 삭제하면 모은 취향이 모두 사라져요!',
+                            '해당 태그의 콘텐츠가 미분류로 변경돼요!',
                             style: const Body1TextStyle().merge(
                               const TextStyle(color: AppColors.primaryColor),
                             ),

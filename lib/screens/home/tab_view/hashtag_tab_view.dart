@@ -69,7 +69,6 @@ class HashtagTabView extends HookConsumerWidget {
         extra: ContentView(
           id: contentId,
           folderName: folderName,
-          source: source,
           contentType:
               contentUrl != '' ? AddContentType.url : AddContentType.image,
         ),

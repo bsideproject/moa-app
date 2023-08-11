@@ -26,6 +26,11 @@ abstract class IContentRepository {
   Future<void> deleteContent({
     required String contentId,
   });
+
+  Future<void> changeContentFolder({
+    required String contentId,
+    required String changeFolderId,
+  });
 }
 
 class ContentRepository implements IContentRepository {
@@ -110,6 +115,7 @@ class ContentRepository implements IContentRepository {
     required String contentName,
     required String contentMemo,
     required String hashTagStringList,
+    String? changeContentUrl,
   }) async {
     var token = await TokenRepository.instance.getToken();
 
@@ -118,7 +124,7 @@ class ContentRepository implements IContentRepository {
       data: {
         'contentId': contentId,
         'changeContentName': contentName,
-        // 'changeContentUrl':changeContentUrl
+        // 'changeContentUrl': changeContentUrl,
         'changeContentMemo': contentMemo,
         'hashTag': hashTagStringList,
       },
@@ -139,6 +145,24 @@ class ContentRepository implements IContentRepository {
       data: {
         'ids': [contentId]
       },
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+  }
+
+  @override
+  Future<void> changeContentFolder({
+    required String contentId,
+    required String changeFolderId,
+  }) async {
+    var token = await TokenRepository.instance.getToken();
+
+    await dio.put(
+      '/api/v1/content/folder-change',
+      data: {'contentId': contentId, 'changeFolderId': changeFolderId},
       options: Options(
         headers: {
           'Authorization': 'Bearer $token',

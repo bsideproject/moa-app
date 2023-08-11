@@ -50,12 +50,12 @@ class ContentDetail extends _$ContentDetail {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      // await ContentRepository.instance.editContent(
-      //   contentId: contentId,
-      //   contentName: contentName,
-      //   contentMemo: contentMemo,
-      //   hashTagStringList: hashTagStringList,
-      // );
+      await ContentRepository.instance.editContent(
+        contentId: contentId,
+        contentName: contentName,
+        contentMemo: contentMemo,
+        hashTagStringList: hashTagStringList,
+      );
       var data = await fetchItem(contentId: contentId);
       return data;
     });

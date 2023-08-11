@@ -88,32 +88,27 @@ class FolderSelect extends HookConsumerWidget {
                   itemBuilder: (context, index) {
                     return Column(
                       children: [
-                        Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            SizedBox(
-                              height: 85,
-                              child: Ink(
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    fit: BoxFit.contain,
-                                    image: Assets.folder,
-                                    colorFilter: ColorFilter.mode(
-                                      folderColors[index % 4],
-                                      BlendMode.srcIn,
-                                    ),
-                                  ),
-                                ),
-                                child: InkWell(
-                                  splashColor: Colors.transparent,
-                                  borderRadius: BorderRadius.circular(8),
-                                  onTap: () => selectFolder(
-                                      index: index,
-                                      folderId: folderList[index].folderId),
+                        SizedBox(
+                          height: 85,
+                          child: Ink(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                fit: BoxFit.contain,
+                                image: Assets.folder,
+                                colorFilter: ColorFilter.mode(
+                                  folderColors[index % 4],
+                                  BlendMode.srcIn,
                                 ),
                               ),
                             ),
-                          ],
+                            child: InkWell(
+                              splashColor: Colors.transparent,
+                              borderRadius: BorderRadius.circular(8),
+                              onTap: () => selectFolder(
+                                  index: index,
+                                  folderId: folderList[index].folderId),
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 10),
                         Text(

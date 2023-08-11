@@ -8,7 +8,9 @@ import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/providers/content_detail_provider.dart';
+import 'package:moa_app/providers/folder_view_provider.dart';
 import 'package:moa_app/providers/hashtag_provider.dart';
+import 'package:moa_app/providers/hashtag_view_provider.dart';
 import 'package:moa_app/repositories/content_repository.dart';
 import 'package:moa_app/screens/add_content/add_image_content.dart';
 import 'package:moa_app/utils/general.dart';
@@ -38,7 +40,6 @@ class EditContentView extends HookConsumerWidget {
     var loading = useState(false);
 
     Future<void> saveEditContent() async {
-      // todo 컨텐츠 수정
       try {
         loading.value = true;
         await ContentRepository.instance.editContent(
@@ -53,6 +54,9 @@ class EditContentView extends HookConsumerWidget {
               contentName: memoController.text,
               hashTagStringList: hashtagList.value.join(','),
             );
+
+        await ref.read(hashtagViewProvider.notifier).refresh();
+        await ref.read(folderViewProvider.notifier).refresh();
         isEditMode.value = false;
       } catch (e) {
         snackbar.alert(

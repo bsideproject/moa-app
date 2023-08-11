@@ -80,4 +80,12 @@ class FolderView extends _$FolderView {
       return fetchItem();
     });
   }
+
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      return fetchItem();
+    });
+  }
 }

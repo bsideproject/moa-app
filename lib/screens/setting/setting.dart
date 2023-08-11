@@ -29,7 +29,7 @@ class Setting extends HookConsumerWidget {
     void pickImage() {}
 
     void goEditMyType() {
-      // context.go('${GoRoutes.setting.fullPath}/${GoRoutes.editContent.path}');
+      context.go('${GoRoutes.setting.fullPath}/${GoRoutes.editContent.path}');
     }
 
     void handleContact() {}
