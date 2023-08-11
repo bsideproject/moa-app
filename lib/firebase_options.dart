@@ -69,8 +69,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '152179311533',
     projectId: 'moajo-app',
     storageBucket: 'moajo-app.appspot.com',
-    androidClientId: '152179311533-23ktj1fi7u3fpb2dcie1p2u439dng99a.apps.googleusercontent.com',
-    iosClientId: '152179311533-2lsvtrj7junkos93nd2oekpropcv8929.apps.googleusercontent.com',
+    androidClientId:
+        '152179311533-23ktj1fi7u3fpb2dcie1p2u439dng99a.apps.googleusercontent.com',
+    iosClientId:
+        '152179311533-2lsvtrj7junkos93nd2oekpropcv8929.apps.googleusercontent.com',
     iosBundleId: 'com.beside.moa',
   );
 }
