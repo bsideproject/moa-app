@@ -118,7 +118,10 @@ class FolderTabView extends HookConsumerWidget {
               await ref.read(folderViewProvider.notifier).deleteFolder(
                     folderName: folderName,
                   );
-              await source.refresh(true);
+              if (context.mounted) {
+                context.pop();
+                context.pop();
+              }
             } catch (error) {
               if (context.mounted) {
                 snackbar.alert(context,

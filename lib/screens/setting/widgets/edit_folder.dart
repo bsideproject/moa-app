@@ -94,6 +94,9 @@ class EditFolder extends HookConsumerWidget {
               await ref.read(folderViewProvider.notifier).deleteFolder(
                     folderName: folderName,
                   );
+              if (context.mounted) {
+                context.pop();
+              }
             } catch (error) {
               if (context.mounted) {
                 snackbar.alert(context,

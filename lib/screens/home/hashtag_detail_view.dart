@@ -98,6 +98,7 @@ class HashtagDetailView extends HookConsumerWidget {
                   .deleteHashtag(tagIds: [searchTagId.value]);
               if (context.mounted) {
                 context.pop();
+                context.pop();
               }
             } catch (e) {
               snackbar.alert(

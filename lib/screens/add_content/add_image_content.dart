@@ -24,10 +24,11 @@ import 'package:moa_app/widgets/snackbar.dart';
 
 class SelectedTagModel {
   SelectedTagModel({
+    this.tagId,
     required this.isSelected,
     required this.name,
   });
-
+  final String? tagId;
   final bool isSelected;
   final String name;
 }
@@ -161,7 +162,8 @@ class AddImageContent extends HookConsumerWidget {
     useEffect(() {
       if (hashtagAsync.hasValue) {
         selectedTagList.value = hashtagAsync.value!
-            .map((e) => SelectedTagModel(name: e.hashTag, isSelected: false))
+            .map((e) => SelectedTagModel(
+                tagId: e.tagId, name: e.hashTag, isSelected: false))
             .toList();
       }
       return null;

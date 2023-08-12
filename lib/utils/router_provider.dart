@@ -16,8 +16,12 @@ import 'package:moa_app/screens/on_boarding/greeting_view.dart';
 import 'package:moa_app/screens/on_boarding/input_name_view.dart';
 import 'package:moa_app/screens/on_boarding/notice_view.dart';
 import 'package:moa_app/screens/on_boarding/sign_in.dart';
+import 'package:moa_app/screens/setting/contact.dart';
 import 'package:moa_app/screens/setting/edit_my_type_view.dart';
+import 'package:moa_app/screens/setting/privacy.dart';
 import 'package:moa_app/screens/setting/setting.dart';
+import 'package:moa_app/screens/setting/terms.dart';
+import 'package:moa_app/screens/setting/withdraw.dart';
 import 'package:moa_app/utils/utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,13 +44,19 @@ enum GoRoutes {
   userListing,
   folder,
   hashtag,
-  setting,
-  editContent,
 
   /// add folder
   folderSelect,
   addImageContent,
-  addLinkContent
+  addLinkContent,
+
+  /// setting
+  setting,
+  editContent,
+  contact,
+  terms,
+  privacy,
+  withdraw,
 }
 
 CustomTransitionPage buildPageWithDefaultTransition<T>({
@@ -254,6 +264,50 @@ final routeProvider = Provider(
                     context: context,
                     state: state,
                     child: const EditMyTypeView(),
+                  ),
+                ),
+                GoRoute(
+                  parentNavigatorKey: _rootNavigatorKey,
+                  name: GoRoutes.contact.name,
+                  path: GoRoutes.contact.path,
+                  pageBuilder: (context, state) =>
+                      buildIosPageTransitions<void>(
+                    context: context,
+                    state: state,
+                    child: const Contact(),
+                  ),
+                ),
+                GoRoute(
+                  parentNavigatorKey: _rootNavigatorKey,
+                  name: GoRoutes.terms.name,
+                  path: GoRoutes.terms.path,
+                  pageBuilder: (context, state) =>
+                      buildIosPageTransitions<void>(
+                    context: context,
+                    state: state,
+                    child: const Terms(),
+                  ),
+                ),
+                GoRoute(
+                  parentNavigatorKey: _rootNavigatorKey,
+                  name: GoRoutes.privacy.name,
+                  path: GoRoutes.privacy.path,
+                  pageBuilder: (context, state) =>
+                      buildIosPageTransitions<void>(
+                    context: context,
+                    state: state,
+                    child: const Privacy(),
+                  ),
+                ),
+                GoRoute(
+                  parentNavigatorKey: _rootNavigatorKey,
+                  name: GoRoutes.withdraw.name,
+                  path: GoRoutes.withdraw.path,
+                  pageBuilder: (context, state) =>
+                      buildIosPageTransitions<void>(
+                    context: context,
+                    state: state,
+                    child: const Withdraw(),
                   ),
                 ),
               ],

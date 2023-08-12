@@ -34,6 +34,7 @@ class EditContent extends HookWidget {
     var controller = useTextEditingController();
     var forRender = useState('');
     var errorText = useState('');
+    var loading = useState(false);
 
     void onChangedContentValue(String value) {
       forRender.value = value;
@@ -48,7 +49,9 @@ class EditContent extends HookWidget {
     }
 
     void editContent() async {
-      onPressed();
+      loading.value = true;
+      await onPressed();
+      loading.value = false;
     }
 
     void closeBottomSheet() {
@@ -100,6 +103,7 @@ class EditContent extends HookWidget {
             ),
             const Spacer(),
             Button(
+              loading: loading.value,
               disabled: controller.text.isEmpty,
               margin: const EdgeInsets.only(bottom: 30),
               text: buttonText ?? '수정하기',

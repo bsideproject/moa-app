@@ -8,7 +8,6 @@ import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/providers/user_provider.dart';
-import 'package:moa_app/repositories/token_repository.dart';
 import 'package:moa_app/screens/setting/widgets/setting_list_tile.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/alert_dialog.dart';
@@ -32,29 +31,20 @@ class Setting extends HookConsumerWidget {
       context.go('${GoRoutes.setting.fullPath}/${GoRoutes.editContent.path}');
     }
 
-    void handleContact() {}
+    void goContact() {
+      context.go('${GoRoutes.setting.fullPath}/${GoRoutes.contact.path}');
+    }
 
-    void handleTerms() {}
+    void goTerms() {
+      context.go('${GoRoutes.setting.fullPath}/${GoRoutes.terms.path}');
+    }
 
-    void showRemoveUserPopup() async {
-      alertDialog.confirm(
-        context,
-        onPress: () async {
-          try {
-            await TokenRepository.instance.removeToken();
-            await ref.read(tokenStateProvider.notifier).removeToken();
-            if (context.mounted) {
-              context.go(GoRoutes.signIn.fullPath);
-            }
-          } catch (e) {
-            snackbar.alert(
-                context, kDebugMode ? e.toString() : '회원탈퇴에 실패했습니다 다시 시도해주세요.');
-          }
-        },
-        showCancelButton: true,
-        title: '회원탈퇴',
-        content: '회원탈퇴 하시겠습니까?',
-      );
+    void goPrivacy() {
+      context.go('${GoRoutes.setting.fullPath}/${GoRoutes.privacy.path}');
+    }
+
+    void goWithdraw() async {
+      context.go('${GoRoutes.setting.fullPath}/${GoRoutes.withdraw.path}');
     }
 
     void showLogoutPopup() {
@@ -213,15 +203,19 @@ class Setting extends HookConsumerWidget {
               ),
               SettingListTile(
                 title: '1:1 문의하기',
-                onPressed: handleContact,
+                onPressed: goContact,
               ),
               SettingListTile(
                 title: '이용약관',
-                onPressed: handleTerms,
+                onPressed: goTerms,
+              ),
+              SettingListTile(
+                title: '개인정보 처리방침',
+                onPressed: goPrivacy,
               ),
               SettingListTile(
                 title: '탈퇴하기',
-                onPressed: showRemoveUserPopup,
+                onPressed: goWithdraw,
               )
             ],
           ),
