@@ -5,7 +5,7 @@ import 'package:moa_app/utils/api.dart';
 
 abstract class IUserRepository {
   Future<UserModel?> getUser({String? token});
-  Future<void> removeUser();
+  Future<void> withdrawUser();
   Future<void> editUserNickname({required String nickname});
 }
 
@@ -46,7 +46,7 @@ class UserRepository implements IUserRepository {
   }
 
   @override
-  Future<void> removeUser() async {
+  Future<void> withdrawUser() async {
     var token = await TokenRepository.instance.getToken();
     await dio.post(
       '/api/v1/user/withdrawal',

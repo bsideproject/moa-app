@@ -30,4 +30,14 @@ class UserState extends _$UserState {
       return fetchItem();
     });
   }
+
+  Future<void> withDraw() async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      await UserRepository.instance.withdrawUser();
+      await ref.read(tokenStateProvider.notifier).removeToken();
+      return fetchItem();
+    });
+  }
 }

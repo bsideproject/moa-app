@@ -31,7 +31,7 @@ class EditHashtag extends HookConsumerWidget {
 
     var updatedHashtagName = useState('');
 
-    void addHashtag() {
+    void addHashtag() async {
       if (textController.text.isEmpty) {
         return;
       }
@@ -42,7 +42,10 @@ class EditHashtag extends HookConsumerWidget {
         return;
       }
 
-      // todo 유저에 해시태그 추가하기 api
+      await ref
+          .read(hashtagProvider.notifier)
+          .addHashtag(hashtag: textController.text);
+
       selectedTagList.value = [
         SelectedTagModel(
           isSelected: false,

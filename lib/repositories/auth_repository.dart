@@ -215,9 +215,12 @@ class AuthRepository implements IAuthRepository {
     late NaverLoginResult user;
 
     // Non web Naver login option
-    user = await FlutterNaverLogin.logIn();
-    token = await FlutterNaverLogin.currentAccessToken;
+    user = await FlutterNaverLogin.logIn().timeout(
+      const Duration(seconds: 8),
+      onTimeout: () => throw '로그인 시간이 초과되었습니다. 다시 시도해주세요.',
+    );
 
+    token = await FlutterNaverLogin.currentAccessToken;
     if (user.status != NaverLoginStatus.loggedIn) {
       return AuthDto.fail();
     }
@@ -249,7 +252,7 @@ class AuthRepository implements IAuthRepository {
     if (credential.identityToken != null && credential.userIdentifier != null) {
       return await _loginAndSetTokenWith(AuthDto.success(
         id: credential.userIdentifier!,
-        email: credential.email!,
+        email: credential.email ?? '',
         token: credential.identityToken!,
         platform: 'apple',
       ));

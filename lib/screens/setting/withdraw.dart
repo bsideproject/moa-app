@@ -5,8 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
-import 'package:moa_app/providers/token_provider.dart';
-import 'package:moa_app/repositories/token_repository.dart';
+import 'package:moa_app/providers/user_provider.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/app_bar.dart';
 import 'package:moa_app/widgets/button.dart';
@@ -21,8 +20,7 @@ class Withdraw extends HookConsumerWidget {
 
     void onPressedWithdraw() async {
       try {
-        await TokenRepository.instance.removeToken();
-        await ref.read(tokenStateProvider.notifier).removeToken();
+        await ref.read(userStateProvider.notifier).withDraw();
         if (context.mounted) {
           context.go(GoRoutes.signIn.fullPath);
         }

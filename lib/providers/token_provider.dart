@@ -10,19 +10,19 @@ class TokenState extends _$TokenState {
     return await TokenRepository.instance.getToken();
   }
 
-  Future<String?> addToken(String token) async {
+  Future<void> addToken(String token) async {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
       return token;
     });
-    return null;
   }
 
   Future<void> removeToken() async {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
+      await TokenRepository.instance.removeToken();
       return null;
     });
   }
