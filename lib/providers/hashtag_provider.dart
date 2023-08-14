@@ -51,13 +51,14 @@ class Hashtag extends _$Hashtag {
   }
 
   Future<List<HashtagModel>?> addHashtag({
-    required HashtagModel hashtag,
+    required String hashtag,
   }) async {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
+      await HashtagRepository.instance.addHashtag(hashTag: hashtag);
       var data = await fetchItem();
-      return [hashtag, ...data];
+      return data;
     });
 
     return state.value;

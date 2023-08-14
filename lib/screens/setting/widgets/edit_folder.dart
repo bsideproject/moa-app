@@ -1,20 +1,16 @@
 import 'package:dio/dio.dart';
-import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:loading_more_list/loading_more_list.dart';
 import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/folder_model.dart';
 import 'package:moa_app/providers/folder_view_provider.dart';
 import 'package:moa_app/repositories/folder_repository.dart';
-import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/utils/logger.dart';
-import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
 import 'package:moa_app/widgets/moa_widgets/add_folder.dart';
 import 'package:moa_app/widgets/moa_widgets/bottom_modal_item.dart';
@@ -23,43 +19,24 @@ import 'package:moa_app/widgets/moa_widgets/edit_content.dart';
 import 'package:moa_app/widgets/moa_widgets/folder_list.dart';
 import 'package:moa_app/widgets/snackbar.dart';
 
-class FolderTabView extends HookConsumerWidget {
-  const FolderTabView({
-    super.key,
-    required this.uniqueKey,
-    required this.source,
-    this.isRefresh,
-  });
-  final Key uniqueKey;
-  final FolderSource source;
-  final bool? isRefresh;
+class EditFolder extends HookConsumerWidget {
+  const EditFolder({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var width = MediaQuery.of(context).size.width;
+    var folderAsync = ref.watch(folderViewProvider);
     var updatedContentName = useState('');
-
-    useEffect(() {
-      if (isRefresh == true) {
-        source.refresh(true);
-      }
-      return null;
-    }, [isRefresh]);
+    Future<void> folderPullToRefresh() async {
+      await ref.read(folderViewProvider.notifier).refresh();
+    }
 
     void showAddFolderModal() {
       General.instance.showBottomSheet(
         context: context,
         child: AddFolder(
-          onRefresh: () {
-            source.refresh(true);
-          },
+          onRefresh: () {},
         ),
-      );
-    }
-
-    void goFolderDetailView({required String folderName}) {
-      context.go(
-        '${GoRoutes.folder.fullPath}/$folderName',
       );
     }
 
@@ -80,7 +57,6 @@ class FolderTabView extends HookConsumerWidget {
                     currentFolderName: folderName,
                     editFolderName: updatedContentName.value,
                   );
-              await source.refresh(true);
               if (context.mounted) {
                 context.pop();
               }
@@ -120,7 +96,6 @@ class FolderTabView extends HookConsumerWidget {
                   );
               if (context.mounted) {
                 context.pop();
-                context.pop();
               }
             } catch (error) {
               if (context.mounted) {
@@ -133,7 +108,7 @@ class FolderTabView extends HookConsumerWidget {
       );
     }
 
-    void showFolderDetailModal(
+    void showFolderModal(
         {required String folderName, required Color folderColor}) {
       General.instance.showBottomSheet(
         context: context,
@@ -164,64 +139,56 @@ class FolderTabView extends HookConsumerWidget {
       );
     }
 
-    return ExtendedVisibilityDetector(
-      uniqueKey: uniqueKey,
-      child: RefreshIndicator(
-        onRefresh: () async {
-          ref.refresh(folderViewProvider).value;
-          await source.refresh(true);
-        },
-        child: LoadingMoreList<FolderModel>(
-          ListConfig<FolderModel>(
-            physics: const BouncingScrollPhysics(),
-            addRepaintBoundaries: true,
-            padding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              top: 10,
-              bottom: kBottomNavigationBarHeight,
-            ),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: width > Breakpoints.md ? 3 : 2,
-              childAspectRatio: 1.3,
-              mainAxisSpacing: 20.0,
-              crossAxisSpacing: 12.0,
-            ),
-            sourceList: source,
-            indicatorBuilder: (context, status) {
-              if ((status == IndicatorStatus.loadingMoreBusying) ||
-                  (status == IndicatorStatus.fullScreenBusying)) {
-                return const LoadingIndicator();
-              }
-              return const SizedBox();
-            },
-            itemBuilder: (c, item, index) {
-              return index == source.length - 1
-                  ? InkWell(
-                      splashColor: Colors.transparent,
-                      borderRadius: BorderRadius.circular(15),
-                      onTap: showAddFolderModal,
-                      child: Image(image: Assets.emptyFolder),
-                    )
-                  : FolderList(
-                      folder: FolderModel(
-                        folderId: item.folderId,
-                        folderName: item.folderName,
-                        count: item.count,
-                        thumbnailUrl: item.thumbnailUrl,
-                      ),
-                      folderColor: folderColors[index % 4],
-                      onPressMore: () => showFolderDetailModal(
-                        folderName: item.folderName,
+    return RefreshIndicator(
+      onRefresh: folderPullToRefresh,
+      child: folderAsync.when(
+          data: (data) {
+            var list = [
+              const FolderModel(
+                folderId: 'folderId',
+                folderName: 'folderName',
+                count: 0,
+              ),
+              ...data
+            ];
+            return GridView.builder(
+              padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
+              itemCount: list.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: width > Breakpoints.md ? 3 : 2,
+                childAspectRatio: 1.3,
+                mainAxisSpacing: 20.0,
+                crossAxisSpacing: 12.0,
+              ),
+              itemBuilder: (context, index) {
+                var item = list[index];
+
+                return index == 0
+                    ? InkWell(
+                        splashColor: Colors.transparent,
+                        borderRadius: BorderRadius.circular(15),
+                        onTap: showAddFolderModal,
+                        child: Image(image: Assets.emptyFolder),
+                      )
+                    : FolderList(
+                        folder: FolderModel(
+                          folderId: item.folderId,
+                          folderName: item.folderName,
+                          count: item.count,
+                          thumbnailUrl: item.thumbnailUrl,
+                        ),
                         folderColor: folderColors[index % 4],
-                      ),
-                      onPress: () =>
-                          goFolderDetailView(folderName: item.folderName),
-                    );
-            },
-          ),
-        ),
-      ),
+                        onPressMore: () => showFolderModal(
+                          folderName: item.folderName,
+                          folderColor: folderColors[index % 4],
+                        ),
+                        onPress: null,
+                      );
+              },
+            );
+          },
+          error: (error, stackTrace) => const SizedBox(),
+          loading: () => const LoadingIndicator()),
     );
   }
 }

@@ -12,7 +12,7 @@ class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
     this.text,
     this.leading,
     this.actions,
-    this.isBottomBorderDisplayed = true,
+    this.isBottomBorderDisplayed = false,
     this.bottomBorderStyle = const BottomBorderStyle(),
     this.onPressedBack,
   }) : super(key: key);

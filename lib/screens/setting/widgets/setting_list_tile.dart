@@ -23,8 +23,8 @@ class SettingListTile extends StatelessWidget {
         angle: 180 * 3.14 / 180,
         child: Image(
           image: Assets.arrowBack,
-          width: 24,
-          height: 24,
+          width: 20,
+          height: 20,
         ),
       ),
       onTap: onPressed,
