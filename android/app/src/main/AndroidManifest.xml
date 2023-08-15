@@ -3,19 +3,10 @@
 
     <!-- Permissions options for the `storage` group -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 
     <!-- Permissions options for the `camera` group -->
     <uses-permission android:name="android.permission.CAMERA"/>
 
-     <!-- Permissions options for the `location` group -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    
     <!-- android:launchMode="singleTop" -->
     <application android:label="@string/app_name" android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"

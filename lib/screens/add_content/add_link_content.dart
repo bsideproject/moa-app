@@ -214,7 +214,7 @@ class AddLinkContent extends HookConsumerWidget {
             ?.attributes['content'];
 
         if (crawledTitle != null && crawledTitle.length > 30) {
-          crawledTitle = '${crawledTitle.substring(0, 30)}...';
+          crawledTitle = crawledTitle.substring(0, 30);
         }
         var crawledDescription = document.head
             ?.querySelector("meta[property='og:description']")
