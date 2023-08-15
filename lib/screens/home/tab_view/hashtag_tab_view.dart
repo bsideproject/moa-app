@@ -24,6 +24,7 @@ import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/image.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
+import 'package:moa_app/widgets/moa_widgets/empty_image.dart';
 import 'package:moa_app/widgets/snackbar.dart';
 
 class HashtagTabView extends HookConsumerWidget {
@@ -238,7 +239,7 @@ class HashtagTabView extends HookConsumerWidget {
                           child: Column(
                             children: [
                               item.thumbnailImageUrl == ''
-                                  ? const Text('이미지 없을 경우 모아 이미지로 대체')
+                                  ? const EmptyImage()
                                   : AspectRatio(
                                       aspectRatio: 1,
                                       child: ImageOnNetwork(

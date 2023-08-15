@@ -80,7 +80,6 @@ class AddLinkContent extends HookConsumerWidget {
         return;
       }
 
-      // todo 대표 이미지 미지정시 하트들고있는 모아 이미지로 대체
       if (imageFile.value != null) {
         imageError.value = '';
       }

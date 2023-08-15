@@ -317,7 +317,8 @@ class FolderSource extends LoadingMoreBase<FolderModel> {
         }
       }
       add(
-        const FolderModel(folderId: 'add', folderName: '폴더 추가', count: 0),
+        const FolderModel(
+            folderId: 'add', folderName: '폴더 추가', count: 0, thumbnailUrl: ''),
       );
       _hasMore = false;
       pageIndex++;

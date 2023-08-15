@@ -11,6 +11,7 @@ import 'package:moa_app/screens/home/widgets/content_card.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/utils/utils.dart';
 import 'package:moa_app/widgets/image.dart';
+import 'package:moa_app/widgets/moa_widgets/empty_image.dart';
 
 class DynamicGridList extends HookWidget {
   const DynamicGridList({
@@ -69,11 +70,10 @@ class DynamicGridList extends HookWidget {
                   children: [
                     FutureBuilder(
                       future: getImageSize(
-                          // todo : 이미지 없을 경우 모아 이미지로 대체
-                          imageURL: contentList[i].thumbnailImageUrl),
+                        imageURL: contentList[i].thumbnailImageUrl,
+                      ),
                       builder: (context, snapshot) {
                         var rate = snapshot.data;
-
                         return AnimatedSwitcher(
                           transitionBuilder: (child, animation) {
                             return FadeTransition(
@@ -89,25 +89,22 @@ class DynamicGridList extends HookWidget {
                               );
                             }
 
-                            if (snapshot.hasData) {
-                              return contentList[i].thumbnailImageUrl == ''
-                                  ? const Text('이미지 없을 경우 모아 이미지로 대체')
-                                  : AspectRatio(
-                                      aspectRatio: rate!,
-                                      child: ImageOnNetwork(
-                                        // fit: BoxFit.contain,
-                                        width: double.infinity,
-                                        border: Border.all(
-                                          color: AppColors.moaOpacity30,
-                                          width: 0.5,
-                                        ),
-                                        borderRadius: 10,
-                                        imageURL:
-                                            contentList[i].thumbnailImageUrl,
-                                      ),
-                                    );
+                            if (snapshot.hasData && rate != null) {
+                              return AspectRatio(
+                                aspectRatio: rate,
+                                child: ImageOnNetwork(
+                                  // fit: BoxFit.contain,
+                                  width: double.infinity,
+                                  border: Border.all(
+                                    color: AppColors.moaOpacity30,
+                                    width: 0.5,
+                                  ),
+                                  borderRadius: 10,
+                                  imageURL: contentList[i].thumbnailImageUrl,
+                                ),
+                              );
                             }
-                            return const SizedBox();
+                            return const EmptyImage();
                           }(),
                         );
                       },

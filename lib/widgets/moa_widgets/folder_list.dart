@@ -52,14 +52,18 @@ class FolderList extends HookWidget {
                         margin: const EdgeInsets.only(top: 30),
                         width: 32,
                         height: 32,
-                        child: ImageOnNetwork(
-                          border: Border.all(
-                            color: AppColors.moaOpacity30,
-                            width: 0.1,
-                          ),
-                          imageURL: folder.thumbnailUrl ?? '',
-                          borderRadius: 30,
-                        ),
+                        child: folder.thumbnailUrl == ''
+                            ? Image(
+                                image: Assets.moaWalking,
+                              )
+                            : ImageOnNetwork(
+                                border: Border.all(
+                                  color: AppColors.moaOpacity30,
+                                  width: 0.1,
+                                ),
+                                imageURL: folder.thumbnailUrl,
+                                borderRadius: 30,
+                              ),
                       ),
                       Positioned(
                         top: 30,

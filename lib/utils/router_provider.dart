@@ -7,7 +7,6 @@ import 'package:moa_app/repositories/user_repository.dart';
 import 'package:moa_app/screens/add_content/add_image_content.dart';
 import 'package:moa_app/screens/add_content/add_link_content.dart';
 import 'package:moa_app/screens/add_content/folder_select.dart';
-import 'package:moa_app/screens/file_sharing/file_sharing.dart';
 import 'package:moa_app/screens/home/content_view.dart';
 import 'package:moa_app/screens/home/folder_detail_view.dart';
 import 'package:moa_app/screens/home/hashtag_detail_view.dart';
@@ -40,8 +39,6 @@ enum GoRoutes {
   home,
   content,
   permission,
-  fileSharing,
-  userListing,
   folder,
   hashtag,
 
@@ -311,15 +308,6 @@ final routeProvider = Provider(
                   ),
                 ),
               ],
-            ),
-            GoRoute(
-              name: GoRoutes.fileSharing.name,
-              path: GoRoutes.fileSharing.fullPath,
-              pageBuilder: (context, state) => buildIosPageTransitions<void>(
-                context: context,
-                state: state,
-                child: const FileSharing(),
-              ),
             ),
           ],
         ),

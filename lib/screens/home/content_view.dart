@@ -19,6 +19,7 @@ import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/image.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
 import 'package:moa_app/widgets/moa_widgets/bottom_modal_item.dart';
+import 'package:moa_app/widgets/moa_widgets/empty_image.dart';
 import 'package:moa_app/widgets/snackbar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -169,10 +170,7 @@ class ContentView extends HookConsumerWidget {
               duration: const Duration(milliseconds: 300),
               child: () {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 100),
-                    child: const LoadingIndicator(),
-                  );
+                  return const LoadingIndicator();
                 }
                 if (snapshot.hasError) {
                   return const Center(
@@ -196,9 +194,18 @@ class ContentView extends HookConsumerWidget {
                             bottom: 30,
                           ),
                           physics: const ClampingScrollPhysics(),
-                          child: EditContentView(
-                            content: content,
-                            isEditMode: isEditMode,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: MediaQuery.of(context).size.height -
+                                  kToolbarHeight -
+                                  kBottomNavigationBarHeight -
+                                  55,
+                            ),
+                            child: EditContentView(
+                              contentType: contentType,
+                              content: content,
+                              isEditMode: isEditMode,
+                            ),
                           ),
                         )
                       : Padding(
@@ -212,7 +219,9 @@ class ContentView extends HookConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               content.thumbnailImageUrl == ''
-                                  ? const Text('이미지 없을 경우 모아 이미지로 대체')
+                                  ? const EmptyImage(
+                                      aspectRatio: 1.8,
+                                    )
                                   : contentType == AddContentType.url
                                       ? Container(
                                           width: 85,

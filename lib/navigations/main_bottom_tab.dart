@@ -1,12 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/screens/add_content/folder_select.dart';
@@ -24,28 +21,6 @@ class MainBottomTab extends HookConsumerWidget {
     bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom == 0;
     var lifeCycle = useAppLifecycleState();
 
-    void navigateToShareMedia(
-        BuildContext context, List<SharedMediaFile> value) {
-      if (value.isNotEmpty) {
-        var newFiles = <File>[];
-        for (var element in value) {
-          newFiles.add(File(
-            Platform.isIOS
-                ? element.type == SharedMediaType.FILE
-                    ? element.path
-                        .toString()
-                        .replaceAll(AppConstants.replaceableText, '')
-                    : element.path
-                : element.path,
-          ));
-        }
-
-        context.push(
-          '${GoRoutes.fileSharing.fullPath}/$newFiles',
-        );
-      }
-    }
-
     var receiveUrl = useState('');
 
     void navigateToShareText(BuildContext context, String? value) {
@@ -58,16 +33,12 @@ class MainBottomTab extends HookConsumerWidget {
     void listenShareMediaFiles(BuildContext context) {
       // For sharing images coming from outside the app
       // while the app is in the memory
-      ReceiveSharingIntent.getMediaStream().listen((value) {
-        navigateToShareMedia(context, value);
-      }, onError: (err) {
+      ReceiveSharingIntent.getMediaStream().listen((value) {}, onError: (err) {
         debugPrint('$err');
       });
 
       // For sharing images coming from outside the app while the app is closed
-      ReceiveSharingIntent.getInitialMedia().then((value) {
-        navigateToShareMedia(context, value);
-      });
+      ReceiveSharingIntent.getInitialMedia().then((value) {});
 
       // For sharing or opening urls/text coming from outside the app while the app is in the memory
       ReceiveSharingIntent.getTextStream().listen((value) {

@@ -18,6 +18,7 @@ import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/image.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
+import 'package:moa_app/widgets/moa_widgets/empty_image.dart';
 import 'package:moa_app/widgets/moa_widgets/hashtag_box.dart';
 import 'package:moa_app/widgets/snackbar.dart';
 
@@ -26,9 +27,11 @@ class EditContentView extends HookConsumerWidget {
     super.key,
     required this.content,
     required this.isEditMode,
+    required this.contentType,
   });
   final ContentModel content;
   final ValueNotifier<bool> isEditMode;
+  final AddContentType contentType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -80,24 +83,43 @@ class EditContentView extends HookConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         content.thumbnailImageUrl == ''
-            ? const Text('이미지 없을 경우 모아 이미지로 대체')
-            : AspectRatio(
-                aspectRatio: 1,
-                child: Container(
-                  margin: const EdgeInsets.only(top: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: AppColors.grayBackground,
-                      width: 0.5,
+            ? const EmptyImage(
+                aspectRatio: 1.8,
+              )
+            : contentType == AddContentType.url
+                ? Container(
+                    width: 85,
+                    height: 85,
+                    margin: const EdgeInsets.only(top: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: AppColors.grayBackground,
+                        width: 0.5,
+                      ),
+                    ),
+                    child: ImageOnNetwork(
+                      imageURL: content.thumbnailImageUrl,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : AspectRatio(
+                    aspectRatio: 1,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 20),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: AppColors.grayBackground,
+                          width: 0.5,
+                        ),
+                      ),
+                      child: ImageOnNetwork(
+                        fit: BoxFit.contain,
+                        imageURL: content.thumbnailImageUrl,
+                      ),
                     ),
                   ),
-                  child: ImageOnNetwork(
-                    fit: BoxFit.contain,
-                    imageURL: content.thumbnailImageUrl,
-                  ),
-                ),
-              ),
         const SizedBox(height: 20),
         const Text(
           '제목',

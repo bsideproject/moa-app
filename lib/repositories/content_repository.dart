@@ -44,7 +44,6 @@ class ContentRepository implements IContentRepository {
     required String hashTagStringList,
   }) async {
     var token = await TokenRepository.instance.getToken();
-
     if (contentType == AddContentType.image) {
       /// 이미지 방식
       await dio.post(
@@ -56,7 +55,9 @@ class ContentRepository implements IContentRepository {
           'hashTag': hashTagStringList,
           'contentType': 'IMAGE',
           'originalFileName': '${content.contentName}.png',
-          'image': 'image/png:base64:${content.thumbnailImageUrl}',
+          'image': content.thumbnailImageUrl == ''
+              ? ''
+              : 'image/png:base64:${content.thumbnailImageUrl}',
         },
         options: Options(
           headers: {

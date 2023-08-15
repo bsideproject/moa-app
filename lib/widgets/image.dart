@@ -73,7 +73,11 @@ class ImageOnNetwork extends HookWidget {
                 ),
               ),
             ),
-            errorWidget: (context, url, error) => const ImagePlaceholder(),
+            errorWidget: (context, url, error) => ImagePlaceholder(
+              borderRadius: borderRadius,
+              width: width,
+              height: height,
+            ),
             width: width,
             height: height,
           );

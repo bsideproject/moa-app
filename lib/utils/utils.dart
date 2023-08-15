@@ -11,9 +11,9 @@ Future<String> xFileToBase64(XFile xFile) async {
   return base64Encode(bytes);
 }
 
-Future<double> getImageSize({required String imageURL}) async {
+Future<double?> getImageSize({required String imageURL}) async {
   if (imageURL == '') {
-    return 1.4;
+    return null;
   }
   Image image = Image.network(imageURL);
   Completer<ui.Image> completer = Completer<ui.Image>();

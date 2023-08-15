@@ -148,6 +148,7 @@ class EditFolder extends HookConsumerWidget {
                 folderId: 'folderId',
                 folderName: 'folderName',
                 count: 0,
+                thumbnailUrl: '',
               ),
               ...data
             ];
