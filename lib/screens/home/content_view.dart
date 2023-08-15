@@ -46,7 +46,6 @@ class ContentView extends HookConsumerWidget {
         if (context.mounted) {
           snackbar.alert(context, '잘못된 링크입니다.\n$url');
         }
-        throw Exception('Could not launch $url');
       }
     }
 

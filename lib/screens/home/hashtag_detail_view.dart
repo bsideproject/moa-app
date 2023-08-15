@@ -149,7 +149,8 @@ class HashtagDetailView extends HookConsumerWidget {
         );
         if (list.isEmpty) {
           if (context.mounted) {
-            snackbar.alert(context, '검색 결과가 없습니다.');
+            snackbar.alert(
+                context, '#${searchTextController.text}로 모은 취향 콘텐츠가 없어요!');
           }
           return;
         }
