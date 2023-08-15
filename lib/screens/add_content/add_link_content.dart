@@ -218,6 +218,10 @@ class AddLinkContent extends HookConsumerWidget {
         var crawledDescription = document.head
             ?.querySelector("meta[property='og:description']")
             ?.attributes['content'];
+
+        if (crawledDescription != null && crawledDescription.length > 100) {
+          crawledDescription = crawledDescription.substring(0, 100);
+        }
         // var crawledImage = document.head
         //     ?.querySelector("meta[property='og:image']")
         //     ?.attributes['content'];

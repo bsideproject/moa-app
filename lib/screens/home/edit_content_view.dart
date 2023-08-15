@@ -40,6 +40,9 @@ class EditContentView extends HookConsumerWidget {
     var hashtagList = useState<List<String>>(
         content.contentHashTags.map((e) => e.hashTag).toList());
 
+    var title = useState(content.contentName);
+    var memo = useState(content.contentMemo);
+
     var loading = useState(false);
 
     Future<void> saveEditContent() async {
@@ -130,8 +133,26 @@ class EditContentView extends HookConsumerWidget {
           borderRadius: const BorderRadius.all(Radius.circular(15)),
           controller: titleController,
           maxLength: 30,
-          onChanged: (value) {},
+          onChanged: (value) {
+            title.value = value;
+          },
           hintText: '1~30자로 입력할 수 있어요.',
+        ),
+        const SizedBox(height: 5),
+        Row(
+          children: [
+            const Spacer(),
+            Text(
+              '${titleController.text.length}/30',
+              style: TextStyle(
+                color: titleController.text.length >= 30
+                    ? AppColors.danger
+                    : AppColors.blackColor.withOpacity(0.3),
+                fontSize: 12,
+                fontFamily: FontConstants.pretendard,
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 30),
         const Text(
@@ -142,10 +163,28 @@ class EditContentView extends HookConsumerWidget {
         EditText(
           borderRadius: const BorderRadius.all(Radius.circular(15)),
           controller: memoController,
-          maxLength: 30,
+          maxLength: 100,
           maxLines: 4,
-          onChanged: (value) {},
+          onChanged: (value) {
+            memo.value = value;
+          },
           hintText: '메모를 입력하세요.',
+        ),
+        const SizedBox(height: 5),
+        Row(
+          children: [
+            const Spacer(),
+            Text(
+              '${memoController.text.length}/100',
+              style: TextStyle(
+                color: memoController.text.length >= 100
+                    ? AppColors.danger
+                    : AppColors.blackColor.withOpacity(0.3),
+                fontSize: 12,
+                fontFamily: FontConstants.pretendard,
+              ),
+            ),
+          ],
         ),
         Wrap(
           spacing: 10,
