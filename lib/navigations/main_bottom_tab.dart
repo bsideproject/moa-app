@@ -64,7 +64,8 @@ class MainBottomTab extends HookConsumerWidget {
 
     useEffect(() {
       /// 외부에서 url 공유로 들어왔을경우 폴더선택화면으로 이동
-      if (receiveUrl.value.isNotEmpty &&
+      if (context.mounted &&
+          receiveUrl.value.isNotEmpty &&
           lifeCycle == AppLifecycleState.resumed) {
         context.go(
           GoRoutes.folderSelect.fullPath,

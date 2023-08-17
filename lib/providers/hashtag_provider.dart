@@ -10,13 +10,13 @@ part 'hashtag_provider.g.dart';
 // @Riverpod(keepAlive: true)
 @riverpod
 class Hashtag extends _$Hashtag {
-  Future<List<HashtagModel>> fetchItem() async {
+  Future<(List<HashtagModel>, List<HashtagModel>)> fetchItem() async {
     var data = HashtagRepository.instance.getHashtagList();
     return data;
   }
 
   @override
-  Future<List<HashtagModel>> build() async {
+  Future<(List<HashtagModel>, List<HashtagModel>)> build() async {
     return fetchItem();
   }
 
@@ -50,7 +50,7 @@ class Hashtag extends _$Hashtag {
     });
   }
 
-  Future<List<HashtagModel>?> addHashtag({
+  Future<void> addHashtag({
     required String hashtag,
   }) async {
     state = const AsyncValue.loading();
@@ -60,7 +60,8 @@ class Hashtag extends _$Hashtag {
       var data = await fetchItem();
       return data;
     });
+    return;
 
-    return state.value;
+    // return state.value;
   }
 }

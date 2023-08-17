@@ -11,7 +11,7 @@ abstract class IHashtagRepository {
     int? size,
     String? tag,
   });
-  Future<List<HashtagModel>> getHashtagList();
+  Future<(List<HashtagModel>, List<HashtagModel>)> getHashtagList();
   Future<void> editHashtag({
     required String tagId,
     required String hashtags,
@@ -59,7 +59,7 @@ class HashtagRepository implements IHashtagRepository {
   }
 
   @override
-  Future<List<HashtagModel>> getHashtagList() async {
+  Future<(List<HashtagModel>, List<HashtagModel>)> getHashtagList() async {
     var token = await TokenRepository.instance.getToken();
 
     var res = await dio.get(
@@ -71,9 +71,14 @@ class HashtagRepository implements IHashtagRepository {
       ),
     );
 
-    return res.data['data']['users']
-        .map<HashtagModel>((e) => HashtagModel.fromJson(e))
-        .toList();
+    return (
+      res.data['data']['users']
+          .map<HashtagModel>((e) => HashtagModel.fromJson(e))
+          .toList() as List<HashtagModel>,
+      res.data['data']['default']
+          .map<HashtagModel>((e) => HashtagModel.fromJson(e))
+          .toList() as List<HashtagModel>
+    );
   }
 
   @override

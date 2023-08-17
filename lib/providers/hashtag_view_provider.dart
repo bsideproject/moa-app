@@ -12,7 +12,11 @@ part 'hashtag_view_provider.g.dart';
 // @Riverpod(keepAlive: true)
 @riverpod
 class HashtagView extends _$HashtagView {
-  Future<(List<ContentModel>, int)> fetchItem({String? hashtag}) async {
+  Future<(List<ContentModel>, int)> fetchItem({
+    int? page,
+    int? size,
+    String? hashtag,
+  }) async {
     var token = ref.watch(tokenStateProvider).value;
 
     // get the [KeepAliveLink]
@@ -38,7 +42,7 @@ class HashtagView extends _$HashtagView {
     });
 
     var data = await HashtagRepository.instance
-        .getHashtagView(tag: hashtag, token: token);
+        .getHashtagView(tag: hashtag, token: token, page: page, size: size);
     return data;
   }
 

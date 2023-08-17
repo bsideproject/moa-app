@@ -21,7 +21,7 @@ class CustomSearchDelegate extends HookConsumerWidget {
   final ValueNotifier<List<HashtagModel>> matchQuery;
   final FocusNode searchFocusNode;
   final TextEditingController searchTextController;
-  final ValueNotifier<List<HashtagModel>> searchTerms;
+  final ValueNotifier<(List<HashtagModel>, List<HashtagModel>)> searchTerms;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,7 +29,7 @@ class CustomSearchDelegate extends HookConsumerWidget {
 
     useEffect(() {
       if (context.mounted) {
-        searchTerms.value = hashtagAsync.value ?? [];
+        searchTerms.value = hashtagAsync.value ?? ([], []);
         searchFocusNode.addListener(() {
           if (searchFocusNode.hasFocus) {
             searchBarHeight.value = 300;
@@ -107,9 +107,9 @@ class CustomSearchDelegate extends HookConsumerWidget {
               : ListView.builder(
                   shrinkWrap: true,
                   padding: const EdgeInsets.only(top: 20, bottom: 20),
-                  itemCount: searchTerms.value.length,
+                  itemCount: searchTerms.value.$1.length,
                   itemBuilder: (context, index) {
-                    var element = searchTerms.value[index];
+                    var element = searchTerms.value.$1[index];
 
                     return Material(
                       child: InkWell(

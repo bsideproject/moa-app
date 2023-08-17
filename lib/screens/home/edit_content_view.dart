@@ -276,7 +276,7 @@ class ChangeHashtagList extends HookConsumerWidget {
             hashtagAsync.when(
               data: (data) {
                 if (selectedTagList.value.isEmpty) {
-                  selectedTagList.value = data.map((e) {
+                  selectedTagList.value = data.$1.map((e) {
                     if (hashtagList.value.contains(e.hashTag)) {
                       return SelectedTagModel(
                           name: e.hashTag, isSelected: true);

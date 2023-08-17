@@ -87,12 +87,15 @@ class FolderRepository implements IFolderRepository {
   }
 
   @override
-  Future<List<ContentModel>> getFolderDetailList(
-      {required String folderName}) async {
+  Future<List<ContentModel>> getFolderDetailList({
+    required String folderName,
+    int? page = 1,
+    int? size = 10,
+  }) async {
     var token = await TokenRepository.instance.getToken();
 
     var res = await dio.get(
-      '/api/v1/folder/detail/view?folderName=$folderName',
+      '/api/v1/folder/detail/view?page=$page&size=$size&folderName=$folderName',
       options: Options(
         headers: {
           'Authorization': 'Bearer $token',

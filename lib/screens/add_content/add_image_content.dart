@@ -63,19 +63,13 @@ class AddImageContent extends HookConsumerWidget {
     }
 
     void completeAddContent() async {
-      if (imageFile.value == null ||
-          title.value.isEmpty ||
-          selectedTagList.value.where((e) => e.isSelected).isEmpty) {
+      if (imageFile.value == null || title.value.isEmpty) {
         if (imageFile.value == null) {
           imageError.value = '이미지를 선택해주세요.';
         }
 
         if (title.value.isEmpty) {
           titleError.value = '제목을 입력해주세요.';
-        }
-
-        if (selectedTagList.value.where((e) => e.isSelected).isEmpty) {
-          tagError.value = '태그를 선택해주세요.';
         }
 
         return;
@@ -92,7 +86,7 @@ class AddImageContent extends HookConsumerWidget {
         }
       }).toList();
 
-      var hashTagStringList = selectTag.join(',');
+      var hashTagStringList = selectTag.isEmpty ? selectTag.join(',') : null;
 
       try {
         await ContentRepository.instance.addContent(
@@ -161,10 +155,16 @@ class AddImageContent extends HookConsumerWidget {
 
     useEffect(() {
       if (hashtagAsync.hasValue) {
-        selectedTagList.value = hashtagAsync.value!
-            .map((e) => SelectedTagModel(
-                tagId: e.tagId, name: e.hashTag, isSelected: false))
-            .toList();
+        selectedTagList.value = [
+          ...hashtagAsync.value!.$2
+              .map((e) => SelectedTagModel(
+                  tagId: e.tagId, name: e.hashTag, isSelected: false))
+              .toList(),
+          ...hashtagAsync.value!.$1
+              .map((e) => SelectedTagModel(
+                  tagId: e.tagId, name: e.hashTag, isSelected: false))
+              .toList()
+        ];
       }
       return null;
     }, [hashtagAsync.isLoading]);

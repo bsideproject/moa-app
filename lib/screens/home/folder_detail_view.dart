@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/content_model.dart';
-import 'package:moa_app/repositories/folder_repository.dart';
+import 'package:moa_app/providers/folder_detail_provider.dart';
 import 'package:moa_app/screens/home/widgets/type_header.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/app_bar.dart';
@@ -19,11 +20,10 @@ class FolderDetailView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var controller = useScrollController();
+    var pageNum = useState(0);
     Future<void> pullToRefresh() async {
-      return Future.delayed(
-        const Duration(seconds: 2),
-        () {},
-      );
+      ref.refresh(folderDetailProvider).value;
     }
 
     void shareFolder() async {
@@ -35,6 +35,14 @@ class FolderDetailView extends HookConsumerWidget {
         subject: 'moa://moa${GoRoutes.folder.fullPath}/$encodeFolderName',
       );
     }
+
+    controller.addListener(() {
+      /// load date at when scroll reached -100
+      if (controller.position.pixels >
+          controller.position.maxScrollExtent - 100) {
+        pageNum.value += pageNum.value;
+      }
+    });
 
     return Scaffold(
       appBar: AppBarBack(
@@ -53,9 +61,11 @@ class FolderDetailView extends HookConsumerWidget {
         ],
       ),
       body: SafeArea(
-        child: FutureBuilder<List<ContentModel>>(
-          future: FolderRepository.instance
-              .getFolderDetailList(folderName: folderName),
+        child: FutureBuilder<List<ContentModel>?>(
+          future: ref.watch(folderDetailProvider.notifier).fetchItem(
+                folderName: folderName,
+                page: pageNum.value,
+              ),
           builder: (context, snapshot) {
             var contentList = snapshot.data ?? [];
 
@@ -80,6 +90,7 @@ class FolderDetailView extends HookConsumerWidget {
                         const SizedBox(height: 5),
                         Expanded(
                           child: DynamicGridList(
+                            controller: controller,
                             contentList: contentList,
                             pullToRefresh: pullToRefresh,
                             folderNameProp: folderName,

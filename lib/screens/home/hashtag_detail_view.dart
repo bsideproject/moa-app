@@ -9,6 +9,7 @@ import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/models/hashtag_model.dart';
 import 'package:moa_app/providers/hashtag_provider.dart';
+import 'package:moa_app/providers/hashtag_view_provider.dart';
 import 'package:moa_app/repositories/hashtag_repository.dart';
 import 'package:moa_app/screens/home/widgets/type_header.dart';
 import 'package:moa_app/utils/general.dart';
@@ -34,12 +35,11 @@ class HashtagDetailView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var hashtagAsync = ref.watch(hashtagProvider);
-    var gridController = useScrollController();
-    var gridPageNum = useState(20);
     var updatedHashtagName = useState('');
 
     var searchFocusNode = useFocusNode();
-    var searchTerms = useState<List<HashtagModel>>([]);
+    var searchTerms =
+        useState<(List<HashtagModel>, List<HashtagModel>)>(([], []));
     var matchQuery = useState<List<HashtagModel>>([]);
 
     var searchTextController = useTextEditingController();
@@ -169,24 +169,12 @@ class HashtagDetailView extends HookConsumerWidget {
     }
 
     useEffect(() {
-      gridController.addListener(() {
-        /// load date at when scroll reached -100
-        if (gridController.position.pixels >
-            gridController.position.maxScrollExtent - 100) {
-          gridPageNum.value += gridPageNum.value;
-        }
-      });
-
-      return null;
-    }, []);
-
-    useEffect(() {
       if (searchTextController.text == '') {
         matchQuery.value = [];
         return;
       }
 
-      for (var hash in searchTerms.value) {
+      for (var hash in searchTerms.value.$1) {
         if (hash.hashTag.contains(searchTextController.text) &&
             !matchQuery.value.contains(hash)) {
           matchQuery.value.add(HashtagModel(
@@ -200,7 +188,7 @@ class HashtagDetailView extends HookConsumerWidget {
     }, [searchTextController.text]);
 
     useEffect(() {
-      searchTerms.value = hashtagAsync.value ?? [];
+      searchTerms.value = hashtagAsync.value ?? ([], []);
 
       searchFocusNode.addListener(() {
         if (searchFocusNode.hasFocus) {
@@ -345,9 +333,9 @@ class HashtagDetailView extends HookConsumerWidget {
                     : ListView.builder(
                         shrinkWrap: true,
                         padding: const EdgeInsets.only(top: 20, bottom: 20),
-                        itemCount: searchTerms.value.length,
+                        itemCount: searchTerms.value.$1.length,
                         itemBuilder: (context, index) {
-                          var element = searchTerms.value[index];
+                          var element = searchTerms.value.$1[index];
 
                           return Material(
                             child: InkWell(
@@ -404,18 +392,27 @@ class HashtagDetailList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var controller = useScrollController();
+    var pageNum = useState(0);
     Future<void> pullToRefresh() async {
-      return Future.delayed(
-        const Duration(seconds: 2),
-        () {},
-      );
+      ref.refresh(hashtagViewProvider).value;
     }
 
     void onPressFilter() {}
 
+    controller.addListener(() {
+      /// load date at when scroll reached -100
+      if (controller.position.pixels >
+          controller.position.maxScrollExtent - 100) {
+        pageNum.value += pageNum.value;
+      }
+    });
+
     return FutureBuilder<(List<ContentModel>, int)>(
-      future:
-          HashtagRepository.instance.getHashtagView(tag: searchHashText.value),
+      future: ref.watch(hashtagViewProvider.notifier).fetchItem(
+            hashtag: searchHashText.value,
+            page: pageNum.value,
+          ),
       builder: (context, snapshot) {
         var (list, _) = snapshot.data ?? ([], 0);
 
@@ -443,6 +440,7 @@ class HashtagDetailList extends HookConsumerWidget {
                     const SizedBox(height: 5),
                     Expanded(
                         child: DynamicGridList(
+                      controller: controller,
                       contentList: list as List<ContentModel>,
                       pullToRefresh: pullToRefresh,
                     )),

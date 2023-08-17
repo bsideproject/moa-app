@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
+import 'package:moa_app/models/hashtag_model.dart';
 import 'package:moa_app/providers/hashtag_provider.dart';
 import 'package:moa_app/repositories/hashtag_repository.dart';
 import 'package:moa_app/screens/add_content/add_image_content.dart';
@@ -161,7 +162,7 @@ class EditHashtag extends HookConsumerWidget {
 
     useEffect(() {
       if (hashtagAsync.hasValue) {
-        selectedTagList.value = hashtagAsync.value!
+        selectedTagList.value = hashtagAsync.value!.$1
             .map((e) => SelectedTagModel(
                 tagId: e.tagId, name: e.hashTag, isSelected: false))
             .toList();
@@ -179,34 +180,48 @@ class EditHashtag extends HookConsumerWidget {
             style: H4TextStyle(),
           ),
           const SizedBox(height: 10),
-          // todo 유저가 가지고있는 기본 해시태그로 수정
-          hashtagAsync.when(
-            data: (data) {
-              return Wrap(
-                spacing: 10,
-                runSpacing: 10,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  ...data.map((tag) {
-                    return HashtagButton(
-                      text: '#${tag.hashTag}',
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 8,
-                      ),
-                      style: const H4TextStyle().merge(
-                        const TextStyle(color: AppColors.subTitle),
-                      ),
-                    );
-                  }).toList()
-                ],
-              );
-            },
-            error: (error, stackTrace) {
-              return const SizedBox();
-            },
-            loading: () => const LoadingIndicator(),
-          ),
+          FutureBuilder<(List<HashtagModel>, List<HashtagModel>)>(
+              future: HashtagRepository.instance.getHashtagList(),
+              builder: (context, snapshot) {
+                var data = snapshot.data ?? ([], []);
+
+                return AnimatedSwitcher(
+                  transitionBuilder: (child, animation) {
+                    return FadeTransition(opacity: animation, child: child);
+                  },
+                  duration: const Duration(milliseconds: 300),
+                  child: () {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const LoadingIndicator();
+                    }
+                    if (snapshot.hasData) {
+                      return SizedBox(
+                        width: double.infinity,
+                        child: Wrap(
+                          spacing: 10,
+                          runSpacing: 10,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            ...data.$2.map((tag) {
+                              return HashtagButton(
+                                text: '#${tag.hashTag}',
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 8,
+                                ),
+                                style: const H4TextStyle().merge(
+                                  const TextStyle(color: AppColors.subTitle),
+                                ),
+                              );
+                            }).toList()
+                          ],
+                        ),
+                      );
+                    }
+                    return const SizedBox();
+                  }(),
+                );
+              }),
           const SizedBox(height: 30),
           const Text(
             '해시태그 생성',

@@ -18,10 +18,12 @@ class DynamicGridList extends HookWidget {
     super.key,
     required this.contentList,
     required this.pullToRefresh,
+    required this.controller,
     this.folderNameProp,
   });
   final List<ContentModel> contentList;
   final Future<void> Function() pullToRefresh;
+  final ScrollController controller;
   final String? folderNameProp;
 
   @override
@@ -46,6 +48,7 @@ class DynamicGridList extends HookWidget {
     return RefreshIndicator(
       onRefresh: pullToRefresh,
       child: SingleChildScrollView(
+        controller: controller,
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
         child: StaggeredGrid.count(

@@ -51,7 +51,7 @@ class EditMyTypeView extends HookConsumerWidget {
                   backgroundColor: AppColors.whiteColor,
                   tabController: tabController,
                   folderCount: folderAsync.value?.length ?? 0,
-                  contentCount: hashtagAsync.value?.length ?? 0,
+                  contentCount: hashtagAsync.value?.$1.length ?? 0,
                   isClick: true,
                   isEditScreen: true,
                 ),

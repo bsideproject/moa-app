@@ -49,7 +49,9 @@ class ContentView extends HookConsumerWidget {
       }
     }
 
-    void pressConfirm() {}
+    void pressConfirm() {
+      context.pop();
+    }
 
     void editContent() {
       isEditMode.value = true;

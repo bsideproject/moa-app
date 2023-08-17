@@ -10,7 +10,11 @@ part 'folder_detail_provider.g.dart';
 // @Riverpod(keepAlive: true)
 @riverpod
 class FolderDetail extends _$FolderDetail {
-  Future<List<ContentModel>> fetchItem({required String folderName}) async {
+  Future<List<ContentModel>> fetchItem({
+    required String folderName,
+    int? page,
+    int? size,
+  }) async {
     // get the [KeepAliveLink]
     var link = ref.keepAlive();
     // a timer to be used by the callbacks below
@@ -33,11 +37,16 @@ class FolderDetail extends _$FolderDetail {
       timer?.cancel();
     });
 
-    var data =
-        FolderRepository.instance.getFolderDetailList(folderName: folderName);
+    var data = FolderRepository.instance.getFolderDetailList(
+      folderName: folderName,
+      page: page,
+      size: size,
+    );
     return data;
   }
 
   @override
-  Future<void> build() async {}
+  Future<List<ContentModel>?> build() async {
+    return null;
+  }
 }

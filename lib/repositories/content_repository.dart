@@ -9,7 +9,7 @@ abstract class IContentRepository {
   Future<void> addContent({
     required AddContentType contentType,
     required ContentModel content,
-    required String hashTagStringList,
+    String? hashTagStringList,
   });
 
   Future<ContentModel> getContentDetail({
@@ -41,7 +41,7 @@ class ContentRepository implements IContentRepository {
   Future<void> addContent({
     required AddContentType contentType,
     required ContentModel content,
-    required String hashTagStringList,
+    String? hashTagStringList,
   }) async {
     var token = await TokenRepository.instance.getToken();
     if (contentType == AddContentType.image) {
@@ -55,9 +55,7 @@ class ContentRepository implements IContentRepository {
           'hashTag': hashTagStringList,
           'contentType': 'IMAGE',
           'originalFileName': '${content.contentName}.png',
-          'image': content.thumbnailImageUrl == ''
-              ? ''
-              : 'image/png:base64:${content.thumbnailImageUrl}',
+          'image': 'image/png:base64:${content.thumbnailImageUrl}',
         },
         options: Options(
           headers: {
@@ -79,7 +77,9 @@ class ContentRepository implements IContentRepository {
           'contentType': 'URL',
           'url': content.contentUrl,
           'originalFileName': '${content.contentName}.png',
-          'image': 'image/png:base64:${content.thumbnailImageUrl}',
+          'image': content.thumbnailImageUrl == ''
+              ? ''
+              : 'image/png:base64:${content.thumbnailImageUrl}',
         },
         options: Options(
           headers: {

@@ -45,7 +45,8 @@ class HashtagTabView extends HookConsumerWidget {
     var width = MediaQuery.of(context).size.width;
     var hashtagAsync = ref.watch(hashtagProvider);
     var searchFocusNode = useFocusNode();
-    var searchTerms = useState<List<HashtagModel>>([]);
+    var searchTerms =
+        useState<(List<HashtagModel>, List<HashtagModel>)>(([], []));
     var matchQuery = useState<List<HashtagModel>>([]);
 
     var searchTextController = useTextEditingController();
@@ -128,7 +129,7 @@ class HashtagTabView extends HookConsumerWidget {
         return;
       }
 
-      for (var hash in searchTerms.value) {
+      for (var hash in searchTerms.value.$1) {
         if (hash.hashTag.contains(searchTextController.text) &&
             !matchQuery.value.contains(hash)) {
           matchQuery.value.add(HashtagModel(
@@ -142,7 +143,7 @@ class HashtagTabView extends HookConsumerWidget {
     }, [searchTextController.text]);
 
     useEffect(() {
-      searchTerms.value = hashtagAsync.value ?? [];
+      searchTerms.value = hashtagAsync.value ?? ([], []);
       searchFocusNode.addListener(() {
         if (searchFocusNode.hasFocus) {
           searchBarHeight.value = 300;
@@ -329,9 +330,9 @@ class HashtagTabView extends HookConsumerWidget {
                   : ListView.builder(
                       shrinkWrap: true,
                       padding: const EdgeInsets.only(top: 20, bottom: 20),
-                      itemCount: searchTerms.value.length,
+                      itemCount: searchTerms.value.$1.length,
                       itemBuilder: (context, index) {
-                        var element = searchTerms.value[index];
+                        var element = searchTerms.value.$1[index];
 
                         return Material(
                           child: InkWell(

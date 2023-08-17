@@ -28,7 +28,7 @@ class _Snackbar {
             child: message.contains('#')
                 ? RichText(
                     text: TextSpan(
-                        style: const H3TextStyle()
+                        style: const H5TextStyle()
                             .merge(
                               const TextStyle(
                                 color: AppColors.whiteColor,
@@ -54,7 +54,7 @@ class _Snackbar {
                       ]))
                 : Text(
                     message,
-                    style: const H3TextStyle()
+                    style: const H5TextStyle()
                         .merge(
                           const TextStyle(
                             fontWeight: FontConstants.fontWeightNormal,
