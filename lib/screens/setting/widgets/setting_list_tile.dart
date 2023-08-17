@@ -7,9 +7,11 @@ class SettingListTile extends StatelessWidget {
     super.key,
     required this.title,
     required this.onPressed,
+    this.trailing,
   });
   final String title;
   final Function() onPressed;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +21,15 @@ class SettingListTile extends StatelessWidget {
         title,
         style: const H3TextStyle(),
       ),
-      trailing: Transform.rotate(
-        angle: 180 * 3.14 / 180,
-        child: Image(
-          image: Assets.arrowBack,
-          width: 20,
-          height: 20,
-        ),
-      ),
+      trailing: trailing ??
+          Transform.rotate(
+            angle: 180 * 3.14 / 180,
+            child: Image(
+              image: Assets.arrowBack,
+              width: 20,
+              height: 20,
+            ),
+          ),
       onTap: onPressed,
     );
   }

@@ -15,6 +15,7 @@ import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
 import 'package:moa_app/widgets/snackbar.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class Setting extends HookConsumerWidget {
   const Setting({super.key});
@@ -25,6 +26,8 @@ class Setting extends HookConsumerWidget {
     var editNicknameMode = useState(false);
     var nickname = useState('');
     var loading = useState(false);
+    var appVersion = useState<String?>(null);
+
     void pickImage() {}
 
     void goEditMyType() {
@@ -78,6 +81,16 @@ class Setting extends HookConsumerWidget {
       editNicknameMode.value = false;
       loading.value = false;
     }
+
+    void getAppVersion() async {
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      appVersion.value = '${packageInfo.version}(${packageInfo.buildNumber})';
+    }
+
+    useEffect(() {
+      getAppVersion();
+      return null;
+    }, []);
 
     return Scaffold(
       body: SafeArea(
@@ -216,7 +229,17 @@ class Setting extends HookConsumerWidget {
               SettingListTile(
                 title: '탈퇴하기',
                 onPressed: goWithdraw,
-              )
+              ),
+              SettingListTile(
+                  title: '앱 버전',
+                  onPressed: () {},
+                  trailing: AnimatedSwitcher(
+                    transitionBuilder: (child, animation) {
+                      return FadeTransition(opacity: animation, child: child);
+                    },
+                    duration: const Duration(milliseconds: 300),
+                    child: Text(appVersion.value ?? ''),
+                  )),
             ],
           ),
         ),

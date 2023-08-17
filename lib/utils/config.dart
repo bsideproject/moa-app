@@ -25,9 +25,6 @@ class Config {
   String get webFcmKey => env('WEB_FCM_KEY');
   // 웹 로그인 시, Redirect 할 URL
   String get socialRedirectUrl => env('SOCIAL_REDIRECT_URL');
-
-  // Front URL
-  String get frontUrl => env('FRONT_URL');
   // Backends URL
   // Moa-Spring
   String get baseUrl => env('BASE_URL');
