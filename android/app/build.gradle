@@ -12,31 +12,23 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def flutterProperties = new Properties()
-def flutterPropertiesFile = rootProject.file('flutter.properties')
-if (flutterPropertiesFile.exists()) {
-    flutterPropertiesFile.withReader('UTF-8') { reader ->
-        flutterProperties.load(reader)
-    }
-}
-
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
     throw new FileNotFoundException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
-def flutterVersionCode = flutterProperties.getProperty('flutter.versionCode')
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
     flutterVersionCode = '1'
 }
 
-def flutterVersionName = flutterProperties.getProperty('flutter.versionName')
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-def flutterMinSdkVersion = flutterProperties.getProperty('flutter.minSdkVersion')
-def flutterTargetSdkVersion = flutterProperties.getProperty('flutter.targetSdkVersion')
+def flutterMinSdkVersion = localProperties.getProperty('flutter.minSdkVersion')
+def flutterTargetSdkVersion = localProperties.getProperty('flutter.targetSdkVersion')
 
 apply plugin: 'com.android.application'
 // START: FlutterFire Configuration
