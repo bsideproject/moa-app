@@ -11,6 +11,7 @@ import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/folder_model.dart';
 import 'package:moa_app/providers/folder_view_provider.dart';
 import 'package:moa_app/repositories/folder_repository.dart';
+import 'package:moa_app/screens/home/folder_detail_view.dart';
 import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/utils/logger.dart';
@@ -57,10 +58,13 @@ class FolderTabView extends HookConsumerWidget {
       );
     }
 
-    void goFolderDetailView({required String folderName}) {
-      context.go(
-        '${GoRoutes.folder.fullPath}/$folderName',
-      );
+    void goFolderDetailView(
+        {required String folderName, required int contentCount}) {
+      context.go('${GoRoutes.folder.fullPath}/$folderName',
+          extra: FolderDetailView(
+            folderName: folderName,
+            contentCount: contentCount,
+          ));
     }
 
     void showEditFolderModal({required String folderName}) {
@@ -215,8 +219,10 @@ class FolderTabView extends HookConsumerWidget {
                         folderName: item.folderName,
                         folderColor: folderColors[index % 4],
                       ),
-                      onPress: () =>
-                          goFolderDetailView(folderName: item.folderName),
+                      onPress: () => goFolderDetailView(
+                        folderName: item.folderName,
+                        contentCount: item.count,
+                      ),
                     );
             },
           ),

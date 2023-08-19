@@ -21,7 +21,6 @@ import 'package:moa_app/screens/setting/privacy.dart';
 import 'package:moa_app/screens/setting/setting.dart';
 import 'package:moa_app/screens/setting/terms.dart';
 import 'package:moa_app/screens/setting/withdraw.dart';
-import 'package:moa_app/utils/utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -191,19 +190,14 @@ final routeProvider = Provider(
                   name: GoRoutes.folder.name,
                   path: '${GoRoutes.folder.path}/:folderName',
                   pageBuilder: (context, state) {
-                    late String decodeFolderName =
-                        state.pathParameters['folderName']!;
-
-                    if (isStringEncoded(state.pathParameters['folderName']!)) {
-                      decodeFolderName = Uri.decodeFull(
-                          state.pathParameters['folderName'] ?? '');
-                    }
+                    var folder = state.extra as FolderDetailView;
 
                     return buildIosPageTransitions<void>(
                       context: context,
                       state: state,
                       child: FolderDetailView(
-                        folderName: decodeFolderName,
+                        folderName: folder.folderName,
+                        contentCount: folder.contentCount,
                       ),
                     );
                   },

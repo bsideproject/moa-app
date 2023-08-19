@@ -86,7 +86,7 @@ class AddImageContent extends HookConsumerWidget {
         }
       }).toList();
 
-      var hashTagStringList = selectTag.isEmpty ? selectTag.join(',') : null;
+      var hashTagStringList = selectTag.isNotEmpty ? selectTag.join(',') : null;
 
       try {
         await ContentRepository.instance.addContent(
