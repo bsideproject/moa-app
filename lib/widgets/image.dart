@@ -37,14 +37,14 @@ class ImagePlaceholder extends StatelessWidget {
 class ImageOnNetwork extends HookWidget {
   const ImageOnNetwork({
     super.key,
-    required this.imageURL,
+    this.imageURL,
     this.borderRadius = 10,
     this.height = 50,
     this.width = 50,
     this.border,
     this.fit = BoxFit.cover,
   });
-  final String imageURL;
+  final String? imageURL;
   final double width;
   final double height;
   final double borderRadius;
@@ -53,13 +53,17 @@ class ImageOnNetwork extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    return imageURL.isEmpty
+    if (imageURL == null) {
+      return ImagePlaceholder(
+          borderRadius: borderRadius, width: width, height: height);
+    }
+    return imageURL!.isEmpty
         ? ImagePlaceholder(
             borderRadius: borderRadius, width: width, height: height)
         : CachedNetworkImage(
             placeholder: (context, url) => ImagePlaceholder(
                 borderRadius: borderRadius, width: width, height: height),
-            imageUrl: imageURL,
+            imageUrl: imageURL!,
             imageBuilder: (context, imageProvider) => Container(
               height: height,
               width: width,

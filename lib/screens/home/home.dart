@@ -38,17 +38,14 @@ class Home extends HookConsumerWidget {
     var folderCount = useState(0);
     var contentCount = useState(0);
 
-    useEffect(() {
-      /// SliverPersistentHeader의 tab icon 색깔 리렌더를 위해서 addListener 사용
-      tabController.addListener(() {
-        if (tabController.index == 0) {
-          tabIdx.value = 0;
-        } else {
-          tabIdx.value = 1;
-        }
-      });
-      return () {};
-    }, []);
+    /// SliverPersistentHeader의 tab icon 색깔 리렌더를 위해서 addListener 사용
+    tabController.addListener(() {
+      if (tabController.index == 0) {
+        tabIdx.value = 0;
+      } else {
+        tabIdx.value = 1;
+      }
+    });
 
     return Container(
       color: AppColors.backgroundColor,

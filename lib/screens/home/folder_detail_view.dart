@@ -15,13 +15,21 @@ import 'package:moa_app/widgets/moa_widgets/empty_content.dart';
 import 'package:share_plus/share_plus.dart';
 
 class FolderDetailView extends HookConsumerWidget {
-  const FolderDetailView({super.key, required this.folderName});
+  const FolderDetailView({
+    super.key,
+    required this.folderName,
+    required this.contentCount,
+  });
   final String folderName;
+  final int contentCount;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var contentList = useState<List<ContentModel>>([]);
     var controller = useScrollController();
     var pageNum = useState(0);
+    var hasMore = useState(true);
+    var loading = useState(false);
     Future<void> pullToRefresh() async {
       ref.refresh(folderDetailProvider).value;
     }
@@ -36,13 +44,39 @@ class FolderDetailView extends HookConsumerWidget {
       );
     }
 
-    controller.addListener(() {
-      /// load date at when scroll reached -100
-      if (controller.position.pixels >
-          controller.position.maxScrollExtent - 100) {
-        pageNum.value += pageNum.value;
+    void getContentList({required int page}) async {
+      if (pageNum.value == 0) {
+        loading.value = true;
       }
-    });
+      var res = await ref.read(folderDetailProvider.notifier).fetchItem(
+            folderName: folderName,
+            page: page,
+          );
+      contentList.value = [...contentList.value, ...res];
+      loading.value = false;
+      if (res.length < 10) {
+        hasMore.value = false;
+      }
+    }
+
+    useEffect(() {
+      getContentList(page: pageNum.value);
+      return null;
+    }, []);
+
+    useEffect(() {
+      controller.addListener(() {
+        /// load date at when scroll reached -100
+        if (controller.position.pixels >
+            controller.position.maxScrollExtent - 100) {
+          if (hasMore.value) {
+            pageNum.value = pageNum.value + 1;
+            getContentList(page: pageNum.value);
+          }
+        }
+      });
+      return null;
+    }, []);
 
     return Scaffold(
       appBar: AppBarBack(
@@ -61,51 +95,37 @@ class FolderDetailView extends HookConsumerWidget {
         ],
       ),
       body: SafeArea(
-        child: FutureBuilder<List<ContentModel>?>(
-          future: ref.watch(folderDetailProvider.notifier).fetchItem(
-                folderName: folderName,
-                page: pageNum.value,
-              ),
-          builder: (context, snapshot) {
-            var contentList = snapshot.data ?? [];
-
-            return AnimatedSwitcher(
-              transitionBuilder: (child, animation) {
-                return FadeTransition(opacity: animation, child: child);
-              },
-              duration: const Duration(milliseconds: 300),
-              child: () {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const LoadingIndicator();
-                }
-
-                if (snapshot.hasData && contentList.isNotEmpty) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 30),
-                        TypeHeader(
-                            count: contentList.length, onPressFilter: () {}),
-                        const SizedBox(height: 5),
-                        Expanded(
-                          child: DynamicGridList(
-                            controller: controller,
-                            contentList: contentList,
-                            pullToRefresh: pullToRefresh,
-                            folderNameProp: folderName,
-                          ),
+          child: AnimatedSwitcher(
+        transitionBuilder: (child, animation) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+        duration: const Duration(milliseconds: 300),
+        child: () {
+          if (loading.value) {
+            return const LoadingIndicator();
+          }
+          return contentList.value.isEmpty
+              ? const EmptyContent(text: '저장된 취향이 없어요!\n취향을 저장해 주세요.')
+              : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 30),
+                      TypeHeader(count: contentCount, onPressFilter: () {}),
+                      const SizedBox(height: 5),
+                      Expanded(
+                        child: DynamicGridList(
+                          controller: controller,
+                          contentList: contentList.value,
+                          pullToRefresh: pullToRefresh,
+                          folderNameProp: folderName,
                         ),
-                      ],
-                    ),
-                  );
-                }
-                return const EmptyContent(text: '저장된 취향이 없어요!\n취향을 저장해 주세요.');
-              }(),
-            );
-          },
-        ),
-      ),
+                      ),
+                    ],
+                  ),
+                );
+        }(),
+      )),
     );
   }
 }

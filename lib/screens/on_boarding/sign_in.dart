@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
-import 'package:moa_app/models/user_model.dart';
 import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/repositories/auth_repository.dart';
 import 'package:moa_app/repositories/user_repository.dart';
@@ -17,7 +15,6 @@ import 'package:moa_app/screens/on_boarding/input_name_view.dart';
 import 'package:moa_app/utils/logger.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/widgets/button.dart';
-import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
 import 'package:moa_app/widgets/snackbar.dart';
 
@@ -26,8 +23,6 @@ class SignIn extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var loading = useState(false);
-    var emailUser = useState<UserModel?>(null);
-
     void hasNicknameCheck({required bool isMember}) async {
       /// 비회원
       // if (!isMember) {
@@ -232,61 +227,6 @@ class SignIn extends HookConsumerWidget {
                   //     ),
                   //   ),
                   // ),
-
-                  /// 심사용 이메일 로그인
-                  Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.only(left: 32, top: 60, right: 32),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Text('심사용 이메일 로그인'),
-                        Column(children: [
-                          ConstrainedBox(
-                            constraints: const BoxConstraints(
-                              maxWidth: Breakpoints.sm,
-                            ),
-                            child: EditText(
-                              onChanged: (txt) {
-                                emailUser.value =
-                                    emailUser.value?.copyWith(email: txt);
-                              },
-                              keyboardType: TextInputType.emailAddress,
-                              hintText: 'Email',
-                            ),
-                          ),
-                          ConstrainedBox(
-                            constraints: const BoxConstraints(
-                              maxWidth: Breakpoints.sm,
-                            ),
-                            child: EditText(
-                              onChanged: (txt) {
-                                // user.value = user.value.copyWith(password: txt);
-                              },
-                              hintText: 'Password',
-                              obscureText: true,
-                              enableSuggestions: false,
-                              autocorrect: false,
-                            ),
-                          ),
-                        ]),
-                        ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            maxWidth: Breakpoints.sm,
-                          ),
-                          child: Button(
-                            text: '로그인 하기',
-                            disabled: emailUser.value?.email == '',
-                            onPressed: () async {
-                              // if (context.mounted) {
-                              //   context.go(GoRoutes.home.fullPath);
-                              // }
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),
