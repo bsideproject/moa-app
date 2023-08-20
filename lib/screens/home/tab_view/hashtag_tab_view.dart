@@ -198,8 +198,8 @@ class HashtagTabView extends HookConsumerWidget {
                   child: LoadingMoreList<ContentModel>(
                     onScrollNotification: (notification) {
                       if (notification is ScrollEndNotification) {
-                        if (notification.metrics.pixels ==
-                            notification.metrics.maxScrollExtent) {
+                        if (notification.metrics.pixels >
+                            notification.metrics.maxScrollExtent - 100) {
                           source.loadMore();
                         }
                       }

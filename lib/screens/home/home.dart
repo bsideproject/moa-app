@@ -365,24 +365,42 @@ class HashtagSource extends LoadingMoreBase<ContentModel> {
         contentCount.value = count;
 
         contentList.addAll(initialList);
-      } else {
+
+        for (ContentModel content in contentList) {
+          if (!contains(content)) {
+            add(content);
+          }
+        }
+
+        if (contentList.length < size) {
+          _hasMore = false;
+        }
+        if (_hasMore) {
+          pageIndex++;
+        }
+        isSuccess = true;
+
+        return true;
+      }
+
+      if (_hasMore) {
         var (list, _) = await HashtagRepository.instance
             .getHashtagView(page: pageIndex, size: size);
         contentList = [...contentList, ...list];
-        _hasMore = list.length >= 10;
-      }
-
-      for (ContentModel content in contentList) {
-        if (!contains(content) && _hasMore) {
-          add(content);
+        for (ContentModel content in contentList) {
+          if (!contains(content)) {
+            add(content);
+          }
         }
-      }
+        if (list.length < size) {
+          _hasMore = false;
+        }
 
-      if (contentList.length > 10) {
-        pageIndex++;
+        if (_hasMore) {
+          pageIndex++;
+        }
+        isSuccess = true;
       }
-
-      isSuccess = true;
     } catch (e) {
       isSuccess = false;
 
