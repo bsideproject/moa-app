@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:moa_app/constants/color_constants.dart';
+import 'package:moa_app/widgets/moa_widgets/empty_image.dart';
 
 class ImagePlaceholder extends StatelessWidget {
   const ImagePlaceholder(
@@ -43,6 +44,7 @@ class ImageOnNetwork extends HookWidget {
     this.width = 50,
     this.border,
     this.fit = BoxFit.cover,
+    this.aspectRatio,
   });
   final String? imageURL;
   final double width;
@@ -50,40 +52,35 @@ class ImageOnNetwork extends HookWidget {
   final double borderRadius;
   final Border? border;
   final BoxFit? fit;
+  final double? aspectRatio;
 
   @override
   Widget build(BuildContext context) {
     if (imageURL == null) {
-      return ImagePlaceholder(
-          borderRadius: borderRadius, width: width, height: height);
+      return AspectRatio(
+          aspectRatio: 1, child: ImagePlaceholder(borderRadius: borderRadius));
     }
     return imageURL!.isEmpty
-        ? ImagePlaceholder(
-            borderRadius: borderRadius, width: width, height: height)
-        : CachedNetworkImage(
-            placeholder: (context, url) => ImagePlaceholder(
-                borderRadius: borderRadius, width: width, height: height),
-            imageUrl: imageURL!,
-            imageBuilder: (context, imageProvider) => Container(
-              height: height,
-              width: width,
-              decoration: BoxDecoration(
-                border: border ??
-                    Border.all(color: AppColors.moaOpacity30, width: 0.5),
-                borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: fit,
-                ),
+        ? EmptyImage(
+            aspectRatio: aspectRatio,
+          )
+        : Container(
+            clipBehavior: Clip.hardEdge,
+            decoration: BoxDecoration(
+              border: border ??
+                  Border.all(color: AppColors.moaOpacity30, width: 0.5),
+              borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+            ),
+            child: CachedNetworkImage(
+              placeholder: (context, url) =>
+                  Image.network(fit: BoxFit.cover, url),
+              imageUrl: imageURL!,
+              errorWidget: (context, url, error) => ImagePlaceholder(
+                borderRadius: borderRadius,
+                width: width,
+                height: height,
               ),
             ),
-            errorWidget: (context, url, error) => ImagePlaceholder(
-              borderRadius: borderRadius,
-              width: width,
-              height: height,
-            ),
-            width: width,
-            height: height,
           );
   }
 }

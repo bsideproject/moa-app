@@ -9,9 +9,7 @@ import 'package:moa_app/repositories/content_repository.dart';
 import 'package:moa_app/screens/home/content_view.dart';
 import 'package:moa_app/screens/home/widgets/content_card.dart';
 import 'package:moa_app/utils/router_provider.dart';
-import 'package:moa_app/utils/utils.dart';
 import 'package:moa_app/widgets/image.dart';
-import 'package:moa_app/widgets/moa_widgets/empty_image.dart';
 
 class DynamicGridList extends HookWidget {
   const DynamicGridList({
@@ -71,46 +69,13 @@ class DynamicGridList extends HookWidget {
                 },
                 child: Column(
                   children: [
-                    FutureBuilder(
-                      future: getImageSize(
-                        imageURL: contentList[i].thumbnailImageUrl,
+                    ImageOnNetwork(
+                      border: Border.all(
+                        color: AppColors.moaOpacity30,
+                        width: 0.5,
                       ),
-                      builder: (context, snapshot) {
-                        var rate = snapshot.data;
-                        return AnimatedSwitcher(
-                          transitionBuilder: (child, animation) {
-                            return FadeTransition(
-                                opacity: animation, child: child);
-                          },
-                          duration: const Duration(milliseconds: 100),
-                          child: () {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const AspectRatio(
-                                aspectRatio: 1,
-                                child: ImagePlaceholder(borderRadius: 10),
-                              );
-                            }
-
-                            if (snapshot.hasData && rate != null) {
-                              return AspectRatio(
-                                aspectRatio: rate,
-                                child: ImageOnNetwork(
-                                  // fit: BoxFit.contain,
-                                  width: double.infinity,
-                                  border: Border.all(
-                                    color: AppColors.moaOpacity30,
-                                    width: 0.5,
-                                  ),
-                                  borderRadius: 10,
-                                  imageURL: contentList[i].thumbnailImageUrl,
-                                ),
-                              );
-                            }
-                            return const EmptyImage();
-                          }(),
-                        );
-                      },
+                      borderRadius: 10,
+                      imageURL: contentList[i].thumbnailImageUrl,
                     ),
                     ContentCard(
                       onPressHashtag: (tag) {},
