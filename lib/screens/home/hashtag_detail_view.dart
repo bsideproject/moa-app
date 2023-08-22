@@ -243,21 +243,24 @@ class HashtagDetailView extends HookConsumerWidget {
         children: [
           Column(
             children: [
-              EditText(
-                controller: searchTextController,
-                focusNode: searchFocusNode,
-                height: 50,
-                onChanged: searchHashtag,
-                hintText: '나의 해시태그 검색',
-                borderRadius: BorderRadius.circular(50),
-                suffixIcon: CircleIconButton(
-                  icon: Image(
-                    fit: BoxFit.contain,
-                    image: Assets.searchIcon,
-                    width: 16,
-                    height: 16,
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 15),
+                child: EditText(
+                  controller: searchTextController,
+                  focusNode: searchFocusNode,
+                  height: 50,
+                  onChanged: searchHashtag,
+                  hintText: '나의 해시태그 검색',
+                  borderRadius: BorderRadius.circular(50),
+                  suffixIcon: CircleIconButton(
+                    icon: Image(
+                      fit: BoxFit.contain,
+                      image: Assets.searchIcon,
+                      width: 16,
+                      height: 16,
+                    ),
+                    onPressed: onPressSearchHashtag,
                   ),
-                  onPressed: onPressSearchHashtag,
                 ),
               ),
               Expanded(
