@@ -65,8 +65,10 @@ class EditContentView extends HookConsumerWidget {
         await ref.read(folderViewProvider.notifier).refresh();
         isEditMode.value = false;
       } catch (e) {
-        snackbar.alert(
-            context, kDebugMode ? e.toString() : '오류가 발생했습니다. 다시 시도해주세요.');
+        if (context.mounted) {
+          snackbar.alert(
+              context, kDebugMode ? e.toString() : '오류가 발생했습니다. 다시 시도해주세요.');
+        }
       } finally {
         loading.value = false;
       }

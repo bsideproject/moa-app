@@ -20,7 +20,7 @@ import 'package:moa_app/providers/hashtag_view_provider.dart';
 import 'package:moa_app/repositories/content_repository.dart';
 import 'package:moa_app/screens/add_content/add_image_content.dart';
 import 'package:moa_app/screens/add_content/widgets/add_content_bottom.dart';
-import 'package:moa_app/screens/home/home.dart';
+import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/utils/utils.dart';
 import 'package:moa_app/widgets/app_bar.dart';
 import 'package:moa_app/widgets/button.dart';
@@ -137,10 +137,7 @@ class AddLinkContent extends HookConsumerWidget {
             .addFolder(folderName: 'folderName');
 
         if (context.mounted) {
-          context.go(
-            '/',
-            extra: const Home(isRefresh: true),
-          );
+          context.go(GoRoutes.completeAddContent.fullPath);
         }
       } catch (error) {
         if (context.mounted) {
@@ -171,12 +168,19 @@ class AddLinkContent extends HookConsumerWidget {
     }
 
     void addHashtag() {
-      if (selectedTagList.value.map((e) => e.name).contains(hashtag.value)) {
-        tagError.value = '중복 태그가 존재해요.';
+      if (hashtagController.text.isEmpty) {
         return;
       }
 
-      if (hashtagController.text.isEmpty) {
+      if (selectedTagList.value.length == 20) {
+        if (context.mounted) {
+          snackbar.alert(context, '더 이상 해시태그를 추가할 수 없습니다.');
+        }
+        return;
+      }
+
+      if (selectedTagList.value.map((e) => e.name).contains(hashtag.value)) {
+        tagError.value = '중복 태그가 존재해요.';
         return;
       }
 

@@ -6,6 +6,7 @@ import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/repositories/user_repository.dart';
 import 'package:moa_app/screens/add_content/add_image_content.dart';
 import 'package:moa_app/screens/add_content/add_link_content.dart';
+import 'package:moa_app/screens/add_content/complete_add_content_view.dart';
 import 'package:moa_app/screens/add_content/folder_select.dart';
 import 'package:moa_app/screens/home/content_view.dart';
 import 'package:moa_app/screens/home/folder_detail_view.dart';
@@ -45,6 +46,7 @@ enum GoRoutes {
   folderSelect,
   addImageContent,
   addLinkContent,
+  completeAddContent,
 
   /// setting
   setting,
@@ -358,6 +360,17 @@ final routeProvider = Provider(
                 },
               ),
             ]),
+        GoRoute(
+          name: GoRoutes.completeAddContent.name,
+          path: GoRoutes.completeAddContent.fullPath,
+          pageBuilder: (context, state) {
+            return buildIosPageTransitions<void>(
+              context: context,
+              state: state,
+              child: const CompleteAddContentView(),
+            );
+          },
+        ),
         GoRoute(
           name: GoRoutes.greeting.name,
           path: GoRoutes.greeting.fullPath,

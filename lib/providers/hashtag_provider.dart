@@ -60,8 +60,5 @@ class Hashtag extends _$Hashtag {
       var data = await fetchItem();
       return data;
     });
-    return;
-
-    // return state.value;
   }
 }

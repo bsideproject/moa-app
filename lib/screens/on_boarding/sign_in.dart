@@ -59,8 +59,10 @@ class SignIn extends HookConsumerWidget {
       } catch (e, traceback) {
         logger.d(e);
         logger.d(traceback);
-        snackbar.alert(context,
-            kDebugMode ? e.toString() : '회원가입 중 에러가 발생했습니다. 관리자에게 문의해주세요.');
+        if (context.mounted) {
+          snackbar.alert(context,
+              kDebugMode ? e.toString() : '회원가입 중 에러가 발생했습니다. 관리자에게 문의해주세요.');
+        }
       } finally {
         loading.value = false;
       }

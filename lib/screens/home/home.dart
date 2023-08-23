@@ -308,15 +308,17 @@ class FolderSource extends LoadingMoreBase<FolderModel> {
       var list = await futureList!.future;
       folderCount.value = list.length;
 
+      add(
+        const FolderModel(
+            folderId: 'add', folderName: '폴더 추가', count: 0, thumbnailUrl: ''),
+      );
+
       for (FolderModel folder in list) {
         if (!contains(folder) && _hasMore) {
           add(folder);
         }
       }
-      add(
-        const FolderModel(
-            folderId: 'add', folderName: '폴더 추가', count: 0, thumbnailUrl: ''),
-      );
+
       _hasMore = false;
       pageIndex++;
       isSuccess = true;

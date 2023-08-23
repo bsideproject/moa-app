@@ -69,8 +69,10 @@ class HashtagDetailView extends HookConsumerWidget {
                 context.pop();
               }
             } catch (e) {
-              snackbar.alert(
-                  context, kDebugMode ? e.toString() : '해시태그 수정에 실패했습니다.');
+              if (context.mounted) {
+                snackbar.alert(
+                    context, kDebugMode ? e.toString() : '해시태그 수정에 실패했습니다.');
+              }
             }
           },
           updatedContentName: updatedHashtagName,
@@ -100,8 +102,10 @@ class HashtagDetailView extends HookConsumerWidget {
                 context.pop();
               }
             } catch (e) {
-              snackbar.alert(
-                  context, kDebugMode ? e.toString() : '해시태그 삭제에 실패했습니다.');
+              if (context.mounted) {
+                snackbar.alert(
+                    context, kDebugMode ? e.toString() : '해시태그 삭제에 실패했습니다.');
+              }
             }
           },
         ),

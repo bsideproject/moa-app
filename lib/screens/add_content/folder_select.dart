@@ -81,15 +81,15 @@ class FolderSelect extends HookConsumerWidget {
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     childAspectRatio: 1.3,
-                    mainAxisSpacing: 30.0,
+                    mainAxisSpacing: 20.0,
                     crossAxisSpacing: 20.0,
-                    mainAxisExtent: 115,
+                    mainAxisExtent: 125,
                   ),
                   itemBuilder: (context, index) {
                     return Column(
                       children: [
                         SizedBox(
-                          height: 85,
+                          height: 77,
                           child: Ink(
                             decoration: BoxDecoration(
                               image: DecorationImage(
@@ -111,10 +111,14 @@ class FolderSelect extends HookConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        Text(
-                          folderList[index].folderName,
-                          style: const H4TextStyle(),
-                        )
+                        Flexible(
+                          child: Text(
+                            folderList[index].folderName,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const H4TextStyle(),
+                          ),
+                        ),
                       ],
                     );
                   },

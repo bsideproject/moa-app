@@ -64,13 +64,17 @@ class EditFolder extends HookConsumerWidget {
               logger.d(error);
               // 폴더 중복 에러 처리
               if (error.response!.statusCode == 409) {
-                snackbar.alert(context,
-                    kDebugMode ? error.toString() : '이미 가지고 있는 폴더이름이에요');
+                if (context.mounted) {
+                  snackbar.alert(context,
+                      kDebugMode ? error.toString() : '이미 가지고 있는 폴더이름이에요');
+                }
                 return;
               }
 
-              snackbar.alert(context,
-                  kDebugMode ? error.toString() : '오류가 발생했어요 다시 시도해주세요.');
+              if (context.mounted) {
+                snackbar.alert(context,
+                    kDebugMode ? error.toString() : '오류가 발생했어요 다시 시도해주세요.');
+              }
             }
           },
         ),

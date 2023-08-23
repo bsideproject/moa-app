@@ -41,7 +41,6 @@ class EditMyTypeView extends HookConsumerWidget {
       body: DefaultTabController(
         length: 2,
         child: ExtendedNestedScrollView(
-          physics: const NeverScrollableScrollPhysics(),
           onlyOneScrollInBody: true,
           floatHeaderSlivers: true,
           headerSliverBuilder: (context, innerBoxIsScrolled) {

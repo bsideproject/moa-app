@@ -60,8 +60,10 @@ class Setting extends HookConsumerWidget {
               context.go(GoRoutes.signIn.fullPath);
             }
           } catch (e) {
-            snackbar.alert(
-                context, kDebugMode ? e.toString() : '로그아웃에 실패했습니다 다시 시도해주세요.');
+            if (context.mounted) {
+              snackbar.alert(context,
+                  kDebugMode ? e.toString() : '로그아웃에 실패했습니다 다시 시도해주세요.');
+            }
           }
         },
         showCancelButton: true,

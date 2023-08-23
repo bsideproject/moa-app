@@ -56,7 +56,7 @@ class AddFolder extends HookConsumerWidget {
         emptyFolderName();
       } on DioException catch (e) {
         // 폴더 중복 에러 처리
-        if (e.response?.statusCode == 409) {
+        if (e.response?.statusCode == 409 && context.mounted) {
           snackbar.alert(context, '이미 가지고 있는 폴더이름이에요');
         }
       } finally {
@@ -79,7 +79,7 @@ class AddFolder extends HookConsumerWidget {
             ),
             const SizedBox(height: 30),
             EditFormText(
-              maxLength: 7,
+              maxLength: 10,
               controller: folderNameController,
               onChanged: folderOnChangedValue,
               hintText: '폴더명을 입력하세요.',
@@ -99,9 +99,9 @@ class AddFolder extends HookConsumerWidget {
               children: [
                 const Spacer(),
                 Text(
-                  '${folderNameController.text.length}/7',
+                  '${folderNameController.text.characters.length}/10',
                   style: TextStyle(
-                      color: folderNameController.text.length == 7
+                      color: folderNameController.text.characters.length == 10
                           ? AppColors.danger
                           : AppColors.blackColor.withOpacity(0.3),
                       fontSize: 12,

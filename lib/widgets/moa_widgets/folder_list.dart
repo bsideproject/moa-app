@@ -86,9 +86,15 @@ class FolderList extends HookWidget {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  Text(
-                    folder.folderName,
-                    style: const H4TextStyle(),
+                  SizedBox(
+                    width: 100,
+                    child: Text(
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      folder.folderName,
+                      style: const H4TextStyle()
+                          .merge(const TextStyle(color: AppColors.blackColor)),
+                    ),
                   ),
                   const SizedBox(height: 3),
                   folder.updatedDate != null
