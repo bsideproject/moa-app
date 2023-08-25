@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:moa_app/models/hashtag_model.dart';
+import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/repositories/hashtag_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,6 +12,11 @@ part 'hashtag_provider.g.dart';
 @riverpod
 class Hashtag extends _$Hashtag {
   Future<(List<HashtagModel>, List<HashtagModel>)> fetchItem() async {
+    var token = ref.watch(tokenStateProvider).value;
+    if (token == null) {
+      return ([] as List<HashtagModel>, [] as List<HashtagModel>);
+    }
+
     var data = HashtagRepository.instance.getHashtagList();
     return data;
   }

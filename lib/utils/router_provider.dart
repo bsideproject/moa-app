@@ -143,9 +143,13 @@ final routeProvider = Provider(
         }
 
         if (token.value != null) {
-          var user = await UserRepository.instance.getUser();
-          if (user?.nickname == null) {
-            return GoRoutes.inputName.fullPath;
+          try {
+            var user = await UserRepository.instance.getUser();
+            if (user?.nickname == null) {
+              return GoRoutes.inputName.fullPath;
+            }
+          } catch (e) {
+            return GoRoutes.signIn.fullPath;
           }
         }
 
