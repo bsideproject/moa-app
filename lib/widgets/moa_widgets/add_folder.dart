@@ -113,10 +113,10 @@ class AddFolder extends HookConsumerWidget {
             Button(
               loading: loading.value,
               disabled: folderNameController.text.isEmpty,
-              margin: const EdgeInsets.only(bottom: 30),
+              margin: const EdgeInsets.only(bottom: 50),
               text: '추가하기',
               onPressed: addFolder,
-            )
+            ),
           ],
         ),
       ),

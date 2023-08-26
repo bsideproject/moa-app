@@ -448,7 +448,6 @@ class HashtagDetailList extends HookConsumerWidget {
                   children: [
                     const SizedBox(height: 20),
                     TypeHeader(count: hashCount, onPressFilter: onPressFilter),
-                    const SizedBox(height: 5),
                     Expanded(
                         child: DynamicGridList(
                       controller: controller,

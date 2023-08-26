@@ -22,6 +22,7 @@ import 'package:moa_app/screens/setting/privacy.dart';
 import 'package:moa_app/screens/setting/setting.dart';
 import 'package:moa_app/screens/setting/terms.dart';
 import 'package:moa_app/screens/setting/withdraw.dart';
+import 'package:moa_app/utils/utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -196,14 +197,22 @@ final routeProvider = Provider(
                   name: GoRoutes.folder.name,
                   path: '${GoRoutes.folder.path}/:folderName',
                   pageBuilder: (context, state) {
-                    var folder = state.extra as FolderDetailView;
+                    late String decodeFolderName =
+                        state.pathParameters['folderName']!;
+
+                    var parseCount = int.parse(state.uri.queryParameters['c']!);
+
+                    if (isStringEncoded(state.pathParameters['folderName']!)) {
+                      decodeFolderName = Uri.decodeFull(
+                          state.pathParameters['folderName'] ?? '');
+                    }
 
                     return buildIosPageTransitions<void>(
                       context: context,
                       state: state,
                       child: FolderDetailView(
-                        folderName: folder.folderName,
-                        contentCount: folder.contentCount,
+                        folderName: decodeFolderName,
+                        contentCount: parseCount,
                       ),
                     );
                   },
@@ -218,7 +227,7 @@ final routeProvider = Provider(
                       state: state,
                       child: HashtagDetailView(
                         filterName: state.pathParameters['hashtag'] ?? '',
-                        tagId: state.queryParameters['tagId'] ?? '',
+                        tagId: state.uri.queryParameters['tagId'] ?? '',
                       ),
                     );
                   },

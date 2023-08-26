@@ -66,7 +66,7 @@ class FolderSelect extends HookConsumerWidget {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
           child: FutureBuilder<List<FolderModel>>(
             future: FolderRepository.instance.getFolderList(),
             builder: (context, snapshot) {
@@ -81,9 +81,8 @@ class FolderSelect extends HookConsumerWidget {
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     childAspectRatio: 1.3,
-                    mainAxisSpacing: 20.0,
-                    crossAxisSpacing: 20.0,
-                    mainAxisExtent: 125,
+                    crossAxisSpacing: 20,
+                    mainAxisExtent: 137,
                   ),
                   itemBuilder: (context, index) {
                     return Column(

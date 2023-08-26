@@ -47,10 +47,12 @@ class EditMyTypeView extends HookConsumerWidget {
             return [
               SliverPersistentHeader(
                 delegate: PersistentTabBar(
+                  isEditMyType: true,
                   backgroundColor: AppColors.whiteColor,
                   tabController: tabController,
                   folderCount: folderAsync.value?.length ?? 0,
-                  contentCount: hashtagAsync.value?.$1.length ?? 0,
+                  contentCount: (hashtagAsync.value?.$1.length ?? 0) +
+                      (hashtagAsync.value?.$2.length ?? 0),
                   isClick: true,
                   isEditScreen: true,
                 ),

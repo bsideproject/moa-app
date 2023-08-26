@@ -24,6 +24,7 @@ class EditFolder extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    useAutomaticKeepAlive(wantKeepAlive: true);
     var width = MediaQuery.of(context).size.width;
     var folderAsync = ref.watch(folderViewProvider);
     var updatedContentName = useState('');
@@ -157,7 +158,11 @@ class EditFolder extends HookConsumerWidget {
               ...data
             ];
             return GridView.builder(
-              padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
+              padding: const EdgeInsets.only(
+                  left: 15,
+                  right: 15,
+                  top: 20,
+                  bottom: kBottomNavigationBarHeight),
               itemCount: list.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: width > Breakpoints.md ? 3 : 2,

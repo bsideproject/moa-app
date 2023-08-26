@@ -105,7 +105,7 @@ class EditContent extends HookWidget {
             Button(
               loading: loading.value,
               disabled: controller.text.isEmpty,
-              margin: const EdgeInsets.only(bottom: 30),
+              margin: const EdgeInsets.only(bottom: 50),
               text: buttonText ?? '수정하기',
               onPressed: editContent,
             )

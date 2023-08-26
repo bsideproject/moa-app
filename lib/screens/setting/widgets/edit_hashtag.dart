@@ -25,6 +25,7 @@ class EditHashtag extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    useAutomaticKeepAlive(wantKeepAlive: true);
     var hashtagAsync = ref.watch(hashtagProvider);
     var textController = useTextEditingController();
     var selectedTagList = useState<List<SelectedTagModel>>([]);
@@ -183,7 +184,8 @@ class EditHashtag extends HookConsumerWidget {
     }, [hashtagAsync.isLoading]);
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
+      padding: const EdgeInsets.only(
+          left: 15, right: 15, top: 20, bottom: kBottomNavigationBarHeight),
       physics: const ClampingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

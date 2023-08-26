@@ -48,7 +48,8 @@ class DynamicGridList extends HookWidget {
       child: SingleChildScrollView(
         controller: controller,
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
+        padding:
+            const EdgeInsets.only(bottom: kBottomNavigationBarHeight, top: 15),
         child: StaggeredGrid.count(
           axisDirection: AxisDirection.down,
           crossAxisCount: width > Breakpoints.md ? 3 : 2,

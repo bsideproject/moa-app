@@ -18,7 +18,7 @@ class MainBottomTab extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var currentIndex = useState(0);
-    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom == 0;
+    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom > 0;
     var lifeCycle = useAppLifecycleState();
 
     var receiveUrl = useState('');
@@ -94,32 +94,28 @@ class MainBottomTab extends HookConsumerWidget {
     }
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       body: child,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       floatingActionButton: SizedBox(
         width: 60,
         height: 60,
-        child: Visibility(
-          maintainAnimation: true,
-          maintainState: true,
-          visible: keyboardIsOpen,
-          child: AnimatedOpacity(
-            opacity: keyboardIsOpen ? 1 : 0,
-            duration: const Duration(milliseconds: 100),
-            child: FloatingActionButton(
-              elevation: 0,
-              backgroundColor: AppColors.primaryColor,
-              shape: const CircleBorder(),
-              onPressed: () {
-                context.push(GoRoutes.folderSelect.fullPath);
-              },
-              child: const Icon(
-                size: 40,
-                Icons.add,
-              ), //icon inside button
-            ),
+        child: AnimatedOpacity(
+          opacity: keyboardIsOpen ? 0 : 1,
+          duration: const Duration(milliseconds: 50),
+          child: FloatingActionButton(
+            elevation: 0,
+            backgroundColor: AppColors.primaryColor,
+            shape: const CircleBorder(),
+            onPressed: () {
+              keyboardIsOpen
+                  ? null
+                  : context.push(GoRoutes.folderSelect.fullPath);
+            },
+            child: const Icon(
+              size: 40,
+              Icons.add,
+            ), //icon inside button
           ),
         ),
       ),
@@ -133,56 +129,42 @@ class MainBottomTab extends HookConsumerWidget {
             ),
           ],
         ),
-        child: Container(
-          height: MediaQuery.of(context).viewInsets.bottom > 0
-              ? 0
-              : const BottomAppBar().height,
-          decoration: const BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, -4),
-                color: Color.fromRGBO(0, 0, 0, 0.05),
-                blurRadius: 8,
+        child: BottomAppBar(
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 5,
+          padding: EdgeInsets.only(
+            top: 10,
+            bottom: MyPlatform().isAndroid ? 10 : 0,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              // Bottom of the screen
+              Expanded(
+                child: IconButton(
+                  iconSize: 28,
+                  onPressed: () => tap(context, 0),
+                  icon: Image(
+                    color: currentIndex.value == 0
+                        ? AppColors.primaryColor
+                        : AppColors.blackColor,
+                    image: Assets.home,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: IconButton(
+                  iconSize: 28,
+                  onPressed: () => tap(context, 1),
+                  icon: Image(
+                    color: currentIndex.value == 1
+                        ? AppColors.primaryColor
+                        : AppColors.blackColor,
+                    image: Assets.setting,
+                  ),
+                ),
               ),
             ],
-          ),
-          child: BottomAppBar(
-            shape: const CircularNotchedRectangle(),
-            notchMargin: 5,
-            padding: EdgeInsets.only(
-              top: 10,
-              bottom: MyPlatform().isAndroid ? 10 : 0,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                // Bottom of the screen
-                Expanded(
-                  child: IconButton(
-                    iconSize: 28,
-                    onPressed: () => tap(context, 0),
-                    icon: Image(
-                      color: currentIndex.value == 0
-                          ? AppColors.primaryColor
-                          : AppColors.blackColor,
-                      image: Assets.home,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: IconButton(
-                    iconSize: 28,
-                    onPressed: () => tap(context, 1),
-                    icon: Image(
-                      color: currentIndex.value == 1
-                          ? AppColors.primaryColor
-                          : AppColors.blackColor,
-                      image: Assets.setting,
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       ),

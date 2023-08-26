@@ -185,7 +185,6 @@ class HashtagTabView extends HookConsumerWidget {
                   ),
                   const SizedBox(height: 20),
                   TypeHeader(count: count, onPressFilter: onPressFilter),
-                  const SizedBox(height: 5),
                 ],
               ),
             ),

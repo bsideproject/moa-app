@@ -145,6 +145,7 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
     required this.tabController,
     required this.folderCount,
     required this.contentCount,
+    this.isEditMyType = false,
     this.backgroundColor,
     this.isEditScreen = false,
   });
@@ -152,6 +153,7 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
   final TabController tabController;
   final int folderCount;
   final int contentCount;
+  final bool isEditMyType;
   final Color? backgroundColor;
   final bool isEditScreen;
 
@@ -196,7 +198,9 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
                           TextSpan(
                             text: tabController.index == 0
                                 ? '$folderCount개의 폴더'
-                                : '$contentCount개의 취향',
+                                : isEditMyType
+                                    ? '$contentCount개의 해시태그'
+                                    : '$contentCount개의 취향',
                             style: const H1TextStyle().merge(
                               const TextStyle(
                                 height: 1.4,

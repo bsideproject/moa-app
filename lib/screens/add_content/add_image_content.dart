@@ -181,75 +181,72 @@ class AddImageContent extends HookConsumerWidget {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
-              padding: const EdgeInsets.only(bottom: 100),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    height: 135,
-                    child: Material(
-                      color: AppColors.textInputBackground,
+          SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            padding: const EdgeInsets.only(
+                bottom: 100, top: 20, left: 20, right: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  height: 135,
+                  child: Material(
+                    color: AppColors.textInputBackground,
+                    borderRadius: BorderRadius.circular(15),
+                    child: InkWell(
                       borderRadius: BorderRadius.circular(15),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(15),
-                        onTap: () => pickImage(ImageSource.gallery),
-                        child: imageFile.value != null
-                            ? Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image:
-                                        FileImage(File(imageFile.value!.path)),
-                                  ),
+                      onTap: () => pickImage(ImageSource.gallery),
+                      child: imageFile.value != null
+                          ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: FileImage(File(imageFile.value!.path)),
                                 ),
-                              )
-                            : Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image(
-                                    width: 16,
-                                    height: 16,
-                                    image: Assets.circlePlus,
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    '이미지 취향을 추가해 주세요.',
-                                    style: const InputLabelTextStyle().merge(
-                                      TextStyle(
-                                        color: AppColors.blackColor
-                                            .withOpacity(0.3),
-                                      ),
-                                    ),
-                                  )
-                                ],
                               ),
-                      ),
+                            )
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image(
+                                  width: 16,
+                                  height: 16,
+                                  image: Assets.circlePlus,
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  '이미지 취향을 추가해 주세요.',
+                                  style: const InputLabelTextStyle().merge(
+                                    TextStyle(
+                                      color:
+                                          AppColors.blackColor.withOpacity(0.3),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
                     ),
                   ),
-                  ErrorText(
-                      errorText: imageError.value,
-                      errorValidate: imageError.value.isNotEmpty),
-                  AddContentBottom(
-                    padding: const EdgeInsets.symmetric(horizontal: 0),
-                    onChangedTitle: onChangedTitle,
-                    addHashtag: addHashtag,
-                    hashtagController: hashtagController,
-                    onChangedHashtag: onChangedHashtag,
-                    onChangedMemo: onChangedMemo,
-                    memo: memo,
-                    tagError: tagError,
-                    title: title,
-                    titleError: titleError,
-                    selectedTagList: selectedTagList,
-                  )
-                ],
-              ),
+                ),
+                ErrorText(
+                    errorText: imageError.value,
+                    errorValidate: imageError.value.isNotEmpty),
+                AddContentBottom(
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
+                  onChangedTitle: onChangedTitle,
+                  addHashtag: addHashtag,
+                  hashtagController: hashtagController,
+                  onChangedHashtag: onChangedHashtag,
+                  onChangedMemo: onChangedMemo,
+                  memo: memo,
+                  tagError: tagError,
+                  title: title,
+                  titleError: titleError,
+                  selectedTagList: selectedTagList,
+                )
+              ],
             ),
           ),
           Positioned(
