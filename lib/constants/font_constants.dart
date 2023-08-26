@@ -90,6 +90,7 @@ class InputLabelTextStyle extends TextStyle {
       : super(
           fontSize: 14,
           fontWeight: FontConstants.fontWeightBold,
+          fontFamily: FontConstants.pretendard,
           color: AppColors.blackColor,
         );
 }

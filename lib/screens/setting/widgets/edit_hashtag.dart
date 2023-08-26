@@ -41,7 +41,11 @@ class EditHashtag extends HookConsumerWidget {
 
       if (selectedTagList.value.length == 13) {
         if (context.mounted) {
-          snackbar.alert(context, '더 이상 해시태그를 추가할 수 없습니다.');
+          snackbar.alert(
+            context,
+            '더 이상 해시태그를 추가할 수 없습니다.',
+            bottom: MediaQuery.of(context).size.height * 0.45,
+          );
         }
         return;
       }

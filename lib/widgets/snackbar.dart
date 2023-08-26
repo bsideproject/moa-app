@@ -16,9 +16,10 @@ class _Snackbar {
     TextStyle? textStyle,
     Color? backgroundColor = AppColors.primaryColor,
     Duration duration = const Duration(seconds: 2),
+    double? bottom,
   }) {
     var snackBar = SnackBar(
-      margin: const EdgeInsets.only(left: 15, right: 15, bottom: 100),
+      margin: EdgeInsets.only(left: 15, right: 15, bottom: bottom ?? 100),
       dismissDirection: DismissDirection.down,
       content: Row(
         mainAxisAlignment: MainAxisAlignment.center,
