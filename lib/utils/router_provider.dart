@@ -16,7 +16,6 @@ import 'package:moa_app/screens/on_boarding/greeting_view.dart';
 import 'package:moa_app/screens/on_boarding/input_name_view.dart';
 import 'package:moa_app/screens/on_boarding/notice_view.dart';
 import 'package:moa_app/screens/on_boarding/sign_in.dart';
-import 'package:moa_app/screens/setting/contact.dart';
 import 'package:moa_app/screens/setting/edit_my_type_view.dart';
 import 'package:moa_app/screens/setting/privacy.dart';
 import 'package:moa_app/screens/setting/setting.dart';
@@ -52,7 +51,6 @@ enum GoRoutes {
   /// setting
   setting,
   editMyType,
-  contact,
   terms,
   privacy,
   withdraw,
@@ -276,17 +274,6 @@ final routeProvider = Provider(
                     context: context,
                     state: state,
                     child: const EditMyTypeView(),
-                  ),
-                ),
-                GoRoute(
-                  parentNavigatorKey: _rootNavigatorKey,
-                  name: GoRoutes.contact.name,
-                  path: GoRoutes.contact.path,
-                  pageBuilder: (context, state) =>
-                      buildIosPageTransitions<void>(
-                    context: context,
-                    state: state,
-                    child: const Contact(),
                   ),
                 ),
                 GoRoute(
