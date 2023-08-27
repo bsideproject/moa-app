@@ -86,7 +86,7 @@ class Setting extends HookConsumerWidget {
 
     void getAppVersion() async {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      appVersion.value = '${packageInfo.version}(${packageInfo.buildNumber})';
+      appVersion.value = packageInfo.version;
     }
 
     useEffect(() {
