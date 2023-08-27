@@ -126,7 +126,6 @@ class FolderTabView extends HookConsumerWidget {
                   );
               if (context.mounted) {
                 context.pop();
-                context.pop();
               }
             } catch (error) {
               if (context.mounted) {
