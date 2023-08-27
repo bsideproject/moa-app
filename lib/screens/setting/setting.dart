@@ -16,6 +16,7 @@ import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
 import 'package:moa_app/widgets/snackbar.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Setting extends HookConsumerWidget {
   const Setting({super.key});
@@ -34,9 +35,15 @@ class Setting extends HookConsumerWidget {
       context.go('${GoRoutes.setting.fullPath}/${GoRoutes.editMyType.path}');
     }
 
-    // void goContact() {
-    //   context.go('${GoRoutes.setting.fullPath}/${GoRoutes.contact.path}');
-    // }
+    void goContact() async {
+      var contactUrl = 'https://forms.gle/TGMsnBDuXGWbpQee8';
+      var url = Uri.parse(contactUrl);
+      if (!await launchUrl(url)) {
+        if (context.mounted) {
+          snackbar.alert(context, '잘못된 링크입니다.\n$url');
+        }
+      }
+    }
 
     void goTerms() {
       context.go('${GoRoutes.setting.fullPath}/${GoRoutes.terms.path}');
@@ -216,10 +223,10 @@ class Setting extends HookConsumerWidget {
                 title: '내 취향관리',
                 onPressed: goEditMyType,
               ),
-              // SettingListTile(
-              //   title: '1:1 문의하기',
-              //   onPressed: goContact,
-              // ),
+              SettingListTile(
+                title: '1:1 문의하기',
+                onPressed: goContact,
+              ),
               SettingListTile(
                 title: '이용약관',
                 onPressed: goTerms,
