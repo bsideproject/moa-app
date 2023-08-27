@@ -178,96 +178,97 @@ class AddImageContent extends HookConsumerWidget {
     }, [hashtagAsync.isLoading]);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: const AppBarBack(
         isBottomBorderDisplayed: false,
         title: '취향 모으기',
       ),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
-            padding: const EdgeInsets.only(
-                bottom: 100, top: 20, left: 20, right: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  height: 135,
-                  child: Material(
-                    color: AppColors.textInputBackground,
-                    borderRadius: BorderRadius.circular(15),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(15),
-                      onTap: () => pickImage(ImageSource.gallery),
-                      child: imageFile.value != null
-                          ? Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: FileImage(File(imageFile.value!.path)),
-                                ),
-                              ),
-                            )
-                          : Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image(
-                                  width: 16,
-                                  height: 16,
-                                  image: Assets.circlePlus,
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  '이미지 취향을 추가해 주세요.',
-                                  style: const InputLabelTextStyle().merge(
-                                    TextStyle(
-                                      color:
-                                          AppColors.blackColor.withOpacity(0.3),
+      body: Padding(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
+                padding: const EdgeInsets.only(
+                    bottom: 100, top: 20, left: 20, right: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      height: 135,
+                      child: Material(
+                        color: AppColors.textInputBackground,
+                        borderRadius: BorderRadius.circular(15),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(15),
+                          onTap: () => pickImage(ImageSource.gallery),
+                          child: imageFile.value != null
+                              ? Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: FileImage(
+                                          File(imageFile.value!.path)),
                                     ),
                                   ),
                                 )
-                              ],
-                            ),
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image(
+                                      width: 16,
+                                      height: 16,
+                                      image: Assets.circlePlus,
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      '이미지 취향을 추가해 주세요.',
+                                      style: const InputLabelTextStyle().merge(
+                                        TextStyle(
+                                          color: AppColors.blackColor
+                                              .withOpacity(0.3),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                        ),
+                      ),
                     ),
-                  ),
+                    ErrorText(
+                        errorText: imageError.value,
+                        errorValidate: imageError.value.isNotEmpty),
+                    AddContentBottom(
+                      padding: const EdgeInsets.symmetric(horizontal: 0),
+                      onChangedTitle: onChangedTitle,
+                      addHashtag: addHashtag,
+                      hashtagController: hashtagController,
+                      onChangedHashtag: onChangedHashtag,
+                      onChangedMemo: onChangedMemo,
+                      memo: memo,
+                      tagError: tagError,
+                      title: title,
+                      titleError: titleError,
+                      selectedTagList: selectedTagList,
+                    ),
+                  ],
                 ),
-                ErrorText(
-                    errorText: imageError.value,
-                    errorValidate: imageError.value.isNotEmpty),
-                AddContentBottom(
-                  padding: const EdgeInsets.symmetric(horizontal: 0),
-                  onChangedTitle: onChangedTitle,
-                  addHashtag: addHashtag,
-                  hashtagController: hashtagController,
-                  onChangedHashtag: onChangedHashtag,
-                  onChangedMemo: onChangedMemo,
-                  memo: memo,
-                  tagError: tagError,
-                  title: title,
-                  titleError: titleError,
-                  selectedTagList: selectedTagList,
-                )
-              ],
+              ),
             ),
-          ),
-          Positioned(
-            bottom: 0,
-            width: MediaQuery.of(context).size.width,
-            child: Button(
+            Button(
               loading: loading.value,
               onPressed: completeAddContent,
               backgroundColor: AppColors.primaryColor,
               text: '완료',
               height: 52 + MediaQuery.of(context).padding.bottom,
               borderRadius: 0,
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).padding.bottom),
             ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }

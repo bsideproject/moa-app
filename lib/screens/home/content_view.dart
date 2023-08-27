@@ -148,7 +148,6 @@ class ContentView extends HookConsumerWidget {
     }
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       appBar: AppBarBack(
         title: folderName,
         isBottomBorderDisplayed: false,

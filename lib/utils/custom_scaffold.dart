@@ -21,7 +21,7 @@ class CustomScaffold extends StatelessWidget {
 
   static Scaffold _buildSafeScaffold({required Widget child}) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: child,
     );
   }

@@ -31,9 +31,7 @@ class EditMyTypeView extends HookConsumerWidget {
       });
       return null;
     }, []);
-
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: const AppBarBack(
         title: '내 취향 관리',
         isBottomBorderDisplayed: false,

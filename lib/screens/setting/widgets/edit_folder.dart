@@ -35,6 +35,8 @@ class EditFolder extends HookConsumerWidget {
     void showAddFolderModal() {
       General.instance.showBottomSheet(
         context: context,
+        // height: MediaQuery.of(context).size.height * 0.5,
+        isScrollControlled: true,
         child: AddFolder(
           onRefresh: () {},
         ),

@@ -51,7 +51,7 @@ enum GoRoutes {
 
   /// setting
   setting,
-  editContent,
+  editMyType,
   contact,
   terms,
   privacy,
@@ -169,6 +169,12 @@ final routeProvider = Provider(
             //   FcmService.instance.foregroundClickHandler(context);
             //   FcmService.instance.setupInteractedMessage(context);
             // }
+
+            // if (state.fullPath ==
+            //     '${GoRoutes.setting.fullPath}${GoRoutes.editMyType.fullPath}') {
+            //   return Scaffold(body: child);
+            // }
+
             return MainBottomTab(child: child);
           },
           routes: [
@@ -263,8 +269,8 @@ final routeProvider = Provider(
               routes: [
                 GoRoute(
                   parentNavigatorKey: _rootNavigatorKey,
-                  name: GoRoutes.editContent.name,
-                  path: GoRoutes.editContent.path,
+                  name: GoRoutes.editMyType.name,
+                  path: GoRoutes.editMyType.path,
                   pageBuilder: (context, state) =>
                       buildIosPageTransitions<void>(
                     context: context,

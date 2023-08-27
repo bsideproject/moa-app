@@ -8,11 +8,9 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/firebase_options.dart';
 import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/utils/config.dart';
-import 'package:moa_app/utils/custom_scaffold.dart';
 import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/utils/themes.dart';
 
@@ -89,19 +87,19 @@ class MyApp extends HookConsumerWidget {
         themeMode: ThemeMode.light,
         routerConfig: ref.watch(routeProvider),
         // 웹에서 scaffold를 사용할 때 최대 너비를 제한하기 위해 사용
-        builder: (context, child) {
-          return CustomScaffold.responsive(
-            builder: (context, x, y) {
-              return Center(
-                child: Container(
-                  constraints: BoxConstraints(
-                      maxWidth: x > Breakpoints.md ? Breakpoints.md : x),
-                  child: child,
-                ),
-              );
-            },
-          );
-        },
+        // builder: (context, child) {
+        //   return CustomScaffold.responsive(
+        //     builder: (context, x, y) {
+        //       return Center(
+        //         child: Container(
+        //           constraints: BoxConstraints(
+        //               maxWidth: x > Breakpoints.md ? Breakpoints.md : x),
+        //           child: child,
+        //         ),
+        //       );
+        //     },
+        //   );
+        // },
       ),
     );
   }

@@ -49,6 +49,7 @@ class FolderTabView extends HookConsumerWidget {
     void showAddFolderModal() {
       General.instance.showBottomSheet(
         context: context,
+        // isScrollControlled: true,
         child: AddFolder(
           onRefresh: () {
             source.refresh(true);
