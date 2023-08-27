@@ -39,15 +39,14 @@ class FolderDetailView extends HookConsumerWidget {
 
       // todo universal link로 변경
       await Share.share(
-        'moa://moa${GoRoutes.folder.fullPath}/$encodeFolderName',
-        subject: 'moa://moa${GoRoutes.folder.fullPath}/$encodeFolderName',
+        'moa://${GoRoutes.folder.fullPath}/$encodeFolderName?c=$contentCount',
+        subject:
+            'moa://${GoRoutes.folder.fullPath}/$encodeFolderName?c=$contentCount',
       );
     }
 
     void getContentList({required int page}) async {
-      if (pageNum.value == 0) {
-        loading.value = true;
-      }
+      loading.value = true;
       var res = await ref.read(folderDetailProvider.notifier).fetchItem(
             folderName: folderName,
             page: page,
@@ -101,7 +100,7 @@ class FolderDetailView extends HookConsumerWidget {
         },
         duration: const Duration(milliseconds: 300),
         child: () {
-          if (loading.value) {
+          if (loading.value && pageNum.value == 0) {
             return const LoadingIndicator();
           }
           return contentList.value.isEmpty
@@ -112,7 +111,6 @@ class FolderDetailView extends HookConsumerWidget {
                     children: [
                       const SizedBox(height: 30),
                       TypeHeader(count: contentCount, onPressFilter: () {}),
-                      const SizedBox(height: 5),
                       Expanded(
                         child: DynamicGridList(
                           controller: controller,
@@ -121,6 +119,9 @@ class FolderDetailView extends HookConsumerWidget {
                           folderNameProp: folderName,
                         ),
                       ),
+                      (loading.value && pageNum.value != 0)
+                          ? const LoadingIndicator()
+                          : const SizedBox(),
                     ],
                   ),
                 );

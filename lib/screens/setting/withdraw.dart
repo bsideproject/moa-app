@@ -17,16 +17,22 @@ class Withdraw extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var withdrawConfirm = useState(false);
+    var loading = useState(false);
 
     void onPressedWithdraw() async {
       try {
+        loading.value = true;
         await ref.read(userStateProvider.notifier).withDraw();
         if (context.mounted) {
           context.go(GoRoutes.signIn.fullPath);
         }
       } catch (e) {
-        snackbar.alert(
-            context, kDebugMode ? e.toString() : '회원탈퇴에 실패했습니다 다시 시도해주세요.');
+        if (context.mounted) {
+          snackbar.alert(
+              context, kDebugMode ? e.toString() : '회원탈퇴에 실패했습니다 다시 시도해주세요.');
+        }
+      } finally {
+        loading.value = false;
       }
     }
 
@@ -84,9 +90,14 @@ class Withdraw extends HookConsumerWidget {
                   ),
                 ),
                 const SizedBox(width: 10),
-                const Text(
-                  '그래도 모아를 탈퇴하시겠어요?',
-                  style: Hash1TextStyle(),
+                GestureDetector(
+                  onTap: () {
+                    withdrawConfirm.value = !withdrawConfirm.value;
+                  },
+                  child: const Text(
+                    '그래도 모아를 탈퇴하시겠어요?',
+                    style: Hash1TextStyle(),
+                  ),
                 )
               ],
             ),
@@ -103,6 +114,7 @@ class Withdraw extends HookConsumerWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Button(
+                    loading: loading.value,
                     disabled: !withdrawConfirm.value,
                     onPressed: onPressedWithdraw,
                     text: '탈퇴',

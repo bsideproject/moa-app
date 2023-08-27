@@ -97,6 +97,11 @@ class ContentView extends HookConsumerWidget {
 
     void showFolderListModal() {
       General.instance.showBottomSheet(
+        padding: const EdgeInsets.only(
+          left: 15,
+          right: 15,
+          top: 0,
+        ),
         isScrollControlled: true,
         height: MediaQuery.of(context).size.height * 0.7,
         context: context,
@@ -143,7 +148,6 @@ class ContentView extends HookConsumerWidget {
     }
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       appBar: AppBarBack(
         title: folderName,
         isBottomBorderDisplayed: false,
@@ -380,100 +384,98 @@ class FolderListModalView extends HookConsumerWidget {
       }
     }
 
-    return SafeArea(
-      child: folderAsync.when(
-        data: (folderList) {
-          return Column(
-            children: [
-              Expanded(
-                child: GridView.builder(
-                  itemCount: folderList.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 1.3,
-                    mainAxisSpacing: 10.0,
-                    crossAxisSpacing: 20.0,
-                    mainAxisExtent: 105,
-                  ),
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Stack(
-                          children: [
-                            SizedBox(
-                              height: 80,
-                              child: Material(
-                                color: AppColors.whiteColor,
-                                child: Ink(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      fit: BoxFit.contain,
-                                      image: Assets.folder,
-                                      colorFilter: ColorFilter.mode(
-                                        folderColors[index % 4].withOpacity(
-                                          (selectedIndex.value == -1 ||
-                                                  selectedIndex.value == index)
-                                              ? 1
-                                              : 0.5,
-                                        ),
-                                        BlendMode.srcIn,
+    return folderAsync.when(
+      data: (folderList) {
+        return Column(
+          children: [
+            Expanded(
+              child: GridView.builder(
+                padding: const EdgeInsets.only(top: 30),
+                itemCount: folderList.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 1.3,
+                  mainAxisExtent: 117,
+                ),
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      Stack(
+                        children: [
+                          SizedBox(
+                            height: 77,
+                            child: Material(
+                              color: AppColors.whiteColor,
+                              child: Ink(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    fit: BoxFit.contain,
+                                    image: Assets.folder,
+                                    colorFilter: ColorFilter.mode(
+                                      folderColors[index % 4].withOpacity(
+                                        (selectedIndex.value == -1 ||
+                                                selectedIndex.value == index)
+                                            ? 1
+                                            : 0.5,
                                       ),
+                                      BlendMode.srcIn,
                                     ),
                                   ),
-                                  child: InkWell(
-                                    splashColor: Colors.transparent,
-                                    borderRadius: BorderRadius.circular(8),
-                                    onTap: () => selectFolder(index: index),
-                                  ),
+                                ),
+                                child: InkWell(
+                                  splashColor: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(8),
+                                  onTap: () => selectFolder(index: index),
                                 ),
                               ),
                             ),
-                            selectedIndex.value == index
-                                ? Positioned.fill(
-                                    child: Center(
-                                      child: Image(
-                                        image: Assets.check,
-                                        width: 20,
-                                        height: 20,
-                                      ),
+                          ),
+                          selectedIndex.value == index
+                              ? Positioned.fill(
+                                  child: Center(
+                                    child: Image(
+                                      image: Assets.check,
+                                      width: 20,
+                                      height: 20,
                                     ),
-                                  )
-                                : const SizedBox()
-                          ],
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          folderList[index].folderName,
-                          style: const H4TextStyle().merge(
-                            TextStyle(
-                              color: AppColors.blackColor.withOpacity(
-                                (selectedIndex.value == -1 ||
-                                        selectedIndex.value == index)
-                                    ? 1
-                                    : 0.5,
-                              ),
+                                  ),
+                                )
+                              : const SizedBox()
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        folderList[index].folderName,
+                        style: const H4TextStyle().merge(
+                          TextStyle(
+                            color: AppColors.blackColor.withOpacity(
+                              (selectedIndex.value == -1 ||
+                                      selectedIndex.value == index)
+                                  ? 1
+                                  : 0.5,
                             ),
                           ),
                         ),
-                      ],
-                    );
-                  },
-                ),
+                      ),
+                    ],
+                  );
+                },
               ),
-              Button(
-                disabled: selectedIndex.value == -1,
-                text: '폴더 변경',
-                onPressed: () => changeFolder(
-                  changeFolderId: folderList[selectedIndex.value].folderId,
-                  folderName: folderList[selectedIndex.value].folderName,
-                ),
-              )
-            ],
-          );
-        },
-        error: (error, stackTrace) => const SizedBox(),
-        loading: () => const LoadingIndicator(),
-      ),
+            ),
+            Button(
+              disabled: selectedIndex.value == -1,
+              text: '폴더 변경',
+              onPressed: () => changeFolder(
+                changeFolderId: folderList[selectedIndex.value].folderId,
+                folderName: folderList[selectedIndex.value].folderName,
+              ),
+            ),
+            const SizedBox(height: 30)
+          ],
+        );
+      },
+      error: (error, stackTrace) => const SizedBox(),
+      loading: () => const LoadingIndicator(),
     );
   }
 }

@@ -65,8 +65,10 @@ class EditContentView extends HookConsumerWidget {
         await ref.read(folderViewProvider.notifier).refresh();
         isEditMode.value = false;
       } catch (e) {
-        snackbar.alert(
-            context, kDebugMode ? e.toString() : '오류가 발생했습니다. 다시 시도해주세요.');
+        if (context.mounted) {
+          snackbar.alert(
+              context, kDebugMode ? e.toString() : '오류가 발생했습니다. 다시 시도해주세요.');
+        }
       } finally {
         loading.value = false;
       }
@@ -143,9 +145,9 @@ class EditContentView extends HookConsumerWidget {
           children: [
             const Spacer(),
             Text(
-              '${titleController.text.length}/30',
+              '${titleController.text.characters.length}/30',
               style: TextStyle(
-                color: titleController.text.length >= 30
+                color: titleController.text.characters.length >= 30
                     ? AppColors.danger
                     : AppColors.blackColor.withOpacity(0.3),
                 fontSize: 12,
@@ -175,9 +177,9 @@ class EditContentView extends HookConsumerWidget {
           children: [
             const Spacer(),
             Text(
-              '${memoController.text.length}/100',
+              '${memoController.text.characters.length}/100',
               style: TextStyle(
-                color: memoController.text.length >= 100
+                color: memoController.text.characters.length >= 100
                     ? AppColors.danger
                     : AppColors.blackColor.withOpacity(0.3),
                 fontSize: 12,

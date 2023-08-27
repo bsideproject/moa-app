@@ -25,15 +25,28 @@ class EditHashtag extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    useAutomaticKeepAlive(wantKeepAlive: true);
     var hashtagAsync = ref.watch(hashtagProvider);
     var textController = useTextEditingController();
     var selectedTagList = useState<List<SelectedTagModel>>([]);
     var isDeleteMode = useState(false);
+    var hashtagText = useState('');
 
     var updatedHashtagName = useState('');
 
     void addHashtag() async {
       if (textController.text.isEmpty) {
+        return;
+      }
+
+      if (selectedTagList.value.length == 13) {
+        if (context.mounted) {
+          snackbar.alert(
+            context,
+            '더 이상 해시태그를 추가할 수 없습니다.',
+            bottom: MediaQuery.of(context).size.height * 0.45,
+          );
+        }
         return;
       }
 
@@ -90,8 +103,10 @@ class EditHashtag extends HookConsumerWidget {
                 context.pop();
               }
             } catch (e) {
-              snackbar.alert(
-                  context, kDebugMode ? e.toString() : '해시태그 수정에 실패했습니다.');
+              if (context.mounted) {
+                snackbar.alert(
+                    context, kDebugMode ? e.toString() : '해시태그 수정에 실패했습니다.');
+              }
             } finally {}
           },
           updatedContentName: updatedHashtagName,
@@ -152,8 +167,10 @@ class EditHashtag extends HookConsumerWidget {
                 context.pop();
               }
             } catch (e) {
-              snackbar.alert(
-                  context, kDebugMode ? e.toString() : '해시태그 삭제에 실패했습니다.');
+              if (context.mounted) {
+                snackbar.alert(
+                    context, kDebugMode ? e.toString() : '해시태그 삭제에 실패했습니다.');
+              }
             }
           },
         ),
@@ -170,8 +187,10 @@ class EditHashtag extends HookConsumerWidget {
       return null;
     }, [hashtagAsync.isLoading]);
 
-    return Padding(
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.only(
+          left: 15, right: 15, top: 20, bottom: kBottomNavigationBarHeight),
+      physics: const ClampingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -180,48 +199,52 @@ class EditHashtag extends HookConsumerWidget {
             style: H4TextStyle(),
           ),
           const SizedBox(height: 10),
-          FutureBuilder<(List<HashtagModel>, List<HashtagModel>)>(
-              future: HashtagRepository.instance.getHashtagList(),
-              builder: (context, snapshot) {
-                var data = snapshot.data ?? ([], []);
+          useMemoized(
+              () => FutureBuilder<(List<HashtagModel>, List<HashtagModel>)>(
+                  future: HashtagRepository.instance.getHashtagList(),
+                  builder: (context, snapshot) {
+                    var data = snapshot.data ?? ([], []);
 
-                return AnimatedSwitcher(
-                  transitionBuilder: (child, animation) {
-                    return FadeTransition(opacity: animation, child: child);
-                  },
-                  duration: const Duration(milliseconds: 300),
-                  child: () {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const LoadingIndicator();
-                    }
-                    if (snapshot.hasData) {
-                      return SizedBox(
-                        width: double.infinity,
-                        child: Wrap(
-                          spacing: 10,
-                          runSpacing: 10,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            ...data.$2.map((tag) {
-                              return HashtagButton(
-                                text: '#${tag.hashTag}',
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 8,
-                                ),
-                                style: const H4TextStyle().merge(
-                                  const TextStyle(color: AppColors.subTitle),
-                                ),
-                              );
-                            }).toList()
-                          ],
-                        ),
-                      );
-                    }
-                    return const SizedBox();
-                  }(),
-                );
-              }),
+                    return AnimatedSwitcher(
+                      transitionBuilder: (child, animation) {
+                        return FadeTransition(opacity: animation, child: child);
+                      },
+                      duration: const Duration(milliseconds: 300),
+                      child: () {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const LoadingIndicator();
+                        }
+                        if (snapshot.hasData) {
+                          return SizedBox(
+                            width: double.infinity,
+                            child: Wrap(
+                              spacing: 10,
+                              runSpacing: 10,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                ...data.$2.map((tag) {
+                                  return HashtagButton(
+                                    text: '#${tag.hashTag}',
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                      vertical: 8,
+                                    ),
+                                    style: const H4TextStyle().merge(
+                                      const TextStyle(
+                                          color: AppColors.subTitle),
+                                    ),
+                                  );
+                                }).toList()
+                              ],
+                            ),
+                          );
+                        }
+                        return const SizedBox();
+                      }(),
+                    );
+                  }),
+              []),
           const SizedBox(height: 30),
           const Text(
             '해시태그 생성',
@@ -232,9 +255,12 @@ class EditHashtag extends HookConsumerWidget {
             children: [
               Expanded(
                 child: EditText(
+                  maxLength: 7,
                   controller: textController,
                   hintText: '새로운 해시태그를 입력해주세요.',
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    hashtagText.value = value;
+                  },
                 ),
               ),
               const SizedBox(width: 5),
@@ -248,6 +274,24 @@ class EditHashtag extends HookConsumerWidget {
                 ),
                 onPressed: addHashtag,
               ),
+            ],
+          ),
+          Row(
+            children: [
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(
+                  '${textController.text.characters.length}/7',
+                  style: TextStyle(
+                      color: textController.text.characters.length >= 7
+                          ? AppColors.danger
+                          : AppColors.blackColor.withOpacity(0.3),
+                      fontSize: 12,
+                      fontFamily: FontConstants.pretendard),
+                ),
+              ),
+              const SizedBox(width: 65),
             ],
           ),
           const SizedBox(height: 20),

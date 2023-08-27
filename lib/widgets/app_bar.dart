@@ -15,6 +15,7 @@ class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
     this.isBottomBorderDisplayed = false,
     this.bottomBorderStyle = const BottomBorderStyle(),
     this.onPressedBack,
+    this.isBackButton = true,
   }) : super(key: key);
   final String? title;
   final Widget? text;
@@ -23,6 +24,7 @@ class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
   final bool isBottomBorderDisplayed;
   final BottomBorderStyle bottomBorderStyle;
   final VoidCallback? onPressedBack;
+  final bool isBackButton;
 
   @override
   Widget build(BuildContext context) {
@@ -33,21 +35,23 @@ class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
             title ?? '',
             style: const H2TextStyle(),
           ),
-      leading: CircleIconButton(
-        backgroundColor: AppColors.whiteColor,
-        icon: Image(
-          width: 24,
-          height: 24,
-          image: Assets.arrowBack,
-        ),
-        onPressed: () {
-          if (onPressedBack != null) {
-            onPressedBack!();
-            return;
-          }
-          context.pop();
-        },
-      ),
+      leading: !isBackButton
+          ? const SizedBox()
+          : CircleIconButton(
+              backgroundColor: AppColors.whiteColor,
+              icon: Image(
+                width: 24,
+                height: 24,
+                image: Assets.arrowBack,
+              ),
+              onPressed: () {
+                if (onPressedBack != null) {
+                  onPressedBack!();
+                  return;
+                }
+                context.pop();
+              },
+            ),
       elevation: 0,
       titleSpacing: 0.0,
       centerTitle: true,

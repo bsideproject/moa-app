@@ -56,7 +56,7 @@ class AddFolder extends HookConsumerWidget {
         emptyFolderName();
       } on DioException catch (e) {
         // 폴더 중복 에러 처리
-        if (e.response?.statusCode == 409) {
+        if (e.response?.statusCode == 409 && context.mounted) {
           snackbar.alert(context, '이미 가지고 있는 폴더이름이에요');
         }
       } finally {
@@ -69,70 +69,76 @@ class AddFolder extends HookConsumerWidget {
       emptyFolderName();
     }
 
-    return Stack(children: [
-      Form(
-        key: formKey,
-        child: Column(
-          children: [
-            const Center(
-              child: Text('폴더 추가', style: H2TextStyle()),
-            ),
-            const SizedBox(height: 30),
-            EditFormText(
-              maxLength: 7,
-              controller: folderNameController,
-              onChanged: folderOnChangedValue,
-              hintText: '폴더명을 입력하세요.',
-              backgroundColor: AppColors.textInputBackground,
-              suffixIcon: CircleIconButton(
-                icon: Image(
-                  fit: BoxFit.contain,
-                  image: Assets.circleClose,
-                  width: 16,
-                  height: 16,
-                ),
-                onPressed: emptyFolderName,
+    return Stack(
+      children: [
+        Container(
+          height: MediaQuery.of(context).size.height * 0.5,
+          margin: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom / 2),
+          child: Column(
+            children: [
+              const Center(
+                child: Text('폴더 추가', style: H2TextStyle()),
               ),
-            ),
-            const SizedBox(height: 5),
-            Row(
-              children: [
-                const Spacer(),
-                Text(
-                  '${folderNameController.text.length}/7',
-                  style: TextStyle(
-                      color: folderNameController.text.length == 7
-                          ? AppColors.danger
-                          : AppColors.blackColor.withOpacity(0.3),
-                      fontSize: 12,
-                      fontFamily: FontConstants.pretendard),
+              const SizedBox(height: 30),
+              EditFormText(
+                maxLength: 10,
+                controller: folderNameController,
+                onChanged: folderOnChangedValue,
+                hintText: '폴더명을 입력하세요.',
+                backgroundColor: AppColors.textInputBackground,
+                suffixIcon: CircleIconButton(
+                  icon: Image(
+                    fit: BoxFit.contain,
+                    image: Assets.circleClose,
+                    width: 16,
+                    height: 16,
+                  ),
+                  onPressed: emptyFolderName,
                 ),
-              ],
-            ),
-            const Spacer(),
-            Button(
-              loading: loading.value,
-              disabled: folderNameController.text.isEmpty,
-              margin: const EdgeInsets.only(bottom: 30),
-              text: '추가하기',
-              onPressed: addFolder,
-            )
-          ],
-        ),
-      ),
-      Positioned(
-        right: -15,
-        top: -15,
-        child: CircleIconButton(
-          backgroundColor: Colors.white,
-          onPressed: closeBottomSheet,
-          icon: const Icon(
-            Icons.close,
-            color: AppColors.blackColor,
-            size: 30,
+              ),
+              const SizedBox(height: 5),
+              Row(
+                children: [
+                  const Spacer(),
+                  Text(
+                    '${folderNameController.text.characters.length}/10',
+                    style: TextStyle(
+                        color: folderNameController.text.characters.length == 10
+                            ? AppColors.danger
+                            : AppColors.blackColor.withOpacity(0.3),
+                        fontSize: 12,
+                        fontFamily: FontConstants.pretendard),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Button(
+                loading: loading.value,
+                disabled: folderNameController.text.isEmpty,
+                margin: EdgeInsets.only(
+                    bottom: (MediaQuery.of(context).viewInsets.bottom / 2) +
+                        (MediaQuery.of(context).padding.bottom + 30)),
+                text: '추가하기',
+                onPressed: addFolder,
+              ),
+            ],
           ),
         ),
-      )
-    ]);
+        Positioned(
+          right: -15,
+          top: -15,
+          child: CircleIconButton(
+            backgroundColor: Colors.white,
+            onPressed: closeBottomSheet,
+            icon: const Icon(
+              Icons.close,
+              color: AppColors.blackColor,
+              size: 30,
+            ),
+          ),
+        )
+      ],
+    );
   }
 }

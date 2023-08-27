@@ -13,8 +13,11 @@ part 'folder_view_provider.g.dart';
 class FolderView extends _$FolderView {
   Future<List<FolderModel>> fetchItem() async {
     var token = ref.watch(tokenStateProvider).value;
-    // get the [KeepAliveLink]
 
+    if (token == null) {
+      return [];
+    }
+    // get the [KeepAliveLink]
     var link = ref.keepAlive();
     // a timer to be used by the callbacks below
     Timer? timer;
@@ -36,7 +39,7 @@ class FolderView extends _$FolderView {
       timer?.cancel();
     });
 
-    var data = await FolderRepository.instance.getFolderList(token: token!);
+    var data = await FolderRepository.instance.getFolderList(token: token);
     return data;
   }
 

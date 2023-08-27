@@ -68,9 +68,9 @@ class AddContentBottom extends HookWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  '${title.value.length}/30',
+                  '${title.value.characters.length}/30',
                   style: TextStyle(
-                      color: title.value.length >= 30
+                      color: title.value.characters.length >= 30
                           ? AppColors.danger
                           : AppColors.blackColor.withOpacity(0.3),
                       fontSize: 12,
@@ -131,9 +131,7 @@ class AddContentBottom extends HookWidget {
               child: CircleIconButton(
                 backgroundColor: AppColors.primaryColor,
                 onPressed: addHashtag,
-                icon: const Icon(
-                  Icons.add,
-                ),
+                icon: const Icon(Icons.add),
               ),
             ),
           ),
@@ -148,9 +146,9 @@ class AddContentBottom extends HookWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  '${hashtagController.text.length}/7',
+                  '${hashtagController.text.characters.length}/7',
                   style: TextStyle(
-                      color: hashtagController.text.length == 7
+                      color: hashtagController.text.characters.length >= 7
                           ? AppColors.danger
                           : AppColors.blackColor.withOpacity(0.3),
                       fontSize: 12,
@@ -181,9 +179,9 @@ class AddContentBottom extends HookWidget {
                 right: 20,
                 bottom: 20,
                 child: Text(
-                  '${memo.value.length}/100',
+                  '${memo.value.characters.length}/100',
                   style: TextStyle(
-                    color: memo.value.length >= 100
+                    color: memo.value.characters.length >= 100
                         ? AppColors.danger
                         : AppColors.blackColor.withOpacity(0.3),
                     fontSize: 12,

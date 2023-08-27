@@ -49,7 +49,9 @@ class InputNameView extends HookWidget {
           await UserRepository.instance.editUserNickname(nickname: name.value);
           step.value = StepType.greeting;
         } catch (e) {
-          snackbar.alert(context, kDebugMode ? e.toString() : '중복된 닉네임입니다.');
+          if (context.mounted) {
+            snackbar.alert(context, kDebugMode ? e.toString() : '중복된 닉네임입니다.');
+          }
         }
       }
     }

@@ -22,11 +22,12 @@ class General {
       isScrollControlled: isScrollControlled,
       builder: (context) => Container(
         height: height,
-        padding: const EdgeInsets.only(
-          left: 15,
-          right: 15,
-          top: 20,
-        ),
+        padding: padding ??
+            const EdgeInsets.only(
+              left: 15,
+              right: 15,
+              top: 20,
+            ),
         decoration: const BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius: BorderRadius.only(

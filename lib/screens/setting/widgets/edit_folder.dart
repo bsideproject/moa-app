@@ -24,6 +24,7 @@ class EditFolder extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    useAutomaticKeepAlive(wantKeepAlive: true);
     var width = MediaQuery.of(context).size.width;
     var folderAsync = ref.watch(folderViewProvider);
     var updatedContentName = useState('');
@@ -34,6 +35,8 @@ class EditFolder extends HookConsumerWidget {
     void showAddFolderModal() {
       General.instance.showBottomSheet(
         context: context,
+        // height: MediaQuery.of(context).size.height * 0.5,
+        isScrollControlled: true,
         child: AddFolder(
           onRefresh: () {},
         ),
@@ -64,13 +67,17 @@ class EditFolder extends HookConsumerWidget {
               logger.d(error);
               // 폴더 중복 에러 처리
               if (error.response!.statusCode == 409) {
-                snackbar.alert(context,
-                    kDebugMode ? error.toString() : '이미 가지고 있는 폴더이름이에요');
+                if (context.mounted) {
+                  snackbar.alert(context,
+                      kDebugMode ? error.toString() : '이미 가지고 있는 폴더이름이에요');
+                }
                 return;
               }
 
-              snackbar.alert(context,
-                  kDebugMode ? error.toString() : '오류가 발생했어요 다시 시도해주세요.');
+              if (context.mounted) {
+                snackbar.alert(context,
+                    kDebugMode ? error.toString() : '오류가 발생했어요 다시 시도해주세요.');
+              }
             }
           },
         ),
@@ -153,7 +160,11 @@ class EditFolder extends HookConsumerWidget {
               ...data
             ];
             return GridView.builder(
-              padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
+              padding: const EdgeInsets.only(
+                  left: 15,
+                  right: 15,
+                  top: 20,
+                  bottom: kBottomNavigationBarHeight),
               itemCount: list.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: width > Breakpoints.md ? 3 : 2,

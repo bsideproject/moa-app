@@ -20,7 +20,7 @@ import 'package:moa_app/providers/hashtag_view_provider.dart';
 import 'package:moa_app/repositories/content_repository.dart';
 import 'package:moa_app/screens/add_content/add_image_content.dart';
 import 'package:moa_app/screens/add_content/widgets/add_content_bottom.dart';
-import 'package:moa_app/screens/home/home.dart';
+import 'package:moa_app/utils/router_provider.dart';
 import 'package:moa_app/utils/utils.dart';
 import 'package:moa_app/widgets/app_bar.dart';
 import 'package:moa_app/widgets/button.dart';
@@ -137,10 +137,7 @@ class AddLinkContent extends HookConsumerWidget {
             .addFolder(folderName: 'folderName');
 
         if (context.mounted) {
-          context.go(
-            '/',
-            extra: const Home(isRefresh: true),
-          );
+          context.go(GoRoutes.completeAddContent.fullPath);
         }
       } catch (error) {
         if (context.mounted) {
@@ -171,12 +168,23 @@ class AddLinkContent extends HookConsumerWidget {
     }
 
     void addHashtag() {
-      if (selectedTagList.value.map((e) => e.name).contains(hashtag.value)) {
-        tagError.value = '중복 태그가 존재해요.';
+      if (hashtagController.text.isEmpty) {
         return;
       }
 
-      if (hashtagController.text.isEmpty) {
+      if (selectedTagList.value.length == 20) {
+        if (context.mounted) {
+          snackbar.alert(
+            context,
+            '더 이상 해시태그를 추가할 수 없습니다.',
+            bottom: MediaQuery.of(context).size.height * 0.45,
+          );
+        }
+        return;
+      }
+
+      if (selectedTagList.value.map((e) => e.name).contains(hashtag.value)) {
+        tagError.value = '중복 태그가 존재해요.';
         return;
       }
 
@@ -245,169 +253,172 @@ class AddLinkContent extends HookConsumerWidget {
     }, [lifeCycle]);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: const AppBarBack(
         isBottomBorderDisplayed: false,
         title: '취향 모으기',
       ),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
-            padding: const EdgeInsets.only(bottom: 100),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        '링크',
-                        style: H4TextStyle(),
-                      ),
-                      const SizedBox(height: 5),
-                      EditText(
-                        controller: linkController,
-                        onChanged: onChangedLink,
-                        hintText: '링크를 입력하세요.',
-                      ),
-                      ErrorText(
-                        errorText: linkError.value,
-                        errorValidate: linkError.value.isNotEmpty,
-                      ),
-                      const SizedBox(height: 25),
-                      const Text(
-                        '대표 이미지',
-                        style: H4TextStyle(),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 5),
-                SizedBox(
-                  width: double.infinity,
-                  height: 85,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    itemCount: defaultImageList.value.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      var image = defaultImageList.value[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 7),
-                        child: Ink(
-                          width: 85,
-                          height: 85,
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(15),
-                            ),
-                            border: Border.all(
-                              color: selectedIndex.value == index
-                                  ? AppColors.primaryColor
-                                  : AppColors.grayBackground,
-                              width: 0.5,
-                            ),
-                            color: selectedIndex.value == index
-                                ? AppColors.moaSecondary
-                                : AppColors.textInputBackground,
+      body: Padding(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
+                padding: const EdgeInsets.only(bottom: 100, top: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            '링크',
+                            style: H4TextStyle(),
                           ),
-                          child: InkWell(
-                            onTap: () async {
-                              if (index == 0) {
-                                pickImage(
-                                    source: ImageSource.gallery, index: index);
-                                selectedIndex.value = -1;
-                                return;
-                              }
+                          const SizedBox(height: 5),
+                          EditText(
+                            controller: linkController,
+                            onChanged: onChangedLink,
+                            hintText: '링크를 입력하세요.',
+                          ),
+                          ErrorText(
+                            errorText: linkError.value,
+                            errorValidate: linkError.value.isNotEmpty,
+                          ),
+                          const SizedBox(height: 25),
+                          const Text(
+                            '대표 이미지',
+                            style: H4TextStyle(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 85,
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        itemCount: defaultImageList.value.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          var image = defaultImageList.value[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 7),
+                            child: Ink(
+                              width: 85,
+                              height: 85,
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(15),
+                                ),
+                                border: Border.all(
+                                  color: selectedIndex.value == index
+                                      ? AppColors.primaryColor
+                                      : AppColors.grayBackground,
+                                  width: 0.5,
+                                ),
+                                color: selectedIndex.value == index
+                                    ? AppColors.moaSecondary
+                                    : AppColors.textInputBackground,
+                              ),
+                              child: InkWell(
+                                onTap: () async {
+                                  if (index == 0) {
+                                    pickImage(
+                                        source: ImageSource.gallery,
+                                        index: index);
+                                    selectedIndex.value = -1;
+                                    return;
+                                  }
 
-                              ByteData bytes = await rootBundle
-                                  .load(image!.assetName.toString());
-                              var buffer = bytes.buffer;
-                              var base64Images =
-                                  base64.encode(Uint8List.view(buffer));
-                              defaultImage.value = base64Images;
-                              imageFile.value = null;
-                              selectedIndex.value = index;
-                            },
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(15),
-                            ),
-                            child: index == 0
-                                ? imageFile.value != null
-                                    ? Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          border: Border.all(
-                                            color: AppColors.grayBackground,
-                                            width: 0.5,
-                                          ),
-                                          image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: FileImage(
-                                                File(imageFile.value!.path)),
+                                  ByteData bytes = await rootBundle
+                                      .load(image!.assetName.toString());
+                                  var buffer = bytes.buffer;
+                                  var base64Images =
+                                      base64.encode(Uint8List.view(buffer));
+                                  defaultImage.value = base64Images;
+                                  imageFile.value = null;
+                                  selectedIndex.value = index;
+                                },
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(15),
+                                ),
+                                child: index == 0
+                                    ? imageFile.value != null
+                                        ? Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              border: Border.all(
+                                                color: AppColors.grayBackground,
+                                                width: 0.5,
+                                              ),
+                                              image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: FileImage(File(
+                                                    imageFile.value!.path)),
+                                              ),
+                                            ),
+                                          )
+                                        : Center(
+                                            child: Image(
+                                              width: 15,
+                                              height: 15,
+                                              image: Assets.circlePlus,
+                                            ),
+                                          )
+                                    : Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 20,
+                                        ),
+                                        child: Center(
+                                          child: Image(
+                                            image: image!,
                                           ),
                                         ),
-                                      )
-                                    : Center(
-                                        child: Image(
-                                          width: 15,
-                                          height: 15,
-                                          image: Assets.circlePlus,
-                                        ),
-                                      )
-                                : Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 20,
-                                    ),
-                                    child: Center(
-                                      child: Image(
-                                        image: image!,
                                       ),
-                                    ),
-                                  ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    AddContentBottom(
+                      onChangedTitle: onChangedTitle,
+                      titleController: titleController,
+                      memoController: memoController,
+                      addHashtag: addHashtag,
+                      hashtagController: hashtagController,
+                      onChangedHashtag: onChangedHashtag,
+                      onChangedMemo: onChangedMemo,
+                      memo: memo,
+                      tagError: tagError,
+                      title: title,
+                      titleError: titleError,
+                      selectedTagList: selectedTagList,
+                    )
+                  ],
                 ),
-                AddContentBottom(
-                  onChangedTitle: onChangedTitle,
-                  titleController: titleController,
-                  memoController: memoController,
-                  addHashtag: addHashtag,
-                  hashtagController: hashtagController,
-                  onChangedHashtag: onChangedHashtag,
-                  onChangedMemo: onChangedMemo,
-                  memo: memo,
-                  tagError: tagError,
-                  title: title,
-                  titleError: titleError,
-                  selectedTagList: selectedTagList,
-                )
-              ],
+              ),
             ),
-          ),
-          Positioned(
-            bottom: 0,
-            width: MediaQuery.of(context).size.width,
-            child: Button(
+            Button(
               loading: loading.value,
               onPressed: completeAddContent,
               backgroundColor: AppColors.primaryColor,
               text: '완료',
               height: 52 + MediaQuery.of(context).padding.bottom,
-              borderRadius: 0,
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).padding.bottom),
+              borderRadius: 0,
             ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }

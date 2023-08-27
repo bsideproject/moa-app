@@ -139,6 +139,6 @@
 	<key>naverServiceAppName</key>
 	<string>Moa-app</string>
 	<key>naverServiceAppUrlScheme</key>
-	<string>moaapp</string>
+	<string>moa</string>
 </dict>
 </plist>

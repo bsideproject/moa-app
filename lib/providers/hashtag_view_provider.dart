@@ -19,6 +19,10 @@ class HashtagView extends _$HashtagView {
   }) async {
     var token = ref.watch(tokenStateProvider).value;
 
+    if (token == null) {
+      return ([] as List<ContentModel>, 0);
+    }
+
     // get the [KeepAliveLink]
     var link = ref.keepAlive();
     // a timer to be used by the callbacks below

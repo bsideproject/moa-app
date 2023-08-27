@@ -44,8 +44,7 @@ class HashtagTabView extends HookConsumerWidget {
     var width = MediaQuery.of(context).size.width;
     var hashtagAsync = ref.watch(hashtagProvider);
     var searchFocusNode = useFocusNode();
-    var searchTerms =
-        useState<(List<HashtagModel>, List<HashtagModel>)>(([], []));
+    var searchTerms = useState<List<HashtagModel>>([]);
     var matchQuery = useState<List<HashtagModel>>([]);
 
     var searchTextController = useTextEditingController();
@@ -128,7 +127,7 @@ class HashtagTabView extends HookConsumerWidget {
         return;
       }
 
-      for (var hash in searchTerms.value.$1) {
+      for (var hash in searchTerms.value) {
         if (hash.hashTag.contains(searchTextController.text) &&
             !matchQuery.value.contains(hash)) {
           matchQuery.value.add(HashtagModel(
@@ -142,7 +141,10 @@ class HashtagTabView extends HookConsumerWidget {
     }, [searchTextController.text]);
 
     useEffect(() {
-      searchTerms.value = hashtagAsync.value ?? ([], []);
+      searchTerms.value = [
+        ...hashtagAsync.value?.$1 ?? [],
+        ...hashtagAsync.value?.$2 ?? []
+      ];
       searchFocusNode.addListener(() {
         if (searchFocusNode.hasFocus) {
           searchBarHeight.value = 300;
@@ -183,7 +185,6 @@ class HashtagTabView extends HookConsumerWidget {
                   ),
                   const SizedBox(height: 20),
                   TypeHeader(count: count, onPressFilter: onPressFilter),
-                  const SizedBox(height: 5),
                 ],
               ),
             ),
@@ -198,8 +199,8 @@ class HashtagTabView extends HookConsumerWidget {
                   child: LoadingMoreList<ContentModel>(
                     onScrollNotification: (notification) {
                       if (notification is ScrollEndNotification) {
-                        if (notification.metrics.pixels ==
-                            notification.metrics.maxScrollExtent) {
+                        if (notification.metrics.pixels >
+                            notification.metrics.maxScrollExtent - 100) {
                           source.loadMore();
                         }
                       }
@@ -276,6 +277,7 @@ class HashtagTabView extends HookConsumerWidget {
               ),
               child: matchQuery.value.isNotEmpty
                   ? ListView.builder(
+                      physics: const ClampingScrollPhysics(),
                       shrinkWrap: true,
                       padding: const EdgeInsets.only(top: 20, bottom: 20),
                       itemCount: matchQuery.value.length,
@@ -322,11 +324,12 @@ class HashtagTabView extends HookConsumerWidget {
                       },
                     )
                   : ListView.builder(
+                      physics: const ClampingScrollPhysics(),
                       shrinkWrap: true,
                       padding: const EdgeInsets.only(top: 20, bottom: 20),
-                      itemCount: searchTerms.value.$1.length,
+                      itemCount: searchTerms.value.length,
                       itemBuilder: (context, index) {
-                        var element = searchTerms.value.$1[index];
+                        var element = searchTerms.value[index];
 
                         return Material(
                           child: InkWell(

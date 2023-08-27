@@ -38,8 +38,7 @@ class HashtagDetailView extends HookConsumerWidget {
     var updatedHashtagName = useState('');
 
     var searchFocusNode = useFocusNode();
-    var searchTerms =
-        useState<(List<HashtagModel>, List<HashtagModel>)>(([], []));
+    var searchTerms = useState<List<HashtagModel>>([]);
     var matchQuery = useState<List<HashtagModel>>([]);
 
     var searchTextController = useTextEditingController();
@@ -70,8 +69,10 @@ class HashtagDetailView extends HookConsumerWidget {
                 context.pop();
               }
             } catch (e) {
-              snackbar.alert(
-                  context, kDebugMode ? e.toString() : '해시태그 수정에 실패했습니다.');
+              if (context.mounted) {
+                snackbar.alert(
+                    context, kDebugMode ? e.toString() : '해시태그 수정에 실패했습니다.');
+              }
             }
           },
           updatedContentName: updatedHashtagName,
@@ -101,8 +102,10 @@ class HashtagDetailView extends HookConsumerWidget {
                 context.pop();
               }
             } catch (e) {
-              snackbar.alert(
-                  context, kDebugMode ? e.toString() : '해시태그 삭제에 실패했습니다.');
+              if (context.mounted) {
+                snackbar.alert(
+                    context, kDebugMode ? e.toString() : '해시태그 삭제에 실패했습니다.');
+              }
             }
           },
         ),
@@ -174,7 +177,7 @@ class HashtagDetailView extends HookConsumerWidget {
         return;
       }
 
-      for (var hash in searchTerms.value.$1) {
+      for (var hash in searchTerms.value) {
         if (hash.hashTag.contains(searchTextController.text) &&
             !matchQuery.value.contains(hash)) {
           matchQuery.value.add(HashtagModel(
@@ -188,7 +191,10 @@ class HashtagDetailView extends HookConsumerWidget {
     }, [searchTextController.text]);
 
     useEffect(() {
-      searchTerms.value = hashtagAsync.value ?? ([], []);
+      searchTerms.value = [
+        ...hashtagAsync.value?.$1 ?? [],
+        ...hashtagAsync.value?.$2 ?? []
+      ];
 
       searchFocusNode.addListener(() {
         if (searchFocusNode.hasFocus) {
@@ -241,21 +247,24 @@ class HashtagDetailView extends HookConsumerWidget {
         children: [
           Column(
             children: [
-              EditText(
-                controller: searchTextController,
-                focusNode: searchFocusNode,
-                height: 50,
-                onChanged: searchHashtag,
-                hintText: '나의 해시태그 검색',
-                borderRadius: BorderRadius.circular(50),
-                suffixIcon: CircleIconButton(
-                  icon: Image(
-                    fit: BoxFit.contain,
-                    image: Assets.searchIcon,
-                    width: 16,
-                    height: 16,
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 15),
+                child: EditText(
+                  controller: searchTextController,
+                  focusNode: searchFocusNode,
+                  height: 50,
+                  onChanged: searchHashtag,
+                  hintText: '나의 해시태그 검색',
+                  borderRadius: BorderRadius.circular(50),
+                  suffixIcon: CircleIconButton(
+                    icon: Image(
+                      fit: BoxFit.contain,
+                      image: Assets.searchIcon,
+                      width: 16,
+                      height: 16,
+                    ),
+                    onPressed: onPressSearchHashtag,
                   ),
-                  onPressed: onPressSearchHashtag,
                 ),
               ),
               Expanded(
@@ -286,6 +295,7 @@ class HashtagDetailView extends HookConsumerWidget {
                 ),
                 child: matchQuery.value.isNotEmpty
                     ? ListView.builder(
+                        physics: const ClampingScrollPhysics(),
                         shrinkWrap: true,
                         padding: const EdgeInsets.only(top: 20, bottom: 20),
                         itemCount: matchQuery.value.length,
@@ -331,11 +341,12 @@ class HashtagDetailView extends HookConsumerWidget {
                         },
                       )
                     : ListView.builder(
+                        physics: const ClampingScrollPhysics(),
                         shrinkWrap: true,
                         padding: const EdgeInsets.only(top: 20, bottom: 20),
-                        itemCount: searchTerms.value.$1.length,
+                        itemCount: searchTerms.value.length,
                         itemBuilder: (context, index) {
-                          var element = searchTerms.value.$1[index];
+                          var element = searchTerms.value[index];
 
                           return Material(
                             child: InkWell(
@@ -437,7 +448,6 @@ class HashtagDetailList extends HookConsumerWidget {
                   children: [
                     const SizedBox(height: 20),
                     TypeHeader(count: hashCount, onPressFilter: onPressFilter),
-                    const SizedBox(height: 5),
                     Expanded(
                         child: DynamicGridList(
                       controller: controller,

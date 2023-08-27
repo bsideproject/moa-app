@@ -145,6 +145,7 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
     required this.tabController,
     required this.folderCount,
     required this.contentCount,
+    this.isEditMyType = false,
     this.backgroundColor,
     this.isEditScreen = false,
   });
@@ -152,6 +153,7 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
   final TabController tabController;
   final int folderCount;
   final int contentCount;
+  final bool isEditMyType;
   final Color? backgroundColor;
   final bool isEditScreen;
 
@@ -196,7 +198,9 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
                           TextSpan(
                             text: tabController.index == 0
                                 ? '$folderCount개의 폴더'
-                                : '$contentCount개의 취향',
+                                : isEditMyType
+                                    ? '$contentCount개의 해시태그'
+                                    : '$contentCount개의 취향',
                             style: const H1TextStyle().merge(
                               const TextStyle(
                                 height: 1.4,
@@ -308,15 +312,17 @@ class FolderSource extends LoadingMoreBase<FolderModel> {
       var list = await futureList!.future;
       folderCount.value = list.length;
 
+      add(
+        const FolderModel(
+            folderId: 'add', folderName: '폴더 추가', count: 0, thumbnailUrl: ''),
+      );
+
       for (FolderModel folder in list) {
         if (!contains(folder) && _hasMore) {
           add(folder);
         }
       }
-      add(
-        const FolderModel(
-            folderId: 'add', folderName: '폴더 추가', count: 0, thumbnailUrl: ''),
-      );
+
       _hasMore = false;
       pageIndex++;
       isSuccess = true;
@@ -365,24 +371,42 @@ class HashtagSource extends LoadingMoreBase<ContentModel> {
         contentCount.value = count;
 
         contentList.addAll(initialList);
-      } else {
+
+        for (ContentModel content in contentList) {
+          if (!contains(content)) {
+            add(content);
+          }
+        }
+
+        if (contentList.length < size) {
+          _hasMore = false;
+        }
+        if (_hasMore) {
+          pageIndex++;
+        }
+        isSuccess = true;
+
+        return true;
+      }
+
+      if (_hasMore) {
         var (list, _) = await HashtagRepository.instance
             .getHashtagView(page: pageIndex, size: size);
         contentList = [...contentList, ...list];
-        _hasMore = list.length >= 10;
-      }
-
-      for (ContentModel content in contentList) {
-        if (!contains(content) && _hasMore) {
-          add(content);
+        for (ContentModel content in contentList) {
+          if (!contains(content)) {
+            add(content);
+          }
         }
-      }
+        if (list.length < size) {
+          _hasMore = false;
+        }
 
-      if (contentList.length > 10) {
-        pageIndex++;
+        if (_hasMore) {
+          pageIndex++;
+        }
+        isSuccess = true;
       }
-
-      isSuccess = true;
     } catch (e) {
       isSuccess = false;
 

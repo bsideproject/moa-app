@@ -31,12 +31,12 @@ class Setting extends HookConsumerWidget {
     void pickImage() {}
 
     void goEditMyType() {
-      context.go('${GoRoutes.setting.fullPath}/${GoRoutes.editContent.path}');
+      context.go('${GoRoutes.setting.fullPath}/${GoRoutes.editMyType.path}');
     }
 
-    void goContact() {
-      context.go('${GoRoutes.setting.fullPath}/${GoRoutes.contact.path}');
-    }
+    // void goContact() {
+    //   context.go('${GoRoutes.setting.fullPath}/${GoRoutes.contact.path}');
+    // }
 
     void goTerms() {
       context.go('${GoRoutes.setting.fullPath}/${GoRoutes.terms.path}');
@@ -60,8 +60,10 @@ class Setting extends HookConsumerWidget {
               context.go(GoRoutes.signIn.fullPath);
             }
           } catch (e) {
-            snackbar.alert(
-                context, kDebugMode ? e.toString() : '로그아웃에 실패했습니다 다시 시도해주세요.');
+            if (context.mounted) {
+              snackbar.alert(context,
+                  kDebugMode ? e.toString() : '로그아웃에 실패했습니다 다시 시도해주세요.');
+            }
           }
         },
         showCancelButton: true,
@@ -214,10 +216,10 @@ class Setting extends HookConsumerWidget {
                 title: '내 취향관리',
                 onPressed: goEditMyType,
               ),
-              SettingListTile(
-                title: '1:1 문의하기',
-                onPressed: goContact,
-              ),
+              // SettingListTile(
+              //   title: '1:1 문의하기',
+              //   onPressed: goContact,
+              // ),
               SettingListTile(
                 title: '이용약관',
                 onPressed: goTerms,

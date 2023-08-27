@@ -31,9 +31,7 @@ class EditMyTypeView extends HookConsumerWidget {
       });
       return null;
     }, []);
-
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: const AppBarBack(
         title: '내 취향 관리',
         isBottomBorderDisplayed: false,
@@ -41,17 +39,18 @@ class EditMyTypeView extends HookConsumerWidget {
       body: DefaultTabController(
         length: 2,
         child: ExtendedNestedScrollView(
-          physics: const NeverScrollableScrollPhysics(),
           onlyOneScrollInBody: true,
           floatHeaderSlivers: true,
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
               SliverPersistentHeader(
                 delegate: PersistentTabBar(
+                  isEditMyType: true,
                   backgroundColor: AppColors.whiteColor,
                   tabController: tabController,
                   folderCount: folderAsync.value?.length ?? 0,
-                  contentCount: hashtagAsync.value?.$1.length ?? 0,
+                  contentCount: (hashtagAsync.value?.$1.length ?? 0) +
+                      (hashtagAsync.value?.$2.length ?? 0),
                   isClick: true,
                   isEditScreen: true,
                 ),
