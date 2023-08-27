@@ -179,9 +179,9 @@ class AddContentBottom extends HookWidget {
                 right: 20,
                 bottom: 20,
                 child: Text(
-                  '${memo.value.length}/100',
+                  '${memo.value.characters.length}/100',
                   style: TextStyle(
-                    color: memo.value.length >= 100
+                    color: memo.value.characters.length >= 100
                         ? AppColors.danger
                         : AppColors.blackColor.withOpacity(0.3),
                     fontSize: 12,
