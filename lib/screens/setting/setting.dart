@@ -223,10 +223,10 @@ class Setting extends HookConsumerWidget {
                 title: '내 취향관리',
                 onPressed: goEditMyType,
               ),
-              // SettingListTile(
-              //   title: '1:1 문의하기',
-              //   onPressed: goContact,
-              // ),
+              SettingListTile(
+                title: '1:1 문의하기',
+                onPressed: goContact,
+              ),
               SettingListTile(
                 title: '이용약관',
                 onPressed: goTerms,
