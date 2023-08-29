@@ -108,7 +108,7 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Need location when in use</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>To upload photos, please allow permission to access your photo library.</string>
+	<string>To upload photos, please allow permission to access your photo library, Pictures are displayed for the purpose of displaying and identifying stored content.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
