@@ -52,8 +52,9 @@ void main() async {
 
   // KaKao login setup
   KakaoSdk.init(
-      nativeAppKey: Config().nativeAppKey,
-      javaScriptAppKey: Config().javaScriptAppKey);
+    nativeAppKey: Config().nativeAppKey,
+    javaScriptAppKey: Config().javaScriptAppKey,
+  );
 
   runApp(ProviderScope(observers: [Logger()], child: const MyApp()));
 }
