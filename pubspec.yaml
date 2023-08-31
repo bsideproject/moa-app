@@ -78,6 +78,7 @@ dependencies:
   path_provider: ^2.0.15
   url_launcher: ^6.1.12
   package_info_plus: ^4.1.0
+  flutter_branch_sdk: ^6.7.0
 
 conditional_dependencies:
   sqflite:
