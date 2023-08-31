@@ -1,6 +1,8 @@
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:loading_more_list/loading_more_list.dart';
 import 'package:moa_app/constants/color_constants.dart';
@@ -45,6 +47,16 @@ class Home extends HookConsumerWidget {
       } else {
         tabIdx.value = 1;
       }
+    });
+
+    FlutterBranchSdk.initSession().listen((data) {
+      if (data.containsKey('+clicked_branch_link') &&
+          data['+clicked_branch_link'] == true) {
+        if (context.mounted) {
+          context.push('${data['\$canonical_identifier']}');
+        }
+      }
+      return;
     });
 
     return Container(
