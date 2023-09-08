@@ -210,15 +210,16 @@ class FolderTabView extends HookConsumerWidget {
                     )
                   : FolderList(
                       folder: FolderModel(
+                        folderColor: item.folderColor,
                         folderId: item.folderId,
                         folderName: item.folderName,
                         count: item.count,
                         thumbnailUrl: item.thumbnailUrl,
                       ),
-                      folderColor: folderColors[index % 4],
+                      folderColor: item.folderColor,
                       onPressMore: () => showFolderDetailModal(
                         folderName: item.folderName,
-                        folderColor: folderColors[index % 4],
+                        folderColor: item.folderColor,
                       ),
                       onPress: () => goFolderDetailView(
                         folderName: item.folderName,

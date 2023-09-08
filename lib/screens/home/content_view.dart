@@ -1,13 +1,14 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/providers/content_detail_provider.dart';
+import 'package:moa_app/providers/folder_detail_provider.dart';
 import 'package:moa_app/providers/folder_view_provider.dart';
 import 'package:moa_app/providers/hashtag_view_provider.dart';
 import 'package:moa_app/repositories/content_repository.dart';
@@ -60,9 +61,13 @@ class ContentView extends HookConsumerWidget {
     void deleteContent() async {
       await hashtagAsync.deleteContent(contentId: id);
       await ref.read(folderViewProvider.notifier).refresh();
+      await ref
+          .read(folderDetailProvider.notifier)
+          .refresh(folderName: folderName);
+
       if (context.mounted) {
         context.pop();
-        context.pop();
+        context.pop(true);
       }
     }
 
@@ -174,20 +179,34 @@ class ContentView extends HookConsumerWidget {
               },
               duration: const Duration(milliseconds: 300),
               child: () {
-                if (snapshot.connectionState == ConnectionState.waiting) {
+                if ((snapshot.connectionState == ConnectionState.waiting) ||
+                    ref.watch(contentDetailProvider).isLoading) {
                   return const LoadingIndicator();
                 }
                 if (snapshot.hasError) {
-                  return const Center(
-                    child: Text(
-                      '취향을 불러오는데 실패했습니다.',
-                      style: TextStyle(
-                        color: AppColors.blackColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: FontConstants.pretendard,
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        kDebugMode
+                            ? snapshot.error.toString()
+                            : '취향을 불러오는데 실패했습니다.',
+                        style: const TextStyle(
+                          color: AppColors.blackColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: FontConstants.pretendard,
+                        ),
                       ),
-                    ),
+                      Button(
+                        onPressed: () {
+                          ref.refresh(contentDetailProvider).value;
+                        },
+                        margin: const EdgeInsets.only(
+                            left: 100, right: 100, top: 20),
+                        text: '다시 시도',
+                      ),
+                    ],
                   );
                 }
                 if (snapshot.hasData && content != null) {
@@ -412,12 +431,13 @@ class FolderListModalView extends HookConsumerWidget {
                                     fit: BoxFit.contain,
                                     image: Assets.folder,
                                     colorFilter: ColorFilter.mode(
-                                      folderColors[index % 4].withOpacity(
-                                        (selectedIndex.value == -1 ||
-                                                selectedIndex.value == index)
-                                            ? 1
-                                            : 0.5,
-                                      ),
+                                      folderList[index].folderColor.withOpacity(
+                                            (selectedIndex.value == -1 ||
+                                                    selectedIndex.value ==
+                                                        index)
+                                                ? 1
+                                                : 0.5,
+                                          ),
                                       BlendMode.srcIn,
                                     ),
                                   ),

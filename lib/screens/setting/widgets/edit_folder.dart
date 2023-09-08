@@ -35,7 +35,6 @@ class EditFolder extends HookConsumerWidget {
     void showAddFolderModal() {
       General.instance.showBottomSheet(
         context: context,
-        // height: MediaQuery.of(context).size.height * 0.5,
         isScrollControlled: true,
         child: AddFolder(
           onRefresh: () {},
@@ -46,6 +45,7 @@ class EditFolder extends HookConsumerWidget {
     void showEditFolderModal({required String folderName}) {
       General.instance.showBottomSheet(
         context: context,
+        isScrollControlled: true,
         child: EditContent(
           title: '폴더명 수정',
           updatedContentName: updatedContentName,
@@ -152,6 +152,7 @@ class EditFolder extends HookConsumerWidget {
           data: (data) {
             var list = [
               const FolderModel(
+                folderColor: Color(0xffffffff),
                 folderId: 'folderId',
                 folderName: 'folderName',
                 count: 0,
@@ -184,15 +185,16 @@ class EditFolder extends HookConsumerWidget {
                       )
                     : FolderList(
                         folder: FolderModel(
+                          folderColor: item.folderColor,
                           folderId: item.folderId,
                           folderName: item.folderName,
                           count: item.count,
                           thumbnailUrl: item.thumbnailUrl,
                         ),
-                        folderColor: folderColors[index % 4],
+                        folderColor: item.folderColor,
                         onPressMore: () => showFolderModal(
                           folderName: item.folderName,
-                          folderColor: folderColors[index % 4],
+                          folderColor: item.folderColor,
                         ),
                         onPress: null,
                       );

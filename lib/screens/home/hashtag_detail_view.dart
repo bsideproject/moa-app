@@ -87,7 +87,7 @@ class HashtagDetailView extends HookConsumerWidget {
         context: context,
         isCloseButton: true,
         child: DeleteContent(
-          folderColor: AppColors.folderColorECD8F3,
+          folderColor: AppColors.folderColorFAE3CB,
           contentName: searchHashText.value,
           type: ContentType.hashtag,
           onPressed: () async {

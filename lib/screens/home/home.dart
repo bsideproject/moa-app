@@ -326,7 +326,11 @@ class FolderSource extends LoadingMoreBase<FolderModel> {
 
       add(
         const FolderModel(
-            folderId: 'add', folderName: '폴더 추가', count: 0, thumbnailUrl: ''),
+            folderColor: Color(0xffffffff),
+            folderId: 'add',
+            folderName: '폴더 추가',
+            count: 0,
+            thumbnailUrl: ''),
       );
 
       for (FolderModel folder in list) {

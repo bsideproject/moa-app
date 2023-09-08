@@ -8,8 +8,6 @@ import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/moa_widgets/error_text.dart';
 
-final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
 class EditContent extends HookWidget {
   const EditContent({
     super.key,
@@ -60,8 +58,10 @@ class EditContent extends HookWidget {
     }
 
     return Stack(children: [
-      Form(
-        key: formKey,
+      Container(
+        height: MediaQuery.of(context).size.height * 0.5,
+        margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom / 2),
         child: Column(
           children: [
             Center(
@@ -105,7 +105,9 @@ class EditContent extends HookWidget {
             Button(
               loading: loading.value,
               disabled: controller.text.isEmpty,
-              margin: const EdgeInsets.only(bottom: 50),
+              margin: EdgeInsets.only(
+                  bottom: (MediaQuery.of(context).viewInsets.bottom / 2) +
+                      (MediaQuery.of(context).padding.bottom + 30)),
               text: buttonText ?? '수정하기',
               onPressed: editContent,
             )

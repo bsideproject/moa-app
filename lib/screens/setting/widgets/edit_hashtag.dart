@@ -149,7 +149,7 @@ class EditHashtag extends HookConsumerWidget {
         context: context,
         isCloseButton: true,
         child: DeleteContent(
-          folderColor: AppColors.folderColorECD8F3,
+          folderColor: AppColors.folderColorFAE3CB,
           contentName: selectedList.length > 1
               ? '${selectedList.length}개의'
               : selectedList.first.name,

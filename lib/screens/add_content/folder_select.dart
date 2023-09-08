@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:moa_app/constants/app_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
 import 'package:moa_app/models/folder_model.dart';
@@ -95,7 +94,7 @@ class FolderSelect extends HookConsumerWidget {
                                 fit: BoxFit.contain,
                                 image: Assets.folder,
                                 colorFilter: ColorFilter.mode(
-                                  folderColors[index % 4],
+                                  folderList[index].folderColor,
                                   BlendMode.srcIn,
                                 ),
                               ),
