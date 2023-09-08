@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:moa_app/constants/color_constants.dart';
-
 class AppConstants {
   static const String replaceableText = 'file://';
   static const List<String> imageExtensions = ['jpg', 'png', 'jpeg', 'gif'];
@@ -20,12 +17,5 @@ class Breakpoints {
   static const xl = 1280.0;
   static const xxl = 1536.0;
 }
-
-List<Color> folderColors = [
-  AppColors.folderColorFAE3CB,
-  AppColors.folderColorFFD4D7,
-  AppColors.folderColorD7E5FC,
-  AppColors.folderColorECD8F3,
-];
 
 String uniqueKey = 'unique_key';

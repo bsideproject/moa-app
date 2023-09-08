@@ -18,11 +18,13 @@ class DynamicGridList extends HookWidget {
     required this.pullToRefresh,
     required this.controller,
     this.folderNameProp,
+    this.folderDetailRefresher,
   });
   final List<ContentModel> contentList;
   final Future<void> Function() pullToRefresh;
   final ScrollController controller;
   final String? folderNameProp;
+  final ValueNotifier<bool>? folderDetailRefresher;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +33,8 @@ class DynamicGridList extends HookWidget {
       required String contentId,
       required String folderName,
       String? contentUrl,
-    }) {
-      context.push(
+    }) async {
+      var val = await context.push(
         '${GoRoutes.content.fullPath}/$contentId',
         extra: ContentView(
           id: contentId,
@@ -41,6 +43,7 @@ class DynamicGridList extends HookWidget {
               contentUrl != '' ? AddContentType.url : AddContentType.image,
         ),
       );
+      folderDetailRefresher?.value = val as bool;
     }
 
     return RefreshIndicator(

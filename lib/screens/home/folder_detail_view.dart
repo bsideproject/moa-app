@@ -27,11 +27,13 @@ class FolderDetailView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var contentList = useState<List<ContentModel>>([]);
     var controller = useScrollController();
+    var contentList = useState<List<ContentModel>>([]);
     var pageNum = useState(0);
     var hasMore = useState(true);
     var loading = useState(false);
+    var folderDetailRefresher = useState(false);
+    var folderDetailNotifier = ref.watch(folderDetailProvider.notifier);
     Future<void> pullToRefresh() async {
       ref.refresh(folderDetailProvider).value;
     }
@@ -56,7 +58,6 @@ class FolderDetailView extends HookConsumerWidget {
 
       BranchResponse response = await FlutterBranchSdk.getShortUrl(
           buo: buo, linkProperties: linkProperties);
-
       if (response.success) {
         await Share.share(response.result);
       } else {
@@ -68,11 +69,13 @@ class FolderDetailView extends HookConsumerWidget {
 
     void getContentList({required int page}) async {
       loading.value = true;
-      var res = await ref.read(folderDetailProvider.notifier).fetchItem(
-            folderName: folderName,
-            page: page,
-          );
-      contentList.value = [...contentList.value, ...res];
+      var res = await folderDetailNotifier.fetchItem(
+          folderName: folderName, page: page);
+      if (page == 0) {
+        contentList.value = res;
+      } else {
+        contentList.value = [...contentList.value, ...res];
+      }
       loading.value = false;
       if (res.length < 10) {
         hasMore.value = false;
@@ -82,7 +85,7 @@ class FolderDetailView extends HookConsumerWidget {
     useEffect(() {
       getContentList(page: pageNum.value);
       return null;
-    }, []);
+    }, [folderDetailRefresher.value]);
 
     useEffect(() {
       controller.addListener(() {
@@ -138,6 +141,7 @@ class FolderDetailView extends HookConsumerWidget {
                           contentList: contentList.value,
                           pullToRefresh: pullToRefresh,
                           folderNameProp: folderName,
+                          folderDetailRefresher: folderDetailRefresher,
                         ),
                       ),
                       (loading.value && pageNum.value != 0)
