@@ -17,7 +17,7 @@ class Hashtag extends _$Hashtag {
       return ([] as List<HashtagModel>, [] as List<HashtagModel>);
     }
 
-    var data = HashtagRepository.instance.getHashtagList();
+    var data = await HashtagRepository.instance.getHashtagList();
     return data;
   }
 
