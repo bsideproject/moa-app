@@ -13,16 +13,28 @@ flutter upgrade
 flutter pub get
 flutter run
 ```
+## 코드 푸시
+https://docs.shorebird.dev/
 
-## 웹
+### 설치
 ```sh
-flutter run -d chrome --web-port=8080
+curl --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/shorebirdtech/install/main/install.sh -sSf | bash
 ```
-### sqflite 웹 실행
+### 앱 빌드
+```sh
+shorebird release android
+shorebird release ios-alpha
+```
+### 앱 시작
+```sh
+shorebird preview
+```
+### 앱 패치
+```sh
+shorebird patch android
+shorebird patch ios-alpha
+```
 
-```sh
-dart run sqflite_common_ffi_web:setup
-```
 ## freezed 모델 빌드
 
 ```sh
