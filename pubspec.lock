@@ -462,6 +462,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.0"
+  flutter_branch_sdk:
+    dependency: "direct main"
+    description:
+      name: flutter_branch_sdk
+      sha256: "346e362915e6c3edf42ebcf447c3982eff9605dc14beda2e3e04a917abbf23a2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.7.0"
   flutter_cache_manager:
     dependency: "direct main"
     description:
@@ -747,7 +755,7 @@ packages:
     source: hosted
     version: "3.2.1"
   http_parser:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: http_parser
       sha256: "2aa08ce0341cc9b354a498388e30986515406668dbcc4f7c950c3e715496693b"
@@ -1016,7 +1024,7 @@ packages:
     source: hosted
     version: "1.8.3"
   path_provider:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: path_provider
       sha256: "909b84830485dbcd0308edf6f7368bc8fd76afa26a270420f34cabea2a6467a0"

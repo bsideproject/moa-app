@@ -66,6 +66,7 @@ class MainBottomTab extends HookConsumerWidget {
       /// 외부에서 url 공유로 들어왔을경우 폴더선택화면으로 이동
       if (context.mounted &&
           receiveUrl.value.isNotEmpty &&
+          !receiveUrl.value.contains('_branch_referrer') &&
           lifeCycle == AppLifecycleState.resumed) {
         context.go(
           GoRoutes.folderSelect.fullPath,

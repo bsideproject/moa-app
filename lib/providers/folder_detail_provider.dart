@@ -37,7 +37,7 @@ class FolderDetail extends _$FolderDetail {
       timer?.cancel();
     });
 
-    var data = FolderRepository.instance.getFolderDetailList(
+    var data = await FolderRepository.instance.getFolderDetailList(
       folderName: folderName,
       page: page,
       size: size,
@@ -48,5 +48,13 @@ class FolderDetail extends _$FolderDetail {
   @override
   Future<List<ContentModel>?> build() async {
     return null;
+  }
+
+  Future<void> refresh({required String folderName}) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      return fetchItem(folderName: folderName);
+    });
   }
 }

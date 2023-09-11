@@ -5,15 +5,17 @@ class AppColors {
   static const Color primaryColor = Color(0xffFD6846);
   static const Color moaSecondary = Color(0xffFFF4EE);
   static const Color backgroundColor = Color(0xffFFE296);
-  static const Color folderColorFAE3CB = Color(0xffFAE3CB);
-  static const Color folderColorFFD4D7 = Color(0xffFFD4D7);
-  static const Color folderColorD7E5FC = Color(0xffD7E5FC);
-  static const Color folderColorECD8F3 = Color(0xffECD8F3);
   static const Color placeholder = Color(0xFF999999);
   static const Color hashtagColor = Color(0xFFE5D0C5);
   static const Color textInputBackground = Color(0xFFF9F9F9);
   static const Color blackColor = Colors.black;
   static const Color whiteColor = Colors.white;
+
+  /// folder color
+  static const Color folderColorFAE3CB = Color(0xffFAE3CB);
+  // static const Color folderColorFFD4D7 = Color(0xffFFD4D7);
+  // static const Color folderColorD7E5FC = Color(0xffD7E5FC);
+  // static const Color folderColorECD8F3 = Color(0xffECD8F3);
 
   // 피그마에 디자인 가이드에 없는데 디자인에 표시된 색상 직접 만듬
   static const Color danger = Color(0xffFF0000);

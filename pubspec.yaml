@@ -16,7 +16,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
-version: 1.0.0+12
+version: 1.0.1+15
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -73,11 +73,10 @@ dependencies:
   google_sign_in_web: ^0.12.0+2
   flutter_staggered_grid_view: ^0.6.2
   sqflite_common_ffi_web: ^0.3.6
-  http_parser: ^4.0.2
   share_plus: ^7.0.2
-  path_provider: ^2.0.15
   url_launcher: ^6.1.12
   package_info_plus: ^4.1.0
+  flutter_branch_sdk: ^6.7.0
 
 conditional_dependencies:
   sqflite:
@@ -120,6 +119,7 @@ flutter:
     - .env
     - assets/images/
     - assets/icons/
+    - shorebird.yaml
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

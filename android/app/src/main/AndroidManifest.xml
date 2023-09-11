@@ -1,134 +1,111 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.beside.moa">
-
-    <!-- Permissions options for the `storage` group -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
-    <!-- Permissions options for the `camera` group -->
-    <uses-permission android:name="android.permission.CAMERA"/>
-
-    <!-- android:launchMode="singleTop" -->
-    <application android:label="@string/app_name" android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        >
-        <!--Kakao 소셜 로그인 설정-->
-        <activity
-            android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity"
-            android:exported="true">
-            <intent-filter android:label="flutter_web_auth">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <!-- "kakao${YOUR_NATIVE_APP_KEY}://oauth" 형식의 앱 실행 스킴 설정 -->
-                <!-- 카카오 로그인 Redirect URI -->
-                <data android:scheme="kakao425f4fa4567f8679a573604ddf734236" android:host="oauth"/>
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".MainActivity" android:exported="true"
-            android:launchMode="singleTask"
-            android:theme="@style/LaunchTheme"
-            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
-            android:hardwareAccelerated="true"
-            android:windowSoftInputMode="adjustResize">
-
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/*" />
-            </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="image/*" />
-            </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="video/*" />
-            </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="*/*" />
-            </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.intent.action.SEND_MULTIPLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="image/*" />
-            </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.intent.action.SEND_MULTIPLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="video/*" />
-            </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.intent.action.SEND_MULTIPLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="*/*" />
-            </intent-filter>
-
-            <!-- Specifies an Android theme to apply to this Activity as soon as
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.beside.moa">
+  <!-- Permissions options for the `storage` group -->
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+  <!-- Permissions options for the `camera` group -->
+  <uses-permission android:name="android.permission.CAMERA"/>
+  <!-- android:launchMode="singleTop" -->
+  <application android:label="@string/app_name" android:name="${applicationName}" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round">
+    <!--Kakao 소셜 로그인 설정-->
+    <activity android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity" android:exported="true">
+      <intent-filter android:label="flutter_web_auth">
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <!-- "kakao${YOUR_NATIVE_APP_KEY}://oauth" 형식의 앱 실행 스킴 설정 -->
+        <!-- 카카오 로그인 Redirect URI -->
+        <data android:scheme="kakao425f4fa4567f8679a573604ddf734236" android:host="oauth"/>
+      </intent-filter>
+    </activity>
+    <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTask" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">
+      <intent-filter>
+        <action android:name="android.intent.action.SEND"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <data android:mimeType="text/*"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.SEND"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <data android:mimeType="image/*"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.SEND"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <data android:mimeType="video/*"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.SEND"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <data android:mimeType="*/*"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.SEND_MULTIPLE"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <data android:mimeType="image/*"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.SEND_MULTIPLE"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <data android:mimeType="video/*"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.SEND_MULTIPLE"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <data android:mimeType="*/*"/>
+      </intent-filter>
+      <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues
                  to determine the Window background behind the Flutter UI. -->
-            <meta-data android:name="io.flutter.embedding.android.NormalTheme"
-                android:resource="@style/NormalTheme" />
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-            <!-- 카카오톡 로그린 URL 스킴 설정 -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <!-- "kakao${YOUR_NATIVE_APP_KEY}://${PRODUCT_NAME}" 형식의 앱 실행 스킴 설정 -->
-                <!-- 카카오로그인 -->
-                <data android:scheme="kakao425f4fa4567f8679a573604ddf734236" android:host="oauth"/>
-            </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="moa" />
-            </intent-filter>
-        </activity>
-        <!-- Don't delete the meta-data below.
+      <meta-data android:name="io.flutter.embedding.android.NormalTheme" android:resource="@style/NormalTheme"/>
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+      <!-- 카카오톡 로그린 URL 스킴 설정 -->
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <!-- "kakao${YOUR_NATIVE_APP_KEY}://${PRODUCT_NAME}" 형식의 앱 실행 스킴 설정 -->
+        <!-- 카카오로그인 -->
+        <data android:scheme="kakao425f4fa4567f8679a573604ddf734236" android:host="oauth"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="moa"/>
+      </intent-filter>
+      <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="https" android:host="moayo.app.link"/>
+        <!-- example-alternate domain is required for App Links when the Journeys/Web SDK and Deepviews are used inside your website.  -->
+        <data android:scheme="https" android:host="moayo-alternate.app.link"/>
+      </intent-filter>
+    </activity>
+    <!-- Branch init -->
+    <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_cAdCkiozDTmbHUBKiCWYplbhrqfE9TOt"/>
+    <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_hlxrWC5Zx16DkYmWu4AHiimdqugRYMr"/>
+    <meta-data android:name="io.branch.sdk.TestMode" android:value="false"/>
+    <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
-        <meta-data android:name="flutterEmbedding" android:value="2" />
-
-        <!--Naver 소셜 로그인 설정-->
-        <!--android/app/src/main/res/values/strings.xml-->
-        <meta-data
-            android:name="com.naver.sdk.clientId"
-            android:value="@string/client_id" />
-        <meta-data
-            android:name="com.naver.sdk.clientSecret"
-            android:value="@string/client_secret" />
-        <meta-data
-            android:name="com.naver.sdk.clientName"
-            android:value="@string/client_name" />
-
-        <!--flutter web auth 설정-->
-        <activity android:name="com.linusu.flutter_web_auth.CallbackActivity" android:exported="true">
+    <meta-data android:name="flutterEmbedding" android:value="2"/>
+    <!--Naver 소셜 로그인 설정-->
+    <!--android/app/src/main/res/values/strings.xml-->
+    <meta-data android:name="com.naver.sdk.clientId" android:value="@string/client_id"/>
+    <meta-data android:name="com.naver.sdk.clientSecret" android:value="@string/client_secret"/>
+    <meta-data android:name="com.naver.sdk.clientName" android:value="@string/client_name"/>
+    <!--flutter web auth 설정-->
+    <!-- <activity android:name="com.linusu.flutter_web_auth.CallbackActivity" android:exported="true">
             <intent-filter android:label="flutter_web_auth">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="moa" />
             </intent-filter>
-        </activity>
-
-    </application>
+        </activity> -->
+  </application>
+  <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>

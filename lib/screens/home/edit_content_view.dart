@@ -50,14 +50,14 @@ class EditContentView extends HookConsumerWidget {
         loading.value = true;
         await ContentRepository.instance.editContent(
           contentId: content.contentId,
-          contentMemo: titleController.text,
-          contentName: memoController.text,
+          contentName: titleController.text,
+          contentMemo: memoController.text,
           hashTagStringList: hashtagList.value.join(','),
         );
         await ref.read(contentDetailProvider.notifier).editContent(
               contentId: content.contentId,
-              contentMemo: titleController.text,
-              contentName: memoController.text,
+              contentName: titleController.text,
+              contentMemo: memoController.text,
               hashTagStringList: hashtagList.value.join(','),
             );
 
