@@ -19,7 +19,9 @@ class SettingListTile extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(horizontal: 20),
       title: Text(
         title,
-        style: const H3TextStyle(),
+        style: const H3TextStyle().merge(
+          const TextStyle(fontWeight: FontConstants.fontWeightMedium),
+        ),
       ),
       trailing: trailing ??
           Transform.rotate(

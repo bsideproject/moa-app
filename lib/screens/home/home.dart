@@ -199,10 +199,13 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
                   children: [
                     RichText(
                       text: TextSpan(
-                        style: const TextStyle(
+                        style: const Body1TextStyle().merge(
+                          const TextStyle(
                             color: AppColors.blackColor,
                             fontSize: 24,
-                            fontWeight: FontConstants.fontWeightNormal),
+                            fontWeight: FontConstants.fontWeightNormal,
+                          ),
+                        ),
                         children: [
                           const TextSpan(
                             text: '지금까지 모아온\n',
@@ -278,10 +281,10 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => isEditScreen ? 99 : 117;
+  double get maxExtent => isEditScreen ? 98 : 117;
 
   @override
-  double get minExtent => isEditScreen ? 99 : 117;
+  double get minExtent => isEditScreen ? 98 : 117;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
