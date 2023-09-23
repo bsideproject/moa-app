@@ -27,6 +27,10 @@ linter:
     - comment_references
     - prefer_void_to_null
     - use_key_in_widget_constructors
+    - prefer_const_literals_to_create_immutables
+    - prefer_typing_uninitialized_variables
+    - unnecessary_getters_setters
+    - no_leading_underscores_for_local_identifiers
 
 analyzer:
   strong-mode:

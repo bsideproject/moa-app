@@ -69,6 +69,7 @@ class FolderTabView extends HookConsumerWidget {
       General.instance.showBottomSheet(
         context: context,
         child: EditContent(
+          maxLength: 10,
           title: '폴더명 수정',
           updatedContentName: updatedContentName,
           contentName: folderName,

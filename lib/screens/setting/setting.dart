@@ -10,10 +10,12 @@ import 'package:moa_app/providers/token_provider.dart';
 import 'package:moa_app/providers/user_provider.dart';
 import 'package:moa_app/screens/setting/widgets/setting_list_tile.dart';
 import 'package:moa_app/utils/router_provider.dart';
+import 'package:moa_app/utils/utils.dart';
 import 'package:moa_app/widgets/alert_dialog.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/loading_indicator.dart';
+import 'package:moa_app/widgets/moa_widgets/error_text.dart';
 import 'package:moa_app/widgets/snackbar.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -164,6 +166,7 @@ class Setting extends HookConsumerWidget {
                                     nickname.value = value;
                                   },
                                   hintText: userInfo?.nickname,
+                                  maxLength: 8,
                                 )
                               : InkWell(
                                   overlayColor: MaterialStateProperty.all(
@@ -180,7 +183,8 @@ class Setting extends HookConsumerWidget {
                           editNicknameMode.value
                               ? Button(
                                   loading: loading.value,
-                                  disabled: nickname.value == '',
+                                  disabled: nickname.value.isEmpty ||
+                                      !validateNickname(nickname.value),
                                   onPressed: () => editMyNickname(
                                     nickname: nickname.value,
                                   ),
@@ -203,6 +207,13 @@ class Setting extends HookConsumerWidget {
                                   ),
                                 ),
                         ],
+                      ),
+                      const SizedBox(height: 3),
+                      ErrorText(
+                        alignment: MainAxisAlignment.center,
+                        errorText: '이름은 한글 2~8자로 입력할 수 있어요.',
+                        errorValidate: nickname.value.isNotEmpty &&
+                            !validateNickname(nickname.value),
                       ),
                       const SizedBox(height: 3),
                       Text(

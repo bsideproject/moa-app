@@ -46,8 +46,8 @@ class FolderDetail extends _$FolderDetail {
   }
 
   @override
-  Future<List<ContentModel>?> build() async {
-    return null;
+  Future<List<ContentModel>?> build({required String folderName}) async {
+    return fetchItem(folderName: folderName);
   }
 
   Future<void> refresh({required String folderName}) async {

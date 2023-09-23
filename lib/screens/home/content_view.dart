@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/constants/font_constants.dart';
-import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/providers/content_detail_provider.dart';
 import 'package:moa_app/providers/folder_detail_provider.dart';
 import 'package:moa_app/providers/folder_view_provider.dart';
@@ -37,7 +36,7 @@ class ContentView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var contentNotifier = ref.watch(contentDetailProvider.notifier);
+    var contentAsync = ref.watch(contentDetailProvider(id: id));
     var hashtagAsync = ref.watch(hashtagViewProvider.notifier);
     var isEditMode = useState(false);
 
@@ -62,7 +61,7 @@ class ContentView extends HookConsumerWidget {
       await hashtagAsync.deleteContent(contentId: id);
       await ref.read(folderViewProvider.notifier).refresh();
       await ref
-          .read(folderDetailProvider.notifier)
+          .read(folderDetailProvider(folderName: folderName).notifier)
           .refresh(folderName: folderName);
 
       if (context.mounted) {
@@ -169,47 +168,15 @@ class ContentView extends HookConsumerWidget {
         ],
       ),
       body: SafeArea(
-        child: FutureBuilder<ContentModel>(
-          future: contentNotifier.fetchItem(contentId: id),
-          builder: (context, snapshot) {
-            var content = snapshot.data;
+        child: contentAsync.when(
+          data: (content) {
             return AnimatedSwitcher(
               transitionBuilder: (child, animation) {
                 return FadeTransition(opacity: animation, child: child);
               },
               duration: const Duration(milliseconds: 300),
               child: () {
-                if ((snapshot.connectionState == ConnectionState.waiting) ||
-                    ref.watch(contentDetailProvider).isLoading) {
-                  return const LoadingIndicator();
-                }
-                if (snapshot.hasError) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        kDebugMode
-                            ? snapshot.error.toString()
-                            : '취향을 불러오는데 실패했습니다.',
-                        style: const TextStyle(
-                          color: AppColors.blackColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: FontConstants.pretendard,
-                        ),
-                      ),
-                      Button(
-                        onPressed: () {
-                          ref.refresh(contentDetailProvider).value;
-                        },
-                        margin: const EdgeInsets.only(
-                            left: 100, right: 100, top: 20),
-                        text: '다시 시도',
-                      ),
-                    ],
-                  );
-                }
-                if (snapshot.hasData && content != null) {
+                if (content != null) {
                   return isEditMode.value
                       ? SingleChildScrollView(
                           padding: const EdgeInsets.only(
@@ -358,6 +325,30 @@ class ContentView extends HookConsumerWidget {
               }(),
             );
           },
+          error: (error, stackTrace) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  kDebugMode ? error.toString() : '취향을 불러오는데 실패했습니다.',
+                  style: const TextStyle(
+                    color: AppColors.blackColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: FontConstants.pretendard,
+                  ),
+                ),
+                Button(
+                  onPressed: () {
+                    ref.refresh(contentDetailProvider(id: id)).value;
+                  },
+                  margin: const EdgeInsets.only(left: 100, right: 100, top: 20),
+                  text: '다시 시도',
+                ),
+              ],
+            );
+          },
+          loading: () => const LoadingIndicator(),
         ),
       ),
     );

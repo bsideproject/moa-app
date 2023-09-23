@@ -32,10 +32,10 @@ class FolderDetailView extends HookConsumerWidget {
     var pageNum = useState(0);
     var hasMore = useState(true);
     var loading = useState(false);
-    var folderDetailRefresher = useState(false);
-    var folderDetailNotifier = ref.watch(folderDetailProvider.notifier);
+    var folderDetailNotifier =
+        ref.watch(folderDetailProvider(folderName: folderName).notifier);
     Future<void> pullToRefresh() async {
-      ref.refresh(folderDetailProvider).value;
+      ref.refresh(folderDetailProvider(folderName: folderName)).value;
     }
 
     void shareFolder() async {
@@ -81,11 +81,6 @@ class FolderDetailView extends HookConsumerWidget {
         hasMore.value = false;
       }
     }
-
-    useEffect(() {
-      getContentList(page: pageNum.value);
-      return null;
-    }, [folderDetailRefresher.value]);
 
     useEffect(() {
       controller.addListener(() {
@@ -141,7 +136,6 @@ class FolderDetailView extends HookConsumerWidget {
                           contentList: contentList.value,
                           pullToRefresh: pullToRefresh,
                           folderNameProp: folderName,
-                          folderDetailRefresher: folderDetailRefresher,
                         ),
                       ),
                       (loading.value && pageNum.value != 0)

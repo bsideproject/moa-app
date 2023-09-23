@@ -34,7 +34,7 @@ class DynamicGridList extends HookWidget {
       required String folderName,
       String? contentUrl,
     }) async {
-      var val = await context.push(
+      await context.push(
         '${GoRoutes.content.fullPath}/$contentId',
         extra: ContentView(
           id: contentId,
@@ -43,7 +43,6 @@ class DynamicGridList extends HookWidget {
               contentUrl != '' ? AddContentType.url : AddContentType.image,
         ),
       );
-      folderDetailRefresher?.value = val as bool;
     }
 
     return RefreshIndicator(
