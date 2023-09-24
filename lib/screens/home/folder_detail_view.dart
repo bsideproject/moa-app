@@ -4,7 +4,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
-import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/providers/folder_detail_provider.dart';
 import 'package:moa_app/screens/home/widgets/type_header.dart';
 import 'package:moa_app/utils/router_provider.dart';
@@ -28,12 +27,12 @@ class FolderDetailView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var controller = useScrollController();
-    var contentList = useState<List<ContentModel>>([]);
     var pageNum = useState(0);
     var hasMore = useState(true);
     var loading = useState(false);
-    var folderDetailNotifier =
-        ref.watch(folderDetailProvider(folderName: folderName).notifier);
+    var folderDetailAsync =
+        ref.watch(folderDetailProvider(folderName: folderName));
+
     Future<void> pullToRefresh() async {
       ref.refresh(folderDetailProvider(folderName: folderName)).value;
     }
@@ -69,15 +68,12 @@ class FolderDetailView extends HookConsumerWidget {
 
     void getContentList({required int page}) async {
       loading.value = true;
-      var res = await folderDetailNotifier.fetchItem(
-          folderName: folderName, page: page);
-      if (page == 0) {
-        contentList.value = res;
-      } else {
-        contentList.value = [...contentList.value, ...res];
-      }
+      var length = await ref
+          .read(folderDetailProvider(folderName: folderName).notifier)
+          .loadMore(folderName: folderName, page: page);
+
       loading.value = false;
-      if (res.length < 10) {
+      if (length < 10) {
         hasMore.value = false;
       }
     }
@@ -118,33 +114,47 @@ class FolderDetailView extends HookConsumerWidget {
           return FadeTransition(opacity: animation, child: child);
         },
         duration: const Duration(milliseconds: 300),
-        child: () {
-          if (loading.value && pageNum.value == 0) {
-            return const LoadingIndicator();
-          }
-          return contentList.value.isEmpty
-              ? const EmptyContent(text: '저장된 취향이 없어요!\n취향을 저장해 주세요.')
-              : Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 30),
-                      TypeHeader(count: contentCount, onPressFilter: () {}),
-                      Expanded(
-                        child: DynamicGridList(
-                          controller: controller,
-                          contentList: contentList.value,
-                          pullToRefresh: pullToRefresh,
-                          folderNameProp: folderName,
+        child: folderDetailAsync.when(
+          loading: () => const LoadingIndicator(),
+          error: (error, stackTrace) {
+            return const Center(
+              child: Text(
+                '에러가 발생했어요.\n다시 시도해주세요.',
+                textAlign: TextAlign.center,
+              ),
+            );
+          },
+          data: (contentList) {
+            return () {
+              if (contentList != null) {
+                return contentList.isEmpty
+                    ? const EmptyContent(text: '저장된 취향이 없어요!\n취향을 저장해 주세요.')
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 30),
+                            TypeHeader(
+                                count: contentCount, onPressFilter: () {}),
+                            Expanded(
+                              child: DynamicGridList(
+                                controller: controller,
+                                contentList: contentList,
+                                pullToRefresh: pullToRefresh,
+                                folderNameProp: folderName,
+                              ),
+                            ),
+                            (loading.value && pageNum.value != 0)
+                                ? const LoadingIndicator()
+                                : const SizedBox(),
+                          ],
                         ),
-                      ),
-                      (loading.value && pageNum.value != 0)
-                          ? const LoadingIndicator()
-                          : const SizedBox(),
-                    ],
-                  ),
-                );
-        }(),
+                      );
+              }
+              return const SizedBox();
+            }();
+          },
+        ),
       )),
     );
   }

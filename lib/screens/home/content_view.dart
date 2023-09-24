@@ -49,7 +49,12 @@ class ContentView extends HookConsumerWidget {
       }
     }
 
+    void refreshCache() {
+      ref.refresh(folderDetailProvider(folderName: folderName)).value;
+    }
+
     void pressConfirm() {
+      refreshCache();
       context.pop();
     }
 
@@ -60,9 +65,7 @@ class ContentView extends HookConsumerWidget {
     void deleteContent() async {
       await hashtagAsync.deleteContent(contentId: id);
       await ref.read(folderViewProvider.notifier).refresh();
-      await ref
-          .read(folderDetailProvider(folderName: folderName).notifier)
-          .refresh(folderName: folderName);
+      ref.refresh(folderDetailProvider(folderName: folderName)).value;
 
       if (context.mounted) {
         context.pop();
@@ -153,6 +156,10 @@ class ContentView extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBarBack(
+        onPressedBack: () => {
+          refreshCache(),
+          context.pop(),
+        },
         title: folderName,
         isBottomBorderDisplayed: false,
         actions: [

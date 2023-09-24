@@ -15,28 +15,7 @@ class FolderDetail extends _$FolderDetail {
     int? page,
     int? size,
   }) async {
-    // get the [KeepAliveLink]
-    var link = ref.keepAlive();
-    // a timer to be used by the callbacks below
-    Timer? timer;
-    // An object from package:dio that allows cancelling http requests
-    // When the provider is destroyed, cancel the http request and the timer
-    ref.onDispose(() {
-      timer?.cancel();
-    });
-    // When the last listener is removed, start a timer to dispose the cached data
-    ref.onCancel(() {
-      // start a 30 second timer
-      timer = Timer(const Duration(seconds: 30), () {
-        // dispose on timeout
-        link.close();
-      });
-    });
-    // If the provider is listened again after it was paused, cancel the timer
-    ref.onResume(() {
-      timer?.cancel();
-    });
-
+    // todo 처음에 불러오는 page==1 일때 데이터만 캐싱하는 방법을 찾아보자
     var data = await FolderRepository.instance.getFolderDetailList(
       folderName: folderName,
       page: page,
@@ -50,11 +29,21 @@ class FolderDetail extends _$FolderDetail {
     return fetchItem(folderName: folderName);
   }
 
-  Future<void> refresh({required String folderName}) async {
-    state = const AsyncValue.loading();
+  Future<int> loadMore({
+    required String folderName,
+    required int page,
+  }) async {
+    List<ContentModel> res = [];
 
     state = await AsyncValue.guard(() async {
-      return fetchItem(folderName: folderName);
+      res = await fetchItem(
+        folderName: folderName,
+        page: page,
+      );
+
+      return [...state.value!, ...res];
     });
+
+    return res.length;
   }
 }
