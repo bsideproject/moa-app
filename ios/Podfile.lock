@@ -5,7 +5,7 @@ PODS:
   - AppAuth/Core (1.6.2)
   - AppAuth/ExternalUserAgent (1.6.2):
     - AppAuth/Core
-  - BranchSDK (2.2.0)
+  - BranchSDK (2.2.1)
   - Firebase/CoreOnly (10.12.0):
     - FirebaseCore (= 10.12.0)
   - firebase_core (2.15.1):
@@ -15,7 +15,7 @@ PODS:
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/Logger (~> 7.8)
-  - FirebaseCoreInternal (10.12.0):
+  - FirebaseCoreInternal (10.15.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
   - Flutter (1.0.0)
   - flutter_branch_sdk (6.4.0):
@@ -40,11 +40,11 @@ PODS:
     - AppAuth (~> 1.5)
     - GTMAppAuth (~> 1.3)
     - GTMSessionFetcher/Core (< 3.0, >= 1.1)
-  - GoogleUtilities/Environment (7.11.4):
+  - GoogleUtilities/Environment (7.11.5):
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/Logger (7.11.4):
+  - GoogleUtilities/Logger (7.11.5):
     - GoogleUtilities/Environment
-  - "GoogleUtilities/NSData+zlib (7.11.4)"
+  - "GoogleUtilities/NSData+zlib (7.11.5)"
   - GTMAppAuth (1.3.1):
     - AppAuth/Core (~> 1.6)
     - GTMSessionFetcher/Core (< 3.0, >= 1.5)
@@ -160,11 +160,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
-  BranchSDK: 8749d10e30725d08b6c188ab90e6fd6223d204db
+  BranchSDK: cb046c2714b03e573484ce9e349e2ddbad7016e8
   Firebase: 07150e75d142fb9399f6777fa56a187b17f833a0
   firebase_core: 4a3246a02f828a01c74a2c26427037786d90f17f
   FirebaseCore: f86a1394906b97ac445ae49c92552a9425831bed
-  FirebaseCoreInternal: 950500ad8a08963657f6d8c67b579740c06d6aa1
+  FirebaseCoreInternal: 2f4bee5ed00301b5e56da0849268797a2dd31fb4
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_branch_sdk: da3bece1a03160a8a021ef4ec3d426e89c6da169
   flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
@@ -174,7 +174,7 @@ SPEC CHECKSUMS:
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   google_sign_in_ios: 1256ff9d941db546373826966720b0c24804bcdd
   GoogleSignIn: 5651ce3a61e56ca864160e79b484cd9ed3f49b7a
-  GoogleUtilities: c63691989bf362ba0505507da00eeb326192e83e
+  GoogleUtilities: 13e2c67ede716b8741c7989e26893d151b2b2084
   GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
   image_picker_ios: 4a8aadfbb6dc30ad5141a2ce3832af9214a705b5
@@ -192,6 +192,6 @@ SPEC CHECKSUMS:
   sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
 
-PODFILE CHECKSUM: 8eb7cecb637c8d903f411e7008dc4a94863ea0c3
+PODFILE CHECKSUM: aa1290718d439ab34b2bb1f45e399e9fdd1f6ad5
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.13.0
