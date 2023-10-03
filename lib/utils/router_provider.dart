@@ -21,7 +21,6 @@ import 'package:moa_app/screens/setting/privacy.dart';
 import 'package:moa_app/screens/setting/setting.dart';
 import 'package:moa_app/screens/setting/terms.dart';
 import 'package:moa_app/screens/setting/withdraw.dart';
-import 'package:moa_app/utils/utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -199,23 +198,19 @@ final routeProvider = Provider(
                 GoRoute(
                   parentNavigatorKey: _rootNavigatorKey,
                   name: GoRoutes.folder.name,
-                  path: '${GoRoutes.folder.path}/:folderName',
+                  path: '${GoRoutes.folder.path}/:folderId',
                   pageBuilder: (context, state) {
-                    late String decodeFolderName =
-                        state.pathParameters['folderName']!;
+                    var folderDetail = state.extra as FolderDetailView;
+                    late String folderId = state.pathParameters['folderId']!;
 
                     var parseCount = int.parse(state.uri.queryParameters['c']!);
-
-                    if (isStringEncoded(state.pathParameters['folderName']!)) {
-                      decodeFolderName = Uri.decodeFull(
-                          state.pathParameters['folderName'] ?? '');
-                    }
 
                     return buildIosPageTransitions<void>(
                       context: context,
                       state: state,
                       child: FolderDetailView(
-                        folderName: decodeFolderName,
+                        folderName: folderDetail.folderName,
+                        id: folderId,
                         contentCount: parseCount,
                       ),
                     );

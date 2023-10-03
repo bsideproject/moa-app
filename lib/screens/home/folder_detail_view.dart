@@ -19,9 +19,11 @@ class FolderDetailView extends HookConsumerWidget {
   const FolderDetailView({
     super.key,
     required this.folderName,
+    required this.id,
     required this.contentCount,
   });
   final String folderName;
+  final String id;
   final int contentCount;
 
   @override
@@ -30,19 +32,15 @@ class FolderDetailView extends HookConsumerWidget {
     var pageNum = useState(0);
     var hasMore = useState(true);
     var loading = useState(false);
-    var folderDetailAsync =
-        ref.watch(folderDetailProvider(folderName: folderName));
+    var folderDetailAsync = ref.watch(folderDetailProvider(folderId: id));
 
     Future<void> pullToRefresh() async {
-      ref.refresh(folderDetailProvider(folderName: folderName)).value;
+      ref.refresh(folderDetailProvider(folderId: id)).value;
     }
 
     void shareFolder() async {
-      var encodeFolderName = Uri.encodeFull(folderName);
-
       BranchUniversalObject buo = BranchUniversalObject(
-        canonicalIdentifier:
-            '${GoRoutes.folder.fullPath}/$encodeFolderName?c=$contentCount',
+        canonicalIdentifier: '${GoRoutes.folder.fullPath}/$id?c=$contentCount',
         title: '모아 폴더 공유',
         contentDescription: folderName,
         // imageUrl:
@@ -69,8 +67,8 @@ class FolderDetailView extends HookConsumerWidget {
     void getContentList({required int page}) async {
       loading.value = true;
       var length = await ref
-          .read(folderDetailProvider(folderName: folderName).notifier)
-          .loadMore(folderName: folderName, page: page);
+          .read(folderDetailProvider(folderId: id).notifier)
+          .loadMore(folderId: id, page: page);
 
       loading.value = false;
       if (length < 10) {

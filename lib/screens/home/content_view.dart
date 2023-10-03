@@ -50,7 +50,7 @@ class ContentView extends HookConsumerWidget {
     }
 
     void refreshCache() {
-      ref.refresh(folderDetailProvider(folderName: folderName)).value;
+      ref.refresh(folderDetailProvider(folderId: id)).value;
     }
 
     void pressConfirm() {
@@ -65,7 +65,7 @@ class ContentView extends HookConsumerWidget {
     void deleteContent() async {
       await hashtagAsync.deleteContent(contentId: id);
       await ref.read(folderViewProvider.notifier).refresh();
-      ref.refresh(folderDetailProvider(folderName: folderName)).value;
+      ref.refresh(folderDetailProvider(folderId: id)).value;
 
       if (context.mounted) {
         context.pop();
