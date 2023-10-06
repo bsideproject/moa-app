@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -39,8 +40,18 @@ class FolderDetailView extends HookConsumerWidget {
     }
 
     void shareFolder() async {
+      var encodeFolderName = Uri.encodeFull(folderName);
+      if (Platform.isIOS) {
+        var currentStatus =
+            await FlutterBranchSdk.getTrackingAuthorizationStatus();
+        if (currentStatus == AppTrackingStatus.notDetermined) {
+          await FlutterBranchSdk.requestTrackingAuthorization();
+        }
+      }
+
       BranchUniversalObject buo = BranchUniversalObject(
-        canonicalIdentifier: '${GoRoutes.folder.fullPath}/$id?c=$contentCount',
+        canonicalIdentifier:
+            '${GoRoutes.folder.fullPath}/$id?folderName=$encodeFolderName&c=$contentCount',
         title: '모아 폴더 공유',
         contentDescription: folderName,
         // imageUrl:
@@ -52,7 +63,6 @@ class FolderDetailView extends HookConsumerWidget {
         feature: 'share',
         campaign: 'example_campaign',
       );
-
       BranchResponse response = await FlutterBranchSdk.getShortUrl(
           buo: buo, linkProperties: linkProperties);
       if (response.success) {

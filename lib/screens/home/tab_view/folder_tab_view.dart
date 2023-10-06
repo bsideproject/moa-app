@@ -64,7 +64,8 @@ class FolderTabView extends HookConsumerWidget {
       required int contentCount,
       required String folderId,
     }) {
-      context.go('${GoRoutes.folder.fullPath}/$folderId?c=$contentCount',
+      context.go(
+          '${GoRoutes.folder.fullPath}/$folderId?folderName=$folderName&c=$contentCount',
           extra: FolderDetailView(
             folderName: folderName,
             id: folderId,
