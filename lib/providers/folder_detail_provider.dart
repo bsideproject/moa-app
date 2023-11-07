@@ -46,4 +46,12 @@ class FolderDetail extends _$FolderDetail {
 
     return res.length;
   }
+
+  Future<void> refresh({required String folderName}) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      return fetchItem(folderName: folderName);
+    });
+  }
 }

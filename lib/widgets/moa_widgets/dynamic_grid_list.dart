@@ -43,6 +43,7 @@ class DynamicGridList extends HookWidget {
               contentUrl != '' ? AddContentType.url : AddContentType.image,
         ),
       );
+      folderDetailRefresher?.value = val as bool;
     }
 
     return RefreshIndicator(

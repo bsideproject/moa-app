@@ -51,6 +51,7 @@ class EditContentView extends HookConsumerWidget {
       // await ref.read(hashtagViewProvider.notifier).refresh();
       // await ref.read(folderViewProvider.notifier).refresh();
       isEditMode.value = false;
+
     }
 
     void showEditHashtagModal() {

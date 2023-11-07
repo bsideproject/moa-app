@@ -30,11 +30,11 @@ class FolderDetailView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var controller = useScrollController();
+    var contentList = useState<List<ContentModel>>([]);
     var pageNum = useState(0);
     var hasMore = useState(true);
     var loading = useState(false);
     var folderDetailAsync = ref.watch(folderDetailProvider(folderId: id));
-
     Future<void> pullToRefresh() async {
       ref.refresh(folderDetailProvider(folderId: id)).value;
     }
@@ -52,6 +52,7 @@ class FolderDetailView extends HookConsumerWidget {
       BranchUniversalObject buo = BranchUniversalObject(
         canonicalIdentifier:
             '${GoRoutes.folder.fullPath}/$id?folderName=$encodeFolderName&c=$contentCount',
+
         title: '모아 폴더 공유',
         contentDescription: folderName,
         // imageUrl:
@@ -79,7 +80,6 @@ class FolderDetailView extends HookConsumerWidget {
       var length = await ref
           .read(folderDetailProvider(folderId: id).notifier)
           .loadMore(folderId: id, page: page);
-
       loading.value = false;
       if (length < 10) {
         hasMore.value = false;
