@@ -47,6 +47,7 @@ class EditFolder extends HookConsumerWidget {
         context: context,
         isScrollControlled: true,
         child: EditContent(
+          maxLength: 10,
           title: '폴더명 수정',
           updatedContentName: updatedContentName,
           contentName: folderName,

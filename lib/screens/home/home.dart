@@ -72,46 +72,47 @@ class Home extends HookConsumerWidget {
               headerSliverBuilder: (context, innerBoxIsScrolled) {
                 return [
                   SliverAppBar(
-                      toolbarHeight: 110,
-                      titleSpacing: 15,
-                      backgroundColor: AppColors.backgroundColor,
-                      flexibleSpace: FlexibleSpaceBar(
-                        background: Stack(
-                          children: [
-                            Positioned(
-                              right: 15,
-                              top: 3,
-                              child: Image(
-                                width: 150,
-                                height: 182,
-                                image: Assets.moaBannerImg,
-                              ),
+                    toolbarHeight: 110,
+                    titleSpacing: 15,
+                    backgroundColor: AppColors.backgroundColor,
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: Stack(
+                        children: [
+                          Positioned(
+                            right: 15,
+                            top: 3,
+                            child: Image(
+                              width: 150,
+                              height: 182,
+                              image: Assets.moaBannerImg,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      title: userAsync.when(
-                        error: (error, stackTrace) {
-                          return const SizedBox();
-                        },
-                        loading: () => Container(
+                    ),
+                    title: userAsync.when(
+                      error: (error, stackTrace) {
+                        return const SizedBox();
+                      },
+                      loading: () => Container(
+                        margin: const EdgeInsets.only(right: 150),
+                        alignment: Alignment.centerLeft,
+                        child: const LoadingIndicator(),
+                      ),
+                      data: (userInfo) {
+                        return Container(
                           margin: const EdgeInsets.only(right: 150),
                           alignment: Alignment.centerLeft,
-                          child: const LoadingIndicator(),
-                        ),
-                        data: (userInfo) {
-                          return Container(
-                            margin: const EdgeInsets.only(right: 150),
-                            alignment: Alignment.centerLeft,
-                            child: RichText(
-                              text: TextSpan(
-                                text: '안녕하세요,\n${userInfo?.nickname}님!',
-                                style: const H1TextStyle(),
-                              ),
+                          child: RichText(
+                            text: TextSpan(
+                              text: '안녕하세요,\n${userInfo?.nickname}님!',
+                              style: const H1TextStyle(),
                             ),
-                          );
-                        },
-                      )),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                   SliverPersistentHeader(
                     delegate: PersistentTabBar(
                       tabController: tabController,
@@ -199,10 +200,13 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
                   children: [
                     RichText(
                       text: TextSpan(
-                        style: const TextStyle(
+                        style: const Body1TextStyle().merge(
+                          const TextStyle(
                             color: AppColors.blackColor,
                             fontSize: 24,
-                            fontWeight: FontConstants.fontWeightNormal),
+                            fontWeight: FontConstants.fontWeightNormal,
+                          ),
+                        ),
                         children: [
                           const TextSpan(
                             text: '지금까지 모아온\n',
@@ -278,10 +282,10 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => isEditScreen ? 99 : 117;
+  double get maxExtent => isEditScreen ? 98 : 117;
 
   @override
-  double get minExtent => isEditScreen ? 99 : 117;
+  double get minExtent => isEditScreen ? 98 : 117;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {

@@ -1,10 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:moa_app/constants/color_constants.dart';
 import 'package:moa_app/constants/file_constants.dart';
-import 'package:moa_app/models/content_model.dart';
 import 'package:moa_app/providers/folder_detail_provider.dart';
 import 'package:moa_app/screens/home/widgets/type_header.dart';
 import 'package:moa_app/utils/router_provider.dart';
@@ -20,9 +20,11 @@ class FolderDetailView extends HookConsumerWidget {
   const FolderDetailView({
     super.key,
     required this.folderName,
+    required this.id,
     required this.contentCount,
   });
   final String folderName;
+  final String id;
   final int contentCount;
 
   @override
@@ -32,18 +34,25 @@ class FolderDetailView extends HookConsumerWidget {
     var pageNum = useState(0);
     var hasMore = useState(true);
     var loading = useState(false);
-    var folderDetailRefresher = useState(false);
-    var folderDetailNotifier = ref.watch(folderDetailProvider.notifier);
+    var folderDetailAsync = ref.watch(folderDetailProvider(folderId: id));
     Future<void> pullToRefresh() async {
-      ref.refresh(folderDetailProvider).value;
+      ref.refresh(folderDetailProvider(folderId: id)).value;
     }
 
     void shareFolder() async {
       var encodeFolderName = Uri.encodeFull(folderName);
+      if (Platform.isIOS) {
+        var currentStatus =
+            await FlutterBranchSdk.getTrackingAuthorizationStatus();
+        if (currentStatus == AppTrackingStatus.notDetermined) {
+          await FlutterBranchSdk.requestTrackingAuthorization();
+        }
+      }
 
       BranchUniversalObject buo = BranchUniversalObject(
         canonicalIdentifier:
-            '${GoRoutes.folder.fullPath}/$encodeFolderName?c=$contentCount',
+            '${GoRoutes.folder.fullPath}/$id?folderName=$encodeFolderName&c=$contentCount',
+
         title: '모아 폴더 공유',
         contentDescription: folderName,
         // imageUrl:
@@ -55,7 +64,6 @@ class FolderDetailView extends HookConsumerWidget {
         feature: 'share',
         campaign: 'example_campaign',
       );
-
       BranchResponse response = await FlutterBranchSdk.getShortUrl(
           buo: buo, linkProperties: linkProperties);
       if (response.success) {
@@ -69,23 +77,14 @@ class FolderDetailView extends HookConsumerWidget {
 
     void getContentList({required int page}) async {
       loading.value = true;
-      var res = await folderDetailNotifier.fetchItem(
-          folderName: folderName, page: page);
-      if (page == 0) {
-        contentList.value = res;
-      } else {
-        contentList.value = [...contentList.value, ...res];
-      }
+      var length = await ref
+          .read(folderDetailProvider(folderId: id).notifier)
+          .loadMore(folderId: id, page: page);
       loading.value = false;
-      if (res.length < 10) {
+      if (length < 10) {
         hasMore.value = false;
       }
     }
-
-    useEffect(() {
-      getContentList(page: pageNum.value);
-      return null;
-    }, [folderDetailRefresher.value]);
 
     useEffect(() {
       controller.addListener(() {
@@ -123,34 +122,47 @@ class FolderDetailView extends HookConsumerWidget {
           return FadeTransition(opacity: animation, child: child);
         },
         duration: const Duration(milliseconds: 300),
-        child: () {
-          if (loading.value && pageNum.value == 0) {
-            return const LoadingIndicator();
-          }
-          return contentList.value.isEmpty
-              ? const EmptyContent(text: '저장된 취향이 없어요!\n취향을 저장해 주세요.')
-              : Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 30),
-                      TypeHeader(count: contentCount, onPressFilter: () {}),
-                      Expanded(
-                        child: DynamicGridList(
-                          controller: controller,
-                          contentList: contentList.value,
-                          pullToRefresh: pullToRefresh,
-                          folderNameProp: folderName,
-                          folderDetailRefresher: folderDetailRefresher,
+        child: folderDetailAsync.when(
+          loading: () => const LoadingIndicator(),
+          error: (error, stackTrace) {
+            return const Center(
+              child: Text(
+                '에러가 발생했어요.\n다시 시도해주세요.',
+                textAlign: TextAlign.center,
+              ),
+            );
+          },
+          data: (contentList) {
+            return () {
+              if (contentList != null) {
+                return contentList.isEmpty
+                    ? const EmptyContent(text: '저장된 취향이 없어요!\n취향을 저장해 주세요.')
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 30),
+                            TypeHeader(
+                                count: contentCount, onPressFilter: () {}),
+                            Expanded(
+                              child: DynamicGridList(
+                                controller: controller,
+                                contentList: contentList,
+                                pullToRefresh: pullToRefresh,
+                                folderNameProp: folderName,
+                              ),
+                            ),
+                            (loading.value && pageNum.value != 0)
+                                ? const LoadingIndicator()
+                                : const SizedBox(),
+                          ],
                         ),
-                      ),
-                      (loading.value && pageNum.value != 0)
-                          ? const LoadingIndicator()
-                          : const SizedBox(),
-                    ],
-                  ),
-                );
-        }(),
+                      );
+              }
+              return const SizedBox();
+            }();
+          },
+        ),
       )),
     );
   }
