@@ -199,24 +199,23 @@ final routeProvider = Provider(
                 GoRoute(
                   parentNavigatorKey: _rootNavigatorKey,
                   name: GoRoutes.folder.name,
-                  path: '${GoRoutes.folder.path}/:folderId',
+                  path: '${GoRoutes.folder.path}/:folderName',
                   pageBuilder: (context, state) {
-                    String folderId = state.pathParameters['folderId']!;
                     late String decodeFolderName =
-                        state.uri.queryParameters['folderName']!;
+                        state.pathParameters['folderName']!;
 
-                    if (isStringEncoded(
-                        state.uri.queryParameters['folderName']!)) {
-                      decodeFolderName = Uri.decodeFull(
-                          state.uri.queryParameters['folderName'] ?? '');
-                    }
                     var parseCount = int.parse(state.uri.queryParameters['c']!);
+
+                    if (isStringEncoded(state.pathParameters['folderName']!)) {
+                      decodeFolderName = Uri.decodeFull(
+                          state.pathParameters['folderName'] ?? '');
+                    }
+
                     return buildIosPageTransitions<void>(
                       context: context,
                       state: state,
                       child: FolderDetailView(
                         folderName: decodeFolderName,
-                        id: folderId,
                         contentCount: parseCount,
                       ),
                     );

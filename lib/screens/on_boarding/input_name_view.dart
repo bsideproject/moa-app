@@ -9,7 +9,6 @@ import 'package:moa_app/repositories/non_member_repository.dart';
 import 'package:moa_app/repositories/user_repository.dart';
 import 'package:moa_app/screens/on_boarding/notice_view.dart';
 import 'package:moa_app/utils/router_provider.dart';
-import 'package:moa_app/utils/utils.dart';
 import 'package:moa_app/widgets/button.dart';
 import 'package:moa_app/widgets/edit_text.dart';
 import 'package:moa_app/widgets/moa_widgets/error_text.dart';
@@ -33,6 +32,13 @@ class InputNameView extends HookWidget {
     var step = useState<StepType>(StepType.inputName);
     var isNextPage = useState(false);
     var focusNode = useFocusNode();
+
+    bool validateNickname(String value) {
+      const pattern = r'^[가-힣]{2,8}$'; // 정규식 패턴: 한글 2~8글자
+      var regex = RegExp(pattern);
+
+      return regex.hasMatch(value);
+    }
 
     void inputUserName() async {
       if (!isMember) {

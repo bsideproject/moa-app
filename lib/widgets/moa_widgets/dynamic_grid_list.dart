@@ -34,7 +34,7 @@ class DynamicGridList extends HookWidget {
       required String folderName,
       String? contentUrl,
     }) async {
-      await context.push(
+      var val = await context.push(
         '${GoRoutes.content.fullPath}/$contentId',
         extra: ContentView(
           id: contentId,

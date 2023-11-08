@@ -38,10 +38,3 @@ bool isStringEncoded(String value) {
     return false;
   }
 }
-
-bool validateNickname(String value) {
-  const pattern = r'^[가-힣]{2,8}$'; // 정규식 패턴: 한글 2~8글자
-  var regex = RegExp(pattern);
-
-  return regex.hasMatch(value);
-}

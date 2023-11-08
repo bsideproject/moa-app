@@ -60,16 +60,6 @@
 				<string>com.googleusercontent.apps.152179311533-2lsvtrj7junkos93nd2oekpropcv8929</string>
 			</array>
 		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>com.beside.moa</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>https</string>
-			</array>
-		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
@@ -119,8 +109,6 @@
 	<string>Need location when in use</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>To upload photos, please allow permission to access your photo library, Pictures are displayed for the purpose of displaying and identifying stored content.</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>App would like to access IDFA for tracking purpose</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -144,18 +132,6 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>branch_key</key>
-	<dict>
-		<key>live</key>
-		<string>key_live_cAdCkiozDTmbHUBKiCWYplbhrqfE9TOt</string>
-		<key>test</key>
-		<string>key_test_eunAdbdqxMhgMHBOaCXYobdouujyZVVL</string>
-	</dict>
-	<key>branch_universal_link_domains</key>
-	<array>
-		<string>moayo.app.link</string>
-		<string>moayo-alternate.app.link</string>
-	</array>
 	<key>naverConsumerKey</key>
 	<string>K10uUCEMBAnAY0ZtJMeo</string>
 	<key>naverConsumerSecret</key>

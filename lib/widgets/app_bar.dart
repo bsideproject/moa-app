@@ -55,15 +55,15 @@ class AppBarBack extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       titleSpacing: 0.0,
       centerTitle: true,
-      bottom: PreferredSize(
-        preferredSize: Size.fromHeight(bottomBorderStyle.height),
-        child: Container(
-          color: isBottomBorderDisplayed
-              ? bottomBorderStyle.color
-              : AppColors.whiteColor,
-          height: bottomBorderStyle.height,
-        ),
-      ),
+      bottom: isBottomBorderDisplayed
+          ? PreferredSize(
+              preferredSize: Size.fromHeight(bottomBorderStyle.height),
+              child: Container(
+                color: bottomBorderStyle.color,
+                height: bottomBorderStyle.height,
+              ),
+            )
+          : null,
       actions: actions,
     );
   }
