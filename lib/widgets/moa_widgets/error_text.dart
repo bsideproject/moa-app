@@ -10,12 +10,10 @@ class ErrorText extends HookWidget {
     required this.errorText,
     required this.errorValidate,
     this.padding,
-    this.alignment,
   });
   final String errorText;
   final bool errorValidate;
   final EdgeInsets? padding;
-  final MainAxisAlignment? alignment;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +26,6 @@ class ErrorText extends HookWidget {
           ? Padding(
               padding: padding ?? const EdgeInsets.only(top: 5),
               child: Row(
-                mainAxisAlignment: alignment ?? MainAxisAlignment.start,
                 children: [
                   Image(
                     image: Assets.alert,

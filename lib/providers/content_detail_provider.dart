@@ -37,8 +37,8 @@ class ContentDetail extends _$ContentDetail {
   }
 
   @override
-  Future<ContentModel?> build({required String id}) async {
-    return fetchItem(contentId: id);
+  Future<ContentModel?> build() async {
+    return null;
   }
 
   Future<void> editContent({
@@ -56,8 +56,8 @@ class ContentDetail extends _$ContentDetail {
         contentMemo: contentMemo,
         hashTagStringList: hashTagStringList,
       );
-
-      return fetchItem(contentId: contentId);
+      var data = await fetchItem(contentId: contentId);
+      return data;
     });
   }
 }

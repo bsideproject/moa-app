@@ -7,8 +7,7 @@
         {
           "name": "moa_app",
           "request": "launch",
-          "type": "dart",
-          "flutterMode": "debug"
+          "type": "dart"
         },
         {
           "name": "moa_app (profile mode)",

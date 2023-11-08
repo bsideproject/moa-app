@@ -11,7 +11,6 @@ import 'package:moa_app/constants/file_constants.dart';
 import 'package:moa_app/models/folder_model.dart';
 import 'package:moa_app/providers/folder_view_provider.dart';
 import 'package:moa_app/repositories/folder_repository.dart';
-import 'package:moa_app/screens/home/folder_detail_view.dart';
 import 'package:moa_app/screens/home/home.dart';
 import 'package:moa_app/utils/general.dart';
 import 'package:moa_app/utils/logger.dart';
@@ -59,25 +58,17 @@ class FolderTabView extends HookConsumerWidget {
       );
     }
 
-    void goFolderDetailView({
-      required String folderName,
-      required int contentCount,
-      required String folderId,
-    }) {
+    void goFolderDetailView(
+        {required String folderName, required int contentCount}) {
       context.go(
-          '${GoRoutes.folder.fullPath}/$folderId?folderName=$folderName&c=$contentCount',
-          extra: FolderDetailView(
-            folderName: folderName,
-            id: folderId,
-            contentCount: contentCount,
-          ));
+        '${GoRoutes.folder.fullPath}/$folderName?c=$contentCount',
+      );
     }
 
     void showEditFolderModal({required String folderName}) {
       General.instance.showBottomSheet(
         context: context,
         child: EditContent(
-          maxLength: 10,
           title: '폴더명 수정',
           updatedContentName: updatedContentName,
           contentName: folderName,
@@ -233,7 +224,6 @@ class FolderTabView extends HookConsumerWidget {
                       onPress: () => goFolderDetailView(
                         folderName: item.folderName,
                         contentCount: item.count,
-                        folderId: item.folderId,
                       ),
                     );
             },
